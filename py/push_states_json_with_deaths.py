@@ -1,10 +1,11 @@
 import boto3
 import json
+import sys
 
 def stringify(num):
     return f'{num}'
 
-def push_states_json_with_deaths():
+def push_states_json_with_deaths(covid, json_str=None):
     table_name = 'state-features'
     dynamodb=boto3.resource('dynamodb')
     client = boto3.client('dynamodb')
@@ -45,15 +46,14 @@ def push_states_json_with_deaths():
 
         table.meta.client.get_waiter('table_exists')
     
-    with open('/home/anna_user2/projects/website-II/json/state-month-deaths.json', 'rt') as f:
-        covid = f.read()
-
-    covid=json.loads(covid, parse_float=stringify, parse_int=stringify)
+    # with open('/home/anna_user2/projects/website-II/json/state-month-deaths.json', 'rt') as f:
+    #     covid = f.read()
+    # covid=json.loads(covid, parse_float=stringify, parse_int=stringify)
+    #covid = json.loads(json_str, parse_float=stringify, parse_int=stringify)
+    #covid = json.loads(json_str)
     for feature in covid['features']:
         id = feature['id']
-        if id == '33':
-            print('here')
-    
+        print(id)
         try :
             with table.batch_writer() as batch:
                 batch.put_item(
