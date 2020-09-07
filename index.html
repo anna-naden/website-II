@@ -148,8 +148,8 @@
                     layer.on({
                         mouseover: highlightFeature,
                         mouseout: resetHighlight,
-                        click: get_data
-                        // click: zoomToFeature
+                        // click: get_data
+                        click: zoomToFeature
                     });
                 }
                 console.log(statesData)
@@ -295,4 +295,4 @@
       draw(json_data, "county");
     }
   </script>
-</html> 
+</html>
