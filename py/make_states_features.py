@@ -3,7 +3,7 @@
 
 from get_world_covid_jh import get_world_covid_jh
 from state_population_fips import state_population_fips
-from push_states_json_with_deaths import push_states_json_with_deaths
+from push_states_features import push_states_features
 
 import numpy as np
 import json
@@ -154,4 +154,4 @@ def make_features():
     return obj
 
 covid = make_features()
-push_states_json_with_deaths(covid)
+push_states_features(covid)

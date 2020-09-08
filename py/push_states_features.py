@@ -5,7 +5,7 @@ import sys
 def stringify(num):
     return f'{num}'
 
-def push_states_json_with_deaths(covid, json_str=None):
+def push_states_features(covid, json_str=None):
     table_name = 'state-features'
     dynamodb=boto3.resource('dynamodb')
     client = boto3.client('dynamodb')
