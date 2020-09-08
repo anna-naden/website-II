@@ -64,7 +64,7 @@ def stringify_deep_multi_poly(l):
         out.append(out1)
     return out
 
-def make_json():
+def make_features():
     status, df = get_world_covid_jh()
     df_us = df[df.index.get_level_values('ISO_A3')=='USA']
     df_can = df[df.index.get_level_values('ISO_A3') == 'CAN']
@@ -153,5 +153,5 @@ def make_json():
     #     f.write(json_str)
     return obj
 
-covid = make_json()
+covid = make_features()
 push_states_json_with_deaths(covid)
