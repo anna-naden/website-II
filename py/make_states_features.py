@@ -75,12 +75,12 @@ def make_features():
     
     #USA
     ISO_A3='USA'
-    df=df_us.groupby(axis='index', by=['fips','date']).sum()
+    df=df_us.groupby(axis='index', by=['state_fips','date']).sum()
     df.reset_index(inplace=True)
-    fips_codes = df.fips.unique()
+    fips_codes = df['state_fips'].unique()
     for fips_code in fips_codes:
-        deaths1 = df.query('date==@start_date and fips==@fips_code').deaths.sum()
-        deaths2 = df.query('date==@end_date and fips==@fips_code').deaths.sum()
+        deaths1 = df.query('date==@start_date and state_fips==@fips_code').deaths.sum()
+        deaths2 = df.query('date==@end_date and state_fips==@fips_code').deaths.sum()
         deaths = deaths2-deaths1
         pop = state_population_fips(ISO_A3, fips_code)
         if pop != 0:
@@ -90,12 +90,12 @@ def make_features():
         
     #Canada
     ISO_A3 = 'CAN'
-    df=df_can.groupby(axis='index', by=['fips','date']).sum()
+    df=df_can.groupby(axis='index', by=['state_fips','date']).sum()
     df.reset_index(inplace=True)
-    fips_codes = df.fips.unique()
+    fips_codes = df['state_fips'].unique()
     for fips_code in fips_codes:
-        deaths1 = df.query('date==@start_date and fips==@fips_code').deaths.sum()
-        deaths2 = df.query('date==@end_date and fips==@fips_code').deaths.sum()
+        deaths1 = df.query('date==@start_date and state_fips==@fips_code').deaths.sum()
+        deaths2 = df.query('date==@end_date and state_fips==@fips_code').deaths.sum()
         deaths = deaths2-deaths1
         pop = state_population_fips(ISO_A3, fips_code)
         if pop != 0:
