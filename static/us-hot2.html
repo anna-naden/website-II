@@ -24,19 +24,17 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="stylesheets/style.css" />
-</head>
-<body>
   <h2>Phoenix Technical Services: Anna Naden</h2>
   <div>
     <img class="logo" src="phoenix-logo.jpg">
   </div>
 <h6>This website is still being tested. To report issues, send email to <a href =mailto:anna@phoenix-computer.com>anna@phoenix-computer.com</a> </h6>
-  
-  <html>
-      <head>
+</head>
+<body id="body">
+
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css">
         <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
-        <script>
+        <script type="text/javascript">
           function get_us_features()
           {
             url = "https://vpw7dxy2uf.execute-api.us-east-1.amazonaws.com/stage/us_hot";
@@ -45,7 +43,6 @@
                 console.log('readyState' + this.readyState);
                 console.log(this.status)
                 if (this.readyState == 4 && this.status == 200) {
-                  // document.getElementById("my-demo").innerHTML = JSON.stringify(this.responseText);
                   var us_features =JSON.parse(this.responseText);
                   make_us_map(us_features);
                 }
@@ -72,7 +69,8 @@
               mapElement.remove();
               var a = document.createElement('div');
               a.id="map";
-              document.body.appendChild(a);
+              container = document.getElementById("state-map-container")
+              container.appendChild(a);
               return;
           }
         </script>
@@ -282,12 +280,13 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
               legend.addTo(map);
           }
       </script>
-    </head>
-    <body  onload="get_us_features()">
-        <div id='map'></div>
-        <div id='state-map'></div>
+        <div id="state-map-container"></div>
+        </script>
+        <script>
+            document.getElementById("body").onload = function() {get_us_features()};
+        </script>
+        <div id="map"></div>
         <div id="anna-svg" class="anna-svg"></div>
-        <div id="my-demo"></div>
         <script type="text/javascript">
             function make_us_map(statesData) {
                 console.log(statesData)
@@ -415,8 +414,6 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
                 legend.addTo(map);
             }
         </script>
-</body>
-</html>
 
 </body>
   <form action="us-hot2.html">

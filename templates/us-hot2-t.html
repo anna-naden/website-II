@@ -1,10 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
-  <html>
-      <head>
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css">
         <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
-        <script>
+        <script type="text/javascript">
           function get_us_features()
           {
             url = "https://vpw7dxy2uf.execute-api.us-east-1.amazonaws.com/stage/us_hot";
@@ -13,7 +11,6 @@
                 console.log('readyState' + this.readyState);
                 console.log(this.status)
                 if (this.readyState == 4 && this.status == 200) {
-                  // document.getElementById("my-demo").innerHTML = JSON.stringify(this.responseText);
                   var us_features =JSON.parse(this.responseText);
                   make_us_map(us_features);
                 }
@@ -40,7 +37,8 @@
               mapElement.remove();
               var a = document.createElement('div');
               a.id="map";
-              document.body.appendChild(a);
+              container = document.getElementById("state-map-container")
+              container.appendChild(a);
               return;
           }
         </script>
@@ -250,12 +248,13 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
               legend.addTo(map);
           }
       </script>
-    </head>
-    <body  onload="get_us_features()">
-        <div id='map'></div>
-        <div id='state-map'></div>
+        <div id="state-map-container"></div>
+        </script>
+        <script>
+            document.getElementById("body").onload = function() {get_us_features()};
+        </script>
+        <div id="map"></div>
         <div id="anna-svg" class="anna-svg"></div>
-        <div id="my-demo"></div>
         <script type="text/javascript">
             function make_us_map(statesData) {
                 console.log(statesData)
@@ -383,6 +382,4 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
                 legend.addTo(map);
             }
         </script>
-</body>
-</html>
 {% endblock %}
