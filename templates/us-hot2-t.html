@@ -1,3 +1,5 @@
+{% extends "base.html" %}
+{% block content %}
 <!DOCTYPE html>
 <style>
     /* set the CSS */
@@ -10,8 +12,6 @@
   </style>
   <html>
       <head>
-        {{google_analytics}}
-        <link rel="stylesheet" href="stylesheets/style.css">
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css">
         <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
         <script>
@@ -262,7 +262,6 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
       </script>
     </head>
     <body  onload="get_us_features()">
-        {{logo}}
         <h6>This website is still being tested. To report issues, send email to <a href =mailto:anna@phoenix-computer.com>anna@phoenix-computer.com</a> </h6>
         <div id='map'></div>
         <div id='state-map'></div>
@@ -397,3 +396,4 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
         </script>
     </body>
 </html>
+{% endblock %}

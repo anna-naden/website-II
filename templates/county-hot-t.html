@@ -1,3 +1,5 @@
+{% extends "base.html" %}
+{% block content %}
 <!DOCTYPE html>
 <style>
     /* set the CSS */
@@ -25,7 +27,6 @@
         }
       </script>
       <head>
-        {{google_analytics}}
         <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
         <link rel="stylesheet" href="stylesheets/style.css">
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css">
@@ -41,8 +42,7 @@
         </style>
         <script src="https://d3js.org/d3.v6.js"></script>
     </head>
-    <body  onload="get_county_covid()">
-        {{logo}}
+    <body>
         <div id='map'></div>
         <div id="anna-svg" class="anna-svg"></div>
         <div id="my-demo"></div>
@@ -346,3 +346,4 @@
     }
   </script>
 </html>
+{% endblock %}
