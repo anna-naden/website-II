@@ -1,15 +1,5 @@
 {% extends "base.html" %}
 {% block content %}
-<!DOCTYPE html>
-<style>
-    /* set the CSS */
-  
-    .line {
-      fill: none;
-      stroke: steelblue;
-      stroke-width: 2px;
-    }
-  </style>
   <html>
       <head>
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css">
@@ -262,7 +252,6 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
       </script>
     </head>
     <body  onload="get_us_features()">
-        <h6>This website is still being tested. To report issues, send email to <a href =mailto:anna@phoenix-computer.com>anna@phoenix-computer.com</a> </h6>
         <div id='map'></div>
         <div id='state-map'></div>
         <div id="anna-svg" class="anna-svg"></div>
@@ -394,6 +383,6 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
                 legend.addTo(map);
             }
         </script>
-    </body>
+</body>
 </html>
 {% endblock %}
