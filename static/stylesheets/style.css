@@ -1,0 +1,33 @@
+.logo {
+    height: 130px;
+}
+.plot {
+    height: 600px
+}
+.flashes {
+    color: red;
+}
+@media only screen and (max-width: 500px) {
+    .banner {
+        visibility: hidden;
+        font-size: 0px;
+    }
+    .logo {
+        height: 70px;
+        }
+    .plot {
+        max-width: 75%;
+        height: auto;
+        padding-bottom: 8px;
+    }
+    select {
+        font-size: 20px;
+    }
+    label {
+        font-size: 16px;
+    }
+    button, input {
+        font-size: 18px;
+    }
+    }
+}
