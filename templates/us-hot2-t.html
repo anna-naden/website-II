@@ -276,7 +276,7 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
                 info.update = function (props) {
                     this._div.innerHTML = '<h3>COVID-19 by State</h3>' + (props ?
                         '<b>' + props.name + '</b><br />' + props.density + ' fatalities per 100,000 people in past 30 days</sup>'
-                        : 'Mouse over a county to fatalities per capita.<br/>Click to see graph.');
+                        : 'Mouse over a state or province to fatalities per capita.<br/>Click to see graph.');
                 };
 
                 info.addTo(map);
