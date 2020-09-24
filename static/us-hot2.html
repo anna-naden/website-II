@@ -40,8 +40,6 @@
             url = "https://vpw7dxy2uf.execute-api.us-east-1.amazonaws.com/stage/us_hot";
             var xhttp = new XMLHttpRequest();
               xhttp.onreadystatechange = function() {
-                console.log('readyState' + this.readyState);
-                console.log(this.status)
                 if (this.readyState == 4 && this.status == 200) {
                   var us_features =JSON.parse(this.responseText);
                   make_us_map(us_features);
@@ -65,7 +63,6 @@
         <script>
           function refresh_map_div() {
               var mapElement = document.getElementById('map');
-              console.log('about to remove');
               mapElement.remove();
               var a = document.createElement('div');
               a.id="map";
@@ -149,15 +146,15 @@
               alaska = '02';
               texas = '48'
               lat_lon = state_lat_long[fips];
-              zoom_level = 8;
+              zoom_level = 6;
               if (fips==alaska) {
                 lat_lon = [64.835365, -147.776749]
                 zoom_level = 4;
               };
-              if (fips = texas) {
+              if (fips == texas) {
                 zoom_level = 5
               }
-              console.log(lat_lon);
+              console.log(zoom_level);
               var map = L.map('map').setView(lat_lon, zoom_level);
               // var map = L.map('map').setView([37.8, -96], 4);
 
@@ -245,8 +242,6 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
                       // click: zoomToFeature
                   });
               }
-              console.log('state features')
-              console.log(state_features)
               geojson = L.geoJson(state_features, {
                   style: style,
                   onEachFeature: onEachFeature
@@ -289,7 +284,6 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
         <div id="anna-svg" class="anna-svg"></div>
         <script type="text/javascript">
             function make_us_map(statesData) {
-                console.log(statesData)
                 var map = L.map('map').setView([37.8, -96], 4);
 
                 L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {

@@ -4,6 +4,7 @@
 from get_world_covid_jh import get_world_covid_jh
 from state_population_fips import state_population_fips
 from push_states_features import push_states_features
+from state_name_from_fips import state_name_from_fips
 
 import numpy as np
 import json
@@ -71,23 +72,28 @@ def make_features():
     df.reset_index(inplace=True)
     end_date = df.date.max()
     start_date = end_date-np.timedelta64(30,'D')
+    print(f'date range {start_date} {end_date}')
     state_deaths = {}
     
     #USA
     ISO_A3='USA'
-    df=df_us.groupby(axis='index', by=['state_fips','date']).sum()
+    fips_codes = df_us.state_fips.unique()
+    df=df_us.groupby(axis='index', by=['state','date']).sum()
     df.reset_index(inplace=True)
-    fips_codes = df['state_fips'].unique()
     for fips_code in fips_codes:
-        deaths1 = df.query('date==@start_date and state_fips==@fips_code').deaths.sum()
-        deaths2 = df.query('date==@end_date and state_fips==@fips_code').deaths.sum()
+        
+        # The Johns Hopkins data has incorrect FIPS code for unassigned county in Illinois, so instead of keying on FIPS I must key on state name, e.g. Illinois
+        state_name = state_name_from_fips(fips_code)
+
+        deaths1 = df.query('date==@start_date and state==@state_name').deaths.sum()
+        deaths2 = df.query('date==@end_date and state==@state_name').deaths.sum()
         deaths = deaths2-deaths1
         pop = state_population_fips(ISO_A3, fips_code)
         if pop != 0:
             state_deaths[ISO_A3 + fips_code]=100000*deaths/pop
         else:
             state_deaths[ISO_A3 + fips_code] = 0
-        
+
     #Canada
     ISO_A3 = 'CAN'
     df=df_can.groupby(axis='index', by=['state_fips','date']).sum()
@@ -154,4 +160,6 @@ def make_features():
     return obj
 
 covid = make_features()
+print("pushing states features")
 push_states_features(covid)
+print("states features pushed")

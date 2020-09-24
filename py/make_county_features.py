@@ -94,6 +94,7 @@ df = df_world[df_world.index.get_level_values('ISO_A3')=='USA']
 df.reset_index(inplace=True)
 end_date = df.date.max()
 start_date = end_date-np.timedelta64(30,'D')
+print(f'date range {start_date} {end_date}')
 county_deaths = get_county_deaths(df, df_pops, start_date, end_date)
 features = get_counties_features()
 update_county_features(features, county_deaths)
