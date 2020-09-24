@@ -8,20 +8,39 @@
       stroke-width: 2px;
     }
   </style>
-  <html>
-      <head>
+<html>
+<head>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-166186377-1">
+  </script>
+
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-166186377-1');
+  </script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="stylesheets/style.css" />
+  <h2>Phoenix Technical Services: Anna Naden</h2>
+  <div>
+    <img class="logo" src="phoenix-logo.jpg">
+  </div>
+<h6>This website is still being tested. To report issues, send email to <a href =mailto:anna@phoenix-computer.com>anna@phoenix-computer.com</a> </h6>
+</head>
+<body id="body">
+
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css">
         <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
-        <script>
+        <script type="text/javascript">
           function get_us_features()
           {
             url = "https://vpw7dxy2uf.execute-api.us-east-1.amazonaws.com/stage/us_hot";
             var xhttp = new XMLHttpRequest();
               xhttp.onreadystatechange = function() {
-                console.log('readyState' + this.readyState);
-                console.log(this.status)
                 if (this.readyState == 4 && this.status == 200) {
-                  // document.getElementById("my-demo").innerHTML = JSON.stringify(this.responseText);
                   var us_features =JSON.parse(this.responseText);
                   make_us_map(us_features);
                 }
@@ -44,11 +63,11 @@
         <script>
           function refresh_map_div() {
               var mapElement = document.getElementById('map');
-              console.log('about to remove');
               mapElement.remove();
               var a = document.createElement('div');
               a.id="map";
-              document.body.appendChild(a);
+              container = document.getElementById("state-map-container")
+              container.appendChild(a);
               return;
           }
         </script>
@@ -125,19 +144,18 @@
   };
               // fips codes
               alaska = '02';
-              texas = '48'
+              texas = '48';
               lat_lon = state_lat_long[fips];
-              zoom_level = 8;
+              zoom_level = 6;
               if (fips==alaska) {
                 lat_lon = [64.835365, -147.776749]
                 zoom_level = 4;
               };
-              if (fips = texas) {
-                zoom_level = 5
+              if (fips == texas) {
+                zoom_level = 5;
               }
-              console.log(lat_lon);
+              console.log(zoom_level);
               var map = L.map('map').setView(lat_lon, zoom_level);
-              // var map = L.map('map').setView([37.8, -96], 4);
 
 L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
     maxZoom: 18,
@@ -223,8 +241,6 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
                       // click: zoomToFeature
                   });
               }
-              console.log('state features')
-              console.log(state_features)
               geojson = L.geoJson(state_features, {
                   style: style,
                   onEachFeature: onEachFeature
@@ -258,16 +274,15 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
               legend.addTo(map);
           }
       </script>
-    </head>
-    <body  onload="get_us_features()">
-        <h4>This website is still being tested. To report issues, send email to <a href =mailto:anna@phoenix-computer.com>anna@phoenix-computer.com</a> </h4>
-        <div id='map'></div>
-        <div id='state-map'></div>
+        <div id="state-map-container"></div>
+        </script>
+        <script>
+            document.getElementById("body").onload = function() {get_us_features()};
+        </script>
+        <div id="map"></div>
         <div id="anna-svg" class="anna-svg"></div>
-        <div id="my-demo"></div>
         <script type="text/javascript">
             function make_us_map(statesData) {
-                console.log(statesData)
                 var map = L.map('map').setView([37.8, -96], 4);
 
                 L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
@@ -293,7 +308,7 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
                 info.update = function (props) {
                     this._div.innerHTML = '<h3>COVID-19 by State</h3>' + (props ?
                         '<b>' + props.name + '</b><br />' + props.density + ' fatalities per 100,000 people in past 30 days</sup>'
-                        : 'Mouse over a county to fatalities per capita.<br/>Click to see graph.');
+                        : 'Mouse over a state or province to fatalities per capita.<br/>Click to see graph.');
                 };
 
                 info.addTo(map);
@@ -392,5 +407,11 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
                 legend.addTo(map);
             }
         </script>
-    </body>
-</html>
+
+</body>
+  <form action="us-hot2.html">
+    <br>
+        <button type="submit">Home</button>
+      </form>
+  </form>
+<html>
