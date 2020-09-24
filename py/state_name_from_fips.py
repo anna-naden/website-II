@@ -1,8 +1,10 @@
 from csv import reader
+from get_config import get_config
 
 def state_name_from_fips(fips):
 
-    with open('/home/anna_user2/datasets/census/state-fips.csv', 'r') as f:
+    config = get_config()
+    with open(config['FILES']['state_fips'], 'r') as f:
         csv_reader = reader(f)
         state = 'XXX'
         for row in csv_reader:
