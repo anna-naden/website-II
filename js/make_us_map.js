@@ -1,4 +1,8 @@
 function make_us_map(statesData) {
+    const formatter = new Intl.NumberFormat('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    })
     var map = L.map('map').setView([37.8, -96], 4);
 
     L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
@@ -23,7 +27,7 @@ function make_us_map(statesData) {
 
     info.update = function (props) {
         this._div.innerHTML = '<h3>COVID-19 by State</h3>' + (props ?
-            '<b>' + props.name + '</b><br />' + props.density + ' fatalities per 100,000 people in past 30 days</sup>'
+            '<b>' + props.name + '</b><br />' + formatter.format(props.density)  + ' fatalities per 100,000 people in past 30 days</sup>'
             : 'Mouse over a state or province to fatalities per capita.<br/>Click to see graph.');
     };
 
