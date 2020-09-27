@@ -1,0 +1,14 @@
+
+{% extends "base.html" %}
+{% block content %}
+<svg></svg>
+<link rel="stylesheet" type="text/css" href="./inspector.css">
+<script type="module">
+  import define from "./index.js";
+  import {Runtime, Library, Inspector} from "./runtime.js";
+  const runtime = new Runtime();
+  const main = runtime.module(define, Inspector.into(document.body));
+  </script>
+<h6>The data for Cook County, for the state of Illinois and for Ottawa has been validated. However, this website is still being tested. To report issues, send email to <a href =mailto:anna@phoenix-computer.com>anna@phoenix-computer.com</a> </h6>
+
+{% endblock %}

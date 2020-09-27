@@ -93,6 +93,8 @@ def make_features():
             state_deaths[ISO_A3 + fips_code]=100000*deaths/pop
         else:
             state_deaths[ISO_A3 + fips_code] = 0
+    # Write csv file for barcharts
+    make_csv_bar_charts(state_deaths)
 
     #Canada
     ISO_A3 = 'CAN'
@@ -158,6 +160,15 @@ def make_features():
     # with open('/home/anna_user2/projects/website-II/json/state-month-deaths.json', 'wt') as f:
     #     f.write(json_str)
     return obj
+
+def make_csv_bar_charts(state_deaths):
+    with open('/var/www/html/files/states-deaths.csv', 'w') as f:
+        f.write("letter,frequency\n")
+        for state in state_deaths.keys():
+            state_name = state_name_from_fips(state[3:])
+            if state_name is not None:
+                f.write(state_name+','+str(state_deaths[state])+'\n')
+    f.close()
 
 covid = make_features()
 print("pushing states features")

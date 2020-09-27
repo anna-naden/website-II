@@ -4,9 +4,13 @@ from get_config import get_config
 config = get_config()
 file_loader = FileSystemLoader(config['DEFAULT']['templates'])
 env = Environment(loader=file_loader)
-template = env.get_template('us-hot2-t.html')
 
-output = template.render()
-with open(config['FILES']['us_hot'],'w') as f:
-    f.write(output)
-print('static html created')
+files = ['index', 'us-hot2', 'barchart']
+for file in files:
+    input = file+'-t'+'.html'
+    output_file = file + '.html'
+    template = env.get_template(input)
+    output = template.render()
+    with open('/var/www/html/'+output_file,'w') as f:
+        f.write(output)
+    print(f'{output_file} created')

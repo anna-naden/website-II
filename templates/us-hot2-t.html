@@ -4,7 +4,6 @@
         <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
         <script src="../js/make_us_map.js"></script>
         <script src="../js/make_state_map.js"></script>
-        <script src="../js/us_barchart.js"></script>
         <script src="https://d3js.org/d3.v6.min.js"></script>
         <script type="text/javascript">
           function get_us_features()
@@ -58,13 +57,10 @@
               xhttp.send();
           }
         </script>
-        <script type="text/javascript">
-      </script>
         <div id="state-map-container"></div>
-        </script>
+        <h6>The data for Cook County, for the state of Illinois and for Ottawa has been validated. However, this website is still being tested. To report issues, send email to <a href =mailto:anna@phoenix-computer.com>anna@phoenix-computer.com</a> </h6>
         <script>
             document.getElementById("body").onload = function() {get_us_features()};
-            document.getElementById("body").onload = function() {us_barchart()};
         </script>
         <div id="map"></div>
         <div id="anna-svg" class="anna-svg"></div>
