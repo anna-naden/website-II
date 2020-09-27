@@ -1,0 +1,14 @@
+{
+  "name": "@d3/horizontal-bar-chart",
+  "main": "743260d2bcf09524@247.js",
+  "version": "247.0.0",
+  "homepage": "https://observablehq.com/@d3/horizontal-bar-chart",
+  "author": {
+    "name": "D3",
+    "url": "https://observablehq.com/@d3"
+  },
+  "type": "module",
+  "peerDependencies": {
+    "@observablehq/runtime": "4"
+  }
+}

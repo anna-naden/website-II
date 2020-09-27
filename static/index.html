@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<style>
+    /* set the CSS */
+  
+    .line {
+      fill: none;
+      stroke: steelblue;
+      stroke-width: 2px;
+    }
+  </style>
+<html>
+<head>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-166186377-1">
+  </script>
+
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-166186377-1');
+  </script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="stylesheets/style.css" />
+  <h2>Phoenix Technical Services: Anna Naden</h2>
+  <div>
+    <img class="logo" src="phoenix-logo.jpg">
+  </div>
+<h6>The data for Cook County, for the state of Illinois and for Ottawa has been validated. However, this website is still being tested. To report issues, send email to <a href =mailto:anna@phoenix-computer.com>anna@phoenix-computer.com</a> </h6>
+</head>
+<body id="body">
+
+        <link rel="stylesheet" type="text/css" href="./inspector.css">
+        <script type="module">
+
+          import define from "./index.js";
+          import {Runtime, Library, Inspector} from "./runtime.js";
+          
+          const runtime = new Runtime();
+          const main = runtime.module(define, Inspector.into(document.body));
+          
+          </script>
+          
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css">
+        <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+        <script src="../js/make_us_map.js"></script>
+        <script src="../js/make_state_map.js"></script>
+        <script src="https://d3js.org/d3.v6.min.js"></script>
+        <script type="text/javascript">
+          function get_us_features()
+          {
+            url = "https://vpw7dxy2uf.execute-api.us-east-1.amazonaws.com/stage/us_hot";
+            var xhttp = new XMLHttpRequest();
+              xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                  var us_features =JSON.parse(this.responseText);
+                  make_us_map(us_features);
+                }
+              };
+              xhttp.open("GET", url, true);
+              xhttp.send();
+          }
+        </script>
+        <style>
+            html, body {
+                height: 100vh;
+                height: 100vw;
+            }
+            #map {
+                height: 40vh;
+                height: 40vw;
+            }
+        </style>
+        <script src="https://d3js.org/d3.v6.js"></script>
+        <script>
+          function refresh_map_div() {
+              var mapElement = document.getElementById('map');
+              mapElement.remove();
+              var a = document.createElement('div');
+              a.id="map";
+              container = document.getElementById("state-map-container")
+              container.appendChild(a);
+              return;
+          }
+        </script>
+        <script>
+          function get_state_features(fips)
+          {
+            refresh_map_div();
+            var xhttp = new XMLHttpRequest();
+              xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                  var state_features = JSON.parse(this.responseText);
+                  make_state_map(fips,state_features);
+                };
+              };
+              xhttp.open("GET", "https://qwwj8ox9l9.execute-api.us-east-1.amazonaws.com/stage/fips?fips="+fips, true);
+              xhttp.send();
+          }
+        </script>
+        <script type="text/javascript">
+      </script>
+        <div id="state-map-container"></div>
+        </script>
+        <script>
+            document.getElementById("body").onload = function() {get_us_features()};
+        </script>
+        <div id="map"></div>
+        <div id="anna-svg" class="anna-svg"></div>
+
+</body>
+  <form action="us-hot2.html">
+    <br>
+        <button type="submit">Home</button>
+      </form>
+  </form>
+<html>
