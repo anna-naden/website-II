@@ -53,7 +53,7 @@ def push_states_features(covid, json_str=None):
     #covid = json.loads(json_str)
     for feature in covid['features']:
         id = feature['id']
-        print(id)
+        # print(id)
         try :
             with table.batch_writer() as batch:
                 batch.put_item(

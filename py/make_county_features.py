@@ -41,7 +41,7 @@ def get_county_deaths(df_us, df_pops, start_date, end_date):
     df1 = df_us[df_us.date == start_date]
     df2 = df_us[df_us.date == end_date]
     for fips_code in fips_codes:
-        print(fips_code)
+        # print(fips_code)
         deaths1 = df1.query('fips==@fips_code').deaths.sum()
         deaths2 = df2.query('fips==@fips_code').deaths.sum()
         deaths = deaths2 - deaths1
@@ -117,12 +117,11 @@ if make_temp_file:
     df.reset_index(inplace=True)
     end_date = df.date.max()
     start_date = end_date-np.timedelta64(30,'D')
-    print(f'date range {start_date} {end_date}')
     county_deaths = get_county_deaths(df, df_pops, start_date, end_date)
     states = get_counties_features()
     update_county_features(states, county_deaths)
     for state in states.keys():
-        print(state)
+        # print(state)
         with open(path + state + '.json', 'w') as f:
             path2 = path + state + '.json'
             feature_set = {'type': 'FeatureCollection', 'features': states[state]}
@@ -130,3 +129,4 @@ if make_temp_file:
             f.flush()
             upload_file(path2, 'phoenix-anna-web-content', state+'.json')
         f.close()
+    print(f'\nuploaded county features {start_date} to {end_date}')

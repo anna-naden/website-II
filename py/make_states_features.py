@@ -73,7 +73,7 @@ def make_features():
     df.reset_index(inplace=True)
     end_date = df.date.max()
     start_date = end_date-np.timedelta64(30,'D')
-    print(f'date range {start_date} {end_date}')
+    print(f'states features date range {start_date} {end_date}')
     state_deaths = {}
     
     #USA

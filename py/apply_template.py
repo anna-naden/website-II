@@ -13,4 +13,4 @@ for file in files:
     output = template.render()
     with open('/var/www/html/'+output_file,'w') as f:
         f.write(output)
-print(f'{output_file} created')
+    print(f'{output_file} created')
