@@ -29,67 +29,60 @@
 </head></head>
 
 <body>
-  <div id="container" class="svg-container"></div>
+  <svg width="960" height="500"></svg>
   <script src='../js/barchart.js'></script>
   <script>
     //------------------------SVG PREPARATION------------------------//
     //set up svg using margin conventions - we'll need plenty of room on the left for labels
     var margin = {
-        top: 15,
-        right: 25,
-        bottom: 15,
-        left: 120
+        top: 20,
+        right: 20,
+        bottom: 20,
+        left: 100
     };
-
-    var width = 960 - margin.left - margin.right,
-        height = 600 - margin.top - margin.bottom;
 
     var adj = 20;
 
-    // we are appending SVG first
-    var svg = d3.select("div#container").append("svg")
-    .attr("preserveAspectRatio", "xMinYMin meet")
-    .attr("viewBox", "-" + adj + " -"+ adj + " " + (width + adj) + " " + (height + adj))
-    .style("padding", 5)
-    .style("margin", 5)
-    .classed("svg-content", true);
+    var svg = d3.select('svg');
+
+    var width = +svg.attr('width');
+    var height = +svg.attr('height');
+    const iw = width - margin.left - margin.right;
+    const ih = height - margin.top - margin.bottom;
 
     //-----------------------DATA PREPARATION------------------------//
     var dataset = data;
     //sort bars based on value
-    data = data.sort(function (a, b) {
+    var data = data.sort(function (a, b) {
         return d3.descending(a.value, b.value);
     })
 
 
     //---------------------------BAR CHART---------------------------//
     
-    var x=d3.scaleLinear([0,40],[0,960]);
-    var domain = data.map(function(d) {
-      return d.name
-    });
-    var range = [0,400];
-    var y=d3.scaleBand().domain(domain).range([0,800]).paddingInner(1);
-    console.log(y.step());
+    const xValue = d => d.value;
+    const yValue = d => d.name;
 
-    const xAxis = d3.axisTop(x);
-    const yAxis = d3.axisLeft(y);
-    
+    var xScale=d3.scaleLinear()
+      .domain([0, d3.max(data, xValue)])
+      .range([100,iw]);
+    var yScale=d3.scaleBand()
+      .domain(data.map(yValue))
+      .range([0,ih]);
+
+    const yAxis = d3.axisLeft(yScale).tickSize(0);
+    const g = svg.append('g').attr('transform', `translate(${margin.left}, 0)`);
+    yAxis(g.append('g'));
+
     svg.selectAll("div")
     .data(data)
     .enter()
     .append("rect")
     .attr("class", "bar")
-    .attr("y", function (d) {
-      return y(d.name);
-    })
-    .attr("x", 0)
-    .attr("width", function(d) {
-      return x(d.value);
-    })
-    .attr("height", function (d) {
-        return 10;
-    });
+    .attr("y", d => yScale(yValue(d)))
+    .attr("x", 100)
+    .attr("width", d => xScale(xValue(d)))
+    .attr("height", yScale.bandwidth());
 
     </script>
     <h6>The chart shows COVID-19 fatalities in the past 30 days per 100,000 population. The results for the state of Illinois have been checked against the Johns Hopkins University dataset. However, this website is still being tested. To report issues, send email to <a href =mailto:anna@phoenix-computer.com>anna@phoenix-computer.com</a> </h6>
