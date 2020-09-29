@@ -32,38 +32,10 @@
 
 <div id="graphic"></div>
 
+<script src="../js/barchart.js"></script>
 <script>
-  {{ test_template }}
-    var data = [{
-            "name": "Apples",
-            "value": 20,
-    },
-        {
-            "name": "Bananas",
-            "value": 12,
-    },
-        {
-            "name": "Grapes",
-            "value": 19,
-    },
-        {
-            "name": "Lemons",
-            "value": 5,
-    },
-        {
-            "name": "Limes",
-            "value": 16,
-    },
-        {
-            "name": "Oranges",
-            "value": 26,
-    },
-        {
-            "name": "Pears",
-            "value": 30,
-    }];
 
-    //sort bars based on value
+//sort bars based on value
     data = data.sort(function (a, b) {
         return d3.ascending(a.value, b.value);
     })
@@ -73,7 +45,7 @@
         top: 15,
         right: 25,
         bottom: 15,
-        left: 60
+        left: 120
     };
 
     var width = 960 - margin.left - margin.right,
@@ -137,7 +109,7 @@
             return x(d.value) + 3;
         })
         .text(function (d) {
-            return d.value;
+            return d3.round(d.value,2);
         });
     
 </script>

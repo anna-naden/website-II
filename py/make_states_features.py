@@ -5,6 +5,7 @@ from get_world_covid_jh import get_world_covid_jh
 from state_population_fips import state_population_fips
 from push_states_features import push_states_features
 from state_name_from_fips import state_name_from_fips
+from get_config import get_config
 
 import numpy as np
 import json
@@ -162,12 +163,19 @@ def make_features():
     return obj
 
 def make_csv_bar_charts(state_deaths):
-    with open('/var/www/html/files/states-deaths.csv', 'w') as f:
-        f.write("letter,frequency\n")
+    config = get_config()
+
+    path = config['FILES']['js']+'/barchart.js'
+    with open(path, 'w') as f:
+        f.write('var data = [\n')
         for state in state_deaths.keys():
             state_name = state_name_from_fips(state[3:])
             if state_name is not None:
-                f.write(state_name+','+str(state_deaths[state])+'\n')
+                f.write('{\n')
+                f.write(f'"name": "{state_name}",\n')
+                f.write(f'"value": {state_deaths[state]},\n')
+                f.write('},\n')
+        f.write('];')
     f.close()
 
 covid = make_features()
