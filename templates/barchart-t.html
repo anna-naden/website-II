@@ -49,7 +49,7 @@
     };
 
     var width = 960 - margin.left - margin.right,
-        height = 500 - margin.top - margin.bottom;
+        height = 600 - margin.top - margin.bottom;
 
     var svg = d3.select("#graphic").append("svg")
         .attr("width", width + margin.left + margin.right)
@@ -58,7 +58,7 @@
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     var x = d3.scale.linear()
-        .range([0, width])
+        .range([0, width-40])
         .domain([0, d3.max(data, function (d) {
             return d.value;
         })]);
@@ -76,6 +76,7 @@
         .tickSize(0)
         .orient("left");
 
+    // Add the <g> elements to the svg element
     var gy = svg.append("g")
         .attr("class", "y axis")
         .call(yAxis)
