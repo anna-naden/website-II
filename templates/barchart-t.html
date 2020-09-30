@@ -24,9 +24,10 @@
     .label {
         font-size: 13px;
     }
+    .label2 {
+        font-size: 10px;
+    }
 </style>
-
-</head></head>
 
 <body>
   <svg width="960" height="500"></svg>
@@ -65,24 +66,53 @@
 
     var xScale=d3.scaleLinear()
       .domain([0, d3.max(data, xValue)])
-      .range([100,iw]);
+      .range([0,iw]);
     var yScale=d3.scaleBand()
       .domain(data.map(yValue))
-      .range([0,ih]);
+      .range([30,ih])
+      .padding(0.1);
 
+    const xAxis = d3.axisBottom(xScale);
     const yAxis = d3.axisLeft(yScale).tickSize(0);
     const g = svg.append('g').attr('transform', `translate(${margin.left}, 0)`);
     yAxis(g.append('g'));
+    xAxis(g.append('g'))
 
-    svg.selectAll("div")
-    .data(data)
-    .enter()
-    .append("rect")
-    .attr("class", "bar")
-    .attr("y", d => yScale(yValue(d)))
-    .attr("x", 100)
-    .attr("width", d => xScale(xValue(d)))
-    .attr("height", yScale.bandwidth());
+    // svg.selectAll("div")
+    // .data(data)
+    // .enter()
+    // .append("rect")
+    // .attr("class", "bar")
+    // .attr("y", d => yScale(yValue(d)))
+    // .attr("x", 100)
+    // .attr("width", d => xScale(xValue(d)))
+    // .attr("height", yScale.bandwidth());
+
+    var bars = svg.selectAll("div")
+      .data(data)
+      .enter()
+      .append("g")
+ 
+    bars
+      .append("text")
+      .attr("class", "label2")
+      .attr("y", function(d) {
+        return yScale(d.name)+yScale.bandwidth()/2+4;
+      })
+      .attr("x", function (d) {
+        return xScale(d.value)+160;
+      })
+      .text(function(d) {
+        var f = d3.format(".2f");
+        return f(d.value);
+      });
+
+    bars.append("rect")
+      .attr("class", "bar")
+      .attr("y", d => yScale(yValue(d)))
+      .attr("x", 100)
+      .attr("width", d => xScale(xValue(d)))
+      .attr("height", yScale.bandwidth());
 
     </script>
     <h6>The chart shows COVID-19 fatalities in the past 30 days per 100,000 population. The results for the state of Illinois have been checked against the Johns Hopkins University dataset. However, this website is still being tested. To report issues, send email to <a href =mailto:anna@phoenix-computer.com>anna@phoenix-computer.com</a> </h6>
