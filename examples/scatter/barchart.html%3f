@@ -1,6 +1,37 @@
 
-{% extends "base.html" %}
-{% block content %}
+<!DOCTYPE html>
+<style>
+    /* set the CSS */
+  
+    .line {
+      fill: none;
+      stroke: steelblue;
+      stroke-width: 2px;
+    }
+  </style>
+<html>
+<head>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-166186377-1">
+  </script>
+
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-166186377-1');
+  </script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="stylesheets/style.css" />
+  <h2>Phoenix Technical Services: Anna Naden</h2>
+  <div>
+    <img class="logo" src="phoenix-logo.jpg">
+  </div>
+</head>
+<body id="body">
+    
 <script src="https://d3js.org/d3.v5.min.js" charset="utf-8"></script>
 <style>
     body {
@@ -74,15 +105,9 @@
 
     const xAxis = d3.axisBottom(xScale);
     const yAxis = d3.axisLeft(yScale).tickSize(0);
-
-    //Shift y axis to the right
     const g = svg.append('g').attr('transform', `translate(${margin.left}, 0)`);
-
-    // Decorate the y axis with values
     yAxis(g.append('g'));
-
-    //Decorate the x axis with tick marks
-    xAxis(g.append('g'))
+//     xAxis(g.append('g'))
 
     // svg.selectAll("div")
     // .data(data)
@@ -124,4 +149,20 @@
     <h6>The chart shows COVID-19 fatalities in the past 30 days per 100,000 population. The results for the state of Illinois have been checked against the Johns Hopkins University dataset. However, this website is still being tested. To report issues, send email to <a href =mailto:anna@phoenix-computer.com>anna@phoenix-computer.com</a> </h6>
   </body>
 
-{% endblock %}
+
+    <form action="index.html">
+      <br>
+          <button type="submit">Home</button>
+        </form>
+    </form>
+    <form action="us-hot2.html">
+      <br>
+          <button type="submit">COVID-19 Maps</button>
+        </form>
+    </form>
+    <form action="barchart.html">
+      <br>
+          <button type="submit">COVID-19 Barchart</button>
+        </form>
+    </form>
+  </body>

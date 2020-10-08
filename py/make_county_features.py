@@ -127,6 +127,6 @@ if make_temp_file:
             feature_set = {'type': 'FeatureCollection', 'features': states[state]}
             json.dump(feature_set,f)
             f.flush()
-            upload_file(path2, 'phoenix-anna-web-content', state+'.json')
+            upload_file(path2, 'phoenix-technical-services.com', state+'.json')
         f.close()
     print(f'\nuploaded county features {start_date} to {end_date}')
