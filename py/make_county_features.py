@@ -122,17 +122,17 @@ def get_counties_features():
 
 def get_world_features():
     config = get_config()
-    with open(config['FILES']['nation_coords'], 'r') as f:
+    with open(config['FILES']['nation_coords577'], 'r') as f:
         features = json.load(f)
     features = features['features']
     nations = {}
     for feature in features:
-        ISO_A3 = feature['properties']['ISO_A3']
+        ISO_A3 = feature['properties']['adm0_a3']
         if ISO_A3 not in nations:
             nations[ISO_A3] = []
     for feature in features:
-        ISO_A3 = feature['properties']['ISO_A3']
-        feature['properties']['name'] = feature['properties']['ADMIN']
+        ISO_A3 = feature['properties']['adm0_a3']
+        feature['properties']['name'] = feature['properties']['admin']
         nations[ISO_A3].append(feature)
     return nations
 
@@ -150,7 +150,7 @@ def update_county_features(states, deaths):
 def update_world_features(nations, deaths):
     for ISO_A3 in nations.keys():
         for feature in nations[ISO_A3]:
-            id = feature['properties']['ISO_A3']
+            id = feature['properties']['adm0_a3']
             feature['id'] = id
             deaths1 = 0
             if id in deaths.keys():
@@ -200,15 +200,34 @@ update_world_features(nations, world_deaths)
 #     json.dump(nations, f)
 
 #Upload
-for ISO_A3 in nations.keys():
-    print(ISO_A3)
-    with open(path + ISO_A3 + '.json', 'w') as f:
-        path2 = path + ISO_A3 + '.json'
-        feature_set = {'type': 'FeatureCollection', 'features': nations[ISO_A3]}
-        json.dump(feature_set, f)
-        f.flush()
-        upload_file(path2, 'phoenix-technical-services.com', ISO_A3+'.json')
+interval = f'{w_start_date},{w_end_date}'
+path2 = path + '*.json'
+feature_list = []
+for key in nations.keys():
+    f = nations[key][0]
+    feature_list.append(f)
+with open(path2, 'w') as f:
+    feature_obj = { 'interval': interval, 'type': 'FeatureCollection', 'features': feature_list}
+
+    # feature_obj = { 'interval': interval, 'feature_set': nations}
+    json.dump(feature_obj, f)
+    f.flush()
+    upload_file(path2, 'phoenix-technical-services.com', '*.json')
     f.close()
+print('world features uploaded')
+
+if False:
+    print('uploading individual countries')
+    for ISO_A3 in nations.keys():
+        print(ISO_A3)
+        with open(path + ISO_A3 + '.json', 'w') as f:
+            path2 = path + ISO_A3 + '.json'
+            feature_set = {'type': 'FeatureCollection', 'features': nations[ISO_A3]}
+            feature_obj = { 'interval': interval, 'feature_set': feature_set}
+            json.dump(feature_obj, f)
+            f.flush()
+            upload_file(path2, 'phoenix-technical-services.com', ISO_A3+'.json')
+        f.close()
 
 # Make and upload county features
 status, df_pops = county_pops_fips()
@@ -229,6 +248,8 @@ for state in states.keys():
     with open(path + state + '.json', 'w') as f:
         path2 = path + state + '.json'
         feature_set = {'type': 'FeatureCollection', 'features': states[state]}
+        interval = f'{w_start_date},{w_end_date}'
+        feature_obj = { 'interval': interval, 'feature_set': feature_set}
         json.dump(feature_set,f)
         f.flush()
         upload_file(path2, 'phoenix-technical-services.com', state+'.json')
