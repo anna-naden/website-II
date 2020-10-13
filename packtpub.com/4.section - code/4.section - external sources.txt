@@ -1,0 +1,5 @@
+video 5.1
+Insert d3.js library --> https://github.com/d3/
+
+video 5.4
+Modifying methods --> https://github.com/d3/d3-selection

@@ -84,16 +84,6 @@
     //Decorate the x axis with tick marks
     xAxis(g.append('g'))
 
-    // svg.selectAll("div")
-    // .data(data)
-    // .enter()
-    // .append("rect")
-    // .attr("class", "bar")
-    // .attr("y", d => yScale(yValue(d)))
-    // .attr("x", 100)
-    // .attr("width", d => xScale(xValue(d)))
-    // .attr("height", yScale.bandwidth());
-
     var bars = svg.selectAll("div")
       .data(data)
       .enter()

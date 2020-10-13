@@ -1,7 +1,7 @@
-bash: cannot set terminal process group (9366): Inappropriate ioctl for device
+bash: cannot set terminal process group (20816): Inappropriate ioctl for device
 bash: no job control in this shell
 Cloning into 'COVID-19'...
-pickle made - end data 2020-10-08 00:00:00
+pickle made - end data 2020-10-11 00:00:00
 AFG
 ALB
 DZA
@@ -183,249 +183,12 @@ YEM
 ZMB
 ZWE
 USA
-ABW
-/home/anna_user2/projects/website-II/json/ABW.json  1298 / 1298.0  (100.00%)AFG
-/home/anna_user2/projects/website-II/json/AFG.json  61830 / 61830.0  (100.00%)AGO
-/home/anna_user2/projects/website-II/json/AGO.json  69131 / 69131.0  (100.00%)AIA
-/home/anna_user2/projects/website-II/json/AIA.json  1381 / 1381.0  (100.00%)ALB
-/home/anna_user2/projects/website-II/json/ALB.json  22937 / 22937.0  (100.00%)ALA
-/home/anna_user2/projects/website-II/json/ALA.json  19308 / 19308.0  (100.00%)AND
-/home/anna_user2/projects/website-II/json/AND.json  2278 / 2278.0  (100.00%)ARE
-/home/anna_user2/projects/website-II/json/ARE.json  32646 / 32646.0  (100.00%)ARG
-/home/anna_user2/projects/website-II/json/ARG.json  198206 / 198206.0  (100.00%)ARM
-/home/anna_user2/projects/website-II/json/ARM.json  17704 / 17704.0  (100.00%)ASM
-/home/anna_user2/projects/website-II/json/ASM.json  2918 / 2918.0  (100.00%)ATA
-/home/anna_user2/projects/website-II/json/ATA.json  262144 / 979708.0  (26.76%)/home/anna_user2/projects/website-II/json/ATA.json  524288 / 979708.0  (53.51%)/home/anna_user2/projects/website-II/json/ATA.json  786432 / 979708.0  (80.27%)/home/anna_user2/projects/website-II/json/ATA.json  979708 / 979708.0  (100.00%)-99
-/home/anna_user2/projects/website-II/json/-99.json  64962 / 64962.0  (100.00%)ATF
-/home/anna_user2/projects/website-II/json/ATF.json  22088 / 22088.0  (100.00%)ATG
-/home/anna_user2/projects/website-II/json/ATG.json  4742 / 4742.0  (100.00%)AUS
-/home/anna_user2/projects/website-II/json/AUS.json  262144 / 571815.0  (45.84%)/home/anna_user2/projects/website-II/json/AUS.json  524288 / 571815.0  (91.69%)/home/anna_user2/projects/website-II/json/AUS.json  571815 / 571815.0  (100.00%)AUT
-/home/anna_user2/projects/website-II/json/AUT.json  45002 / 45002.0  (100.00%)AZE
-/home/anna_user2/projects/website-II/json/AZE.json  38756 / 38756.0  (100.00%)BDI
-/home/anna_user2/projects/website-II/json/BDI.json  12966 / 12966.0  (100.00%)BEL
-/home/anna_user2/projects/website-II/json/BEL.json  26217 / 26217.0  (100.00%)BEN
-/home/anna_user2/projects/website-II/json/BEN.json  25085 / 25085.0  (100.00%)BFA
-/home/anna_user2/projects/website-II/json/BFA.json  46003 / 46003.0  (100.00%)BGD
-/home/anna_user2/projects/website-II/json/BGD.json  91220 / 91220.0  (100.00%)BGR
-/home/anna_user2/projects/website-II/json/BGR.json  36059 / 36059.0  (100.00%)BHR
-/home/anna_user2/projects/website-II/json/BHR.json  2402 / 2402.0  (100.00%)BHS
-/home/anna_user2/projects/website-II/json/BHS.json  66352 / 66352.0  (100.00%)BIH
-/home/anna_user2/projects/website-II/json/BIH.json  25431 / 25431.0  (100.00%)BLM
-/home/anna_user2/projects/website-II/json/BLM.json  695 / 695.0  (100.00%)BLR
-/home/anna_user2/projects/website-II/json/BLR.json  48157 / 48157.0  (100.00%)BLZ
-/home/anna_user2/projects/website-II/json/BLZ.json  20573 / 20573.0  (100.00%)BMU
-/home/anna_user2/projects/website-II/json/BMU.json  3723 / 3723.0  (100.00%)BOL
-/home/anna_user2/projects/website-II/json/BOL.json  63709 / 63709.0  (100.00%)BRA
-/home/anna_user2/projects/website-II/json/BRA.json  262144 / 468220.0  (55.99%)/home/anna_user2/projects/website-II/json/BRA.json  468220 / 468220.0  (100.00%)BRB
-/home/anna_user2/projects/website-II/json/BRB.json  1690 / 1690.0  (100.00%)BRN
-/home/anna_user2/projects/website-II/json/BRN.json  6606 / 6606.0  (100.00%)BTN
-/home/anna_user2/projects/website-II/json/BTN.json  13448 / 13448.0  (100.00%)BWA
-/home/anna_user2/projects/website-II/json/BWA.json  40561 / 40561.0  (100.00%)CAF
-/home/anna_user2/projects/website-II/json/CAF.json  72854 / 72854.0  (100.00%)CAN
-/home/anna_user2/projects/website-II/json/CAN.json  262144 / 2779799.0  (9.43%)/home/anna_user2/projects/website-II/json/CAN.json  524288 / 2779799.0  (18.86%)/home/anna_user2/projects/website-II/json/CAN.json  786432 / 2779799.0  (28.29%)/home/anna_user2/projects/website-II/json/CAN.json  1048576 / 2779799.0  (37.72%)/home/anna_user2/projects/website-II/json/CAN.json  1310720 / 2779799.0  (47.15%)/home/anna_user2/projects/website-II/json/CAN.json  1572864 / 2779799.0  (56.58%)/home/anna_user2/projects/website-II/json/CAN.json  1835008 / 2779799.0  (66.01%)/home/anna_user2/projects/website-II/json/CAN.json  2097152 / 2779799.0  (75.44%)/home/anna_user2/projects/website-II/json/CAN.json  2359296 / 2779799.0  (84.87%)/home/anna_user2/projects/website-II/json/CAN.json  2621440 / 2779799.0  (94.30%)/home/anna_user2/projects/website-II/json/CAN.json  2779799 / 2779799.0  (100.00%)CHE
-/home/anna_user2/projects/website-II/json/CHE.json  30335 / 30335.0  (100.00%)CHL
-/home/anna_user2/projects/website-II/json/CHL.json  262144 / 722379.0  (36.29%)/home/anna_user2/projects/website-II/json/CHL.json  524288 / 722379.0  (72.58%)/home/anna_user2/projects/website-II/json/CHL.json  722379 / 722379.0  (100.00%)CHN
-/home/anna_user2/projects/website-II/json/CHN.json  262144 / 575151.0  (45.58%)/home/anna_user2/projects/website-II/json/CHN.json  524288 / 575151.0  (91.16%)/home/anna_user2/projects/website-II/json/CHN.json  575151 / 575151.0  (100.00%)CIV
-/home/anna_user2/projects/website-II/json/CIV.json  65827 / 65827.0  (100.00%)CMR
-/home/anna_user2/projects/website-II/json/CMR.json  59365 / 59365.0  (100.00%)COD
-/home/anna_user2/projects/website-II/json/COD.json  118744 / 118744.0  (100.00%)COG
-/home/anna_user2/projects/website-II/json/COG.json  55626 / 55626.0  (100.00%)COK
-/home/anna_user2/projects/website-II/json/COK.json  5940 / 5940.0  (100.00%)COL
-/home/anna_user2/projects/website-II/json/COL.json  135123 / 135123.0  (100.00%)COM
-/home/anna_user2/projects/website-II/json/COM.json  5543 / 5543.0  (100.00%)CPV
-/home/anna_user2/projects/website-II/json/CPV.json  17491 / 17491.0  (100.00%)CRI
-/home/anna_user2/projects/website-II/json/CRI.json  33815 / 33815.0  (100.00%)CUB
-/home/anna_user2/projects/website-II/json/CUB.json  111063 / 111063.0  (100.00%)CUW
-/home/anna_user2/projects/website-II/json/CUW.json  2058 / 2058.0  (100.00%)CYM
-/home/anna_user2/projects/website-II/json/CYM.json  3568 / 3568.0  (100.00%)CYP
-/home/anna_user2/projects/website-II/json/CYP.json  12645 / 12645.0  (100.00%)CZE
-/home/anna_user2/projects/website-II/json/CZE.json  37982 / 37982.0  (100.00%)DEU
-/home/anna_user2/projects/website-II/json/DEU.json  122262 / 122262.0  (100.00%)DJI
-/home/anna_user2/projects/website-II/json/DJI.json  8788 / 8788.0  (100.00%)DMA
-/home/anna_user2/projects/website-II/json/DMA.json  3376 / 3376.0  (100.00%)DNK
-/home/anna_user2/projects/website-II/json/DNK.json  87863 / 87863.0  (100.00%)DOM
-/home/anna_user2/projects/website-II/json/DOM.json  24050 / 24050.0  (100.00%)DZA
-/home/anna_user2/projects/website-II/json/DZA.json  50836 / 50836.0  (100.00%)ECU
-/home/anna_user2/projects/website-II/json/ECU.json  63084 / 63084.0  (100.00%)EGY
-/home/anna_user2/projects/website-II/json/EGY.json  77852 / 77852.0  (100.00%)ERI
-/home/anna_user2/projects/website-II/json/ERI.json  41404 / 41404.0  (100.00%)ESP
-/home/anna_user2/projects/website-II/json/ESP.json  121535 / 121535.0  (100.00%)EST
-/home/anna_user2/projects/website-II/json/EST.json  42535 / 42535.0  (100.00%)ETH
-/home/anna_user2/projects/website-II/json/ETH.json  43753 / 43753.0  (100.00%)FIN
-/home/anna_user2/projects/website-II/json/FIN.json  130448 / 130448.0  (100.00%)FJI
-/home/anna_user2/projects/website-II/json/FJI.json  62901 / 62901.0  (100.00%)FLK
-/home/anna_user2/projects/website-II/json/FLK.json  56933 / 56933.0  (100.00%)FRA
-/home/anna_user2/projects/website-II/json/FRA.json  187697 / 187697.0  (100.00%)FRO
-/home/anna_user2/projects/website-II/json/FRO.json  19994 / 19994.0  (100.00%)FSM
-/home/anna_user2/projects/website-II/json/FSM.json  10562 / 10562.0  (100.00%)GAB
-/home/anna_user2/projects/website-II/json/GAB.json  59918 / 59918.0  (100.00%)GBR
-/home/anna_user2/projects/website-II/json/GBR.json  262144 / 289700.0  (90.49%)/home/anna_user2/projects/website-II/json/GBR.json  289700 / 289700.0  (100.00%)GEO
-/home/anna_user2/projects/website-II/json/GEO.json  21721 / 21721.0  (100.00%)GGY
-/home/anna_user2/projects/website-II/json/GGY.json  2641 / 2641.0  (100.00%)GHA
-/home/anna_user2/projects/website-II/json/GHA.json  33934 / 33934.0  (100.00%)GIB
-/home/anna_user2/projects/website-II/json/GIB.json  506 / 506.0  (100.00%)GIN
-/home/anna_user2/projects/website-II/json/GIN.json  68192 / 68192.0  (100.00%)GMB
-/home/anna_user2/projects/website-II/json/GMB.json  17520 / 17520.0  (100.00%)GNB
-/home/anna_user2/projects/website-II/json/GNB.json  54882 / 54882.0  (100.00%)GNQ
-/home/anna_user2/projects/website-II/json/GNQ.json  10290 / 10290.0  (100.00%)GRC
-/home/anna_user2/projects/website-II/json/GRC.json  246883 / 246883.0  (100.00%)GRD
-/home/anna_user2/projects/website-II/json/GRD.json  2920 / 2920.0  (100.00%)GRL
-/home/anna_user2/projects/website-II/json/GRL.json  262144 / 822269.0  (31.88%)/home/anna_user2/projects/website-II/json/GRL.json  524288 / 822269.0  (63.76%)/home/anna_user2/projects/website-II/json/GRL.json  786432 / 822269.0  (95.64%)/home/anna_user2/projects/website-II/json/GRL.json  822269 / 822269.0  (100.00%)GTM
-/home/anna_user2/projects/website-II/json/GTM.json  19272 / 19272.0  (100.00%)GUM
-/home/anna_user2/projects/website-II/json/GUM.json  2225 / 2225.0  (100.00%)GUY
-/home/anna_user2/projects/website-II/json/GUY.json  46343 / 46343.0  (100.00%)HKG
-/home/anna_user2/projects/website-II/json/HKG.json  16570 / 16570.0  (100.00%)HMD
-/home/anna_user2/projects/website-II/json/HMD.json  2492 / 2492.0  (100.00%)HND
-/home/anna_user2/projects/website-II/json/HND.json  49406 / 49406.0  (100.00%)HRV
-/home/anna_user2/projects/website-II/json/HRV.json  95105 / 95105.0  (100.00%)HTI
-/home/anna_user2/projects/website-II/json/HTI.json  26939 / 26939.0  (100.00%)HUN
-/home/anna_user2/projects/website-II/json/HUN.json  34785 / 34785.0  (100.00%)IDN
-/home/anna_user2/projects/website-II/json/IDN.json  262144 / 805068.0  (32.56%)/home/anna_user2/projects/website-II/json/IDN.json  524288 / 805068.0  (65.12%)/home/anna_user2/projects/website-II/json/IDN.json  786432 / 805068.0  (97.69%)/home/anna_user2/projects/website-II/json/IDN.json  805068 / 805068.0  (100.00%)IMN
-/home/anna_user2/projects/website-II/json/IMN.json  3198 / 3198.0  (100.00%)IND
-/home/anna_user2/projects/website-II/json/IND.json  262144 / 311777.0  (84.08%)/home/anna_user2/projects/website-II/json/IND.json  311777 / 311777.0  (100.00%)IOT
-/home/anna_user2/projects/website-II/json/IOT.json  4424 / 4424.0  (100.00%)IRL
-/home/anna_user2/projects/website-II/json/IRL.json  98009 / 98009.0  (100.00%)IRN
-/home/anna_user2/projects/website-II/json/IRN.json  110368 / 110368.0  (100.00%)IRQ
-/home/anna_user2/projects/website-II/json/IRQ.json  34276 / 34276.0  (100.00%)ISL
-/home/anna_user2/projects/website-II/json/ISL.json  128041 / 128041.0  (100.00%)ISR
-/home/anna_user2/projects/website-II/json/ISR.json  17221 / 17221.0  (100.00%)ITA
-/home/anna_user2/projects/website-II/json/ITA.json  135314 / 135314.0  (100.00%)JAM
-/home/anna_user2/projects/website-II/json/JAM.json  10758 / 10758.0  (100.00%)JEY
-/home/anna_user2/projects/website-II/json/JEY.json  2120 / 2120.0  (100.00%)JOR
-/home/anna_user2/projects/website-II/json/JOR.json  15177 / 15177.0  (100.00%)JPN
-/home/anna_user2/projects/website-II/json/JPN.json  262144 / 281162.0  (93.24%)/home/anna_user2/projects/website-II/json/JPN.json  281162 / 281162.0  (100.00%)KAZ
-/home/anna_user2/projects/website-II/json/KAZ.json  169175 / 169175.0  (100.00%)KEN
-/home/anna_user2/projects/website-II/json/KEN.json  35713 / 35713.0  (100.00%)KGZ
-/home/anna_user2/projects/website-II/json/KGZ.json  48647 / 48647.0  (100.00%)KHM
-/home/anna_user2/projects/website-II/json/KHM.json  50592 / 50592.0  (100.00%)KIR
-/home/anna_user2/projects/website-II/json/KIR.json  29621 / 29621.0  (100.00%)KNA
-/home/anna_user2/projects/website-II/json/KNA.json  2024 / 2024.0  (100.00%)KOR
-/home/anna_user2/projects/website-II/json/KOR.json  124013 / 124013.0  (100.00%)KWT
-/home/anna_user2/projects/website-II/json/KWT.json  10311 / 10311.0  (100.00%)LAO
-/home/anna_user2/projects/website-II/json/LAO.json  73637 / 73637.0  (100.00%)LBN
-/home/anna_user2/projects/website-II/json/LBN.json  12904 / 12904.0  (100.00%)LBR
-/home/anna_user2/projects/website-II/json/LBR.json  28753 / 28753.0  (100.00%)LBY
-/home/anna_user2/projects/website-II/json/LBY.json  27296 / 27296.0  (100.00%)LCA
-/home/anna_user2/projects/website-II/json/LCA.json  2318 / 2318.0  (100.00%)LIE
-/home/anna_user2/projects/website-II/json/LIE.json  1399 / 1399.0  (100.00%)LKA
-/home/anna_user2/projects/website-II/json/LKA.json  35585 / 35585.0  (100.00%)LSO
-/home/anna_user2/projects/website-II/json/LSO.json  13889 / 13889.0  (100.00%)LTU
-/home/anna_user2/projects/website-II/json/LTU.json  23108 / 23108.0  (100.00%)LUX
-/home/anna_user2/projects/website-II/json/LUX.json  8103 / 8103.0  (100.00%)LVA
-/home/anna_user2/projects/website-II/json/LVA.json  22377 / 22377.0  (100.00%)MAC
-/home/anna_user2/projects/website-II/json/MAC.json  4064 / 4064.0  (100.00%)MAF
-/home/anna_user2/projects/website-II/json/MAF.json  1221 / 1221.0  (100.00%)MAR
-/home/anna_user2/projects/website-II/json/MAR.json  42531 / 42531.0  (100.00%)MCO
-/home/anna_user2/projects/website-II/json/MCO.json  717 / 717.0  (100.00%)MDA
-/home/anna_user2/projects/website-II/json/MDA.json  29624 / 29624.0  (100.00%)MDG
-/home/anna_user2/projects/website-II/json/MDG.json  68822 / 68822.0  (100.00%)MDV
-/home/anna_user2/projects/website-II/json/MDV.json  59941 / 59941.0  (100.00%)MEX
-/home/anna_user2/projects/website-II/json/MEX.json  262144 / 309693.0  (84.65%)/home/anna_user2/projects/website-II/json/MEX.json  309693 / 309693.0  (100.00%)MHL
-/home/anna_user2/projects/website-II/json/MHL.json  8870 / 8870.0  (100.00%)MKD
-/home/anna_user2/projects/website-II/json/MKD.json  15107 / 15107.0  (100.00%)MLI
-/home/anna_user2/projects/website-II/json/MLI.json  73256 / 73256.0  (100.00%)MLT
-/home/anna_user2/projects/website-II/json/MLT.json  2475 / 2475.0  (100.00%)MMR
-/home/anna_user2/projects/website-II/json/MMR.json  185189 / 185189.0  (100.00%)MNE
-/home/anna_user2/projects/website-II/json/MNE.json  14896 / 14896.0  (100.00%)MNG
-/home/anna_user2/projects/website-II/json/MNG.json  60778 / 60778.0  (100.00%)MNP
-/home/anna_user2/projects/website-II/json/MNP.json  7777 / 7777.0  (100.00%)MOZ
-/home/anna_user2/projects/website-II/json/MOZ.json  97636 / 97636.0  (100.00%)MRT
-/home/anna_user2/projects/website-II/json/MRT.json  48364 / 48364.0  (100.00%)MSR
-/home/anna_user2/projects/website-II/json/MSR.json  1187 / 1187.0  (100.00%)MUS
-/home/anna_user2/projects/website-II/json/MUS.json  4958 / 4958.0  (100.00%)MWI
-/home/anna_user2/projects/website-II/json/MWI.json  34196 / 34196.0  (100.00%)MYS
-/home/anna_user2/projects/website-II/json/MYS.json  103482 / 103482.0  (100.00%)NAM
-/home/anna_user2/projects/website-II/json/NAM.json  50163 / 50163.0  (100.00%)NCL
-/home/anna_user2/projects/website-II/json/NCL.json  41445 / 41445.0  (100.00%)NER
-/home/anna_user2/projects/website-II/json/NER.json  42881 / 42881.0  (100.00%)NFK
-/home/anna_user2/projects/website-II/json/NFK.json  1309 / 1309.0  (100.00%)NGA
-/home/anna_user2/projects/website-II/json/NGA.json  71620 / 71620.0  (100.00%)NIC
-/home/anna_user2/projects/website-II/json/NIC.json  38893 / 38893.0  (100.00%)NIU
-/home/anna_user2/projects/website-II/json/NIU.json  1749 / 1749.0  (100.00%)NLD
-/home/anna_user2/projects/website-II/json/NLD.json  34380 / 34380.0  (100.00%)NOR
-/home/anna_user2/projects/website-II/json/NOR.json  262144 / 633154.0  (41.40%)/home/anna_user2/projects/website-II/json/NOR.json  524288 / 633154.0  (82.81%)/home/anna_user2/projects/website-II/json/NOR.json  633154 / 633154.0  (100.00%)NPL
-/home/anna_user2/projects/website-II/json/NPL.json  41649 / 41649.0  (100.00%)NRU
-/home/anna_user2/projects/website-II/json/NRU.json  567 / 567.0  (100.00%)NZL
-/home/anna_user2/projects/website-II/json/NZL.json  188587 / 188587.0  (100.00%)OMN
-/home/anna_user2/projects/website-II/json/OMN.json  42104 / 42104.0  (100.00%)PAK
-/home/anna_user2/projects/website-II/json/PAK.json  85942 / 85942.0  (100.00%)PAN
-/home/anna_user2/projects/website-II/json/PAN.json  81713 / 81713.0  (100.00%)PCN
-/home/anna_user2/projects/website-II/json/PCN.json  1899 / 1899.0  (100.00%)PER
-/home/anna_user2/projects/website-II/json/PER.json  101669 / 101669.0  (100.00%)PHL
-/home/anna_user2/projects/website-II/json/PHL.json  262144 / 303601.0  (86.34%)/home/anna_user2/projects/website-II/json/PHL.json  303601 / 303601.0  (100.00%)PLW
-/home/anna_user2/projects/website-II/json/PLW.json  6900 / 6900.0  (100.00%)PNG
-/home/anna_user2/projects/website-II/json/PNG.json  199177 / 199177.0  (100.00%)POL
-/home/anna_user2/projects/website-II/json/POL.json  54698 / 54698.0  (100.00%)PRI
-/home/anna_user2/projects/website-II/json/PRI.json  12709 / 12709.0  (100.00%)PRK
-/home/anna_user2/projects/website-II/json/PRK.json  72580 / 72580.0  (100.00%)PRT
-/home/anna_user2/projects/website-II/json/PRT.json  51667 / 51667.0  (100.00%)PRY
-/home/anna_user2/projects/website-II/json/PRY.json  49060 / 49060.0  (100.00%)PSE
-/home/anna_user2/projects/website-II/json/PSE.json  7665 / 7665.0  (100.00%)PYF
-/home/anna_user2/projects/website-II/json/PYF.json  45349 / 45349.0  (100.00%)QAT
-/home/anna_user2/projects/website-II/json/QAT.json  10064 / 10064.0  (100.00%)ROU
-/home/anna_user2/projects/website-II/json/ROU.json  49055 / 49055.0  (100.00%)RUS
-/home/anna_user2/projects/website-II/json/RUS.json  262144 / 1450814.0  (18.07%)/home/anna_user2/projects/website-II/json/RUS.json  524288 / 1450814.0  (36.14%)/home/anna_user2/projects/website-II/json/RUS.json  786432 / 1450814.0  (54.21%)/home/anna_user2/projects/website-II/json/RUS.json  1048576 / 1450814.0  (72.28%)/home/anna_user2/projects/website-II/json/RUS.json  1310720 / 1450814.0  (90.34%)/home/anna_user2/projects/website-II/json/RUS.json  1450814 / 1450814.0  (100.00%)RWA
-/home/anna_user2/projects/website-II/json/RWA.json  13586 / 13586.0  (100.00%)ESH
-/home/anna_user2/projects/website-II/json/ESH.json  12518 / 12518.0  (100.00%)SAU
-/home/anna_user2/projects/website-II/json/SAU.json  95995 / 95995.0  (100.00%)SDN
-/home/anna_user2/projects/website-II/json/SDN.json  48135 / 48135.0  (100.00%)SSD
-/home/anna_user2/projects/website-II/json/SSD.json  47018 / 47018.0  (100.00%)SEN
-/home/anna_user2/projects/website-II/json/SEN.json  58761 / 58761.0  (100.00%)SGP
-/home/anna_user2/projects/website-II/json/SGP.json  1852 / 1852.0  (100.00%)SGS
-/home/anna_user2/projects/website-II/json/SGS.json  25132 / 25132.0  (100.00%)SHN
-/home/anna_user2/projects/website-II/json/SHN.json  3788 / 3788.0  (100.00%)SLB
-/home/anna_user2/projects/website-II/json/SLB.json  90922 / 90922.0  (100.00%)SLE
-/home/anna_user2/projects/website-II/json/SLE.json  29157 / 29157.0  (100.00%)SLV
-/home/anna_user2/projects/website-II/json/SLV.json  16045 / 16045.0  (100.00%)SMR
-/home/anna_user2/projects/website-II/json/SMR.json  1001 / 1001.0  (100.00%)SOM
-/home/anna_user2/projects/website-II/json/SOM.json  27384 / 27384.0  (100.00%)SPM
-/home/anna_user2/projects/website-II/json/SPM.json  3622 / 3622.0  (100.00%)SRB
-/home/anna_user2/projects/website-II/json/SRB.json  38201 / 38201.0  (100.00%)STP
-/home/anna_user2/projects/website-II/json/STP.json  4064 / 4064.0  (100.00%)SUR
-/home/anna_user2/projects/website-II/json/SUR.json  30553 / 30553.0  (100.00%)SVK
-/home/anna_user2/projects/website-II/json/SVK.json  23597 / 23597.0  (100.00%)SVN
-/home/anna_user2/projects/website-II/json/SVN.json  21428 / 21428.0  (100.00%)SWE
-/home/anna_user2/projects/website-II/json/SWE.json  188589 / 188589.0  (100.00%)SWZ
-/home/anna_user2/projects/website-II/json/SWZ.json  3856 / 3856.0  (100.00%)SXM
-/home/anna_user2/projects/website-II/json/SXM.json  602 / 602.0  (100.00%)SYC
-/home/anna_user2/projects/website-II/json/SYC.json  13885 / 13885.0  (100.00%)SYR
-/home/anna_user2/projects/website-II/json/SYR.json  24319 / 24319.0  (100.00%)TCA
-/home/anna_user2/projects/website-II/json/TCA.json  9057 / 9057.0  (100.00%)TCD
-/home/anna_user2/projects/website-II/json/TCD.json  50186 / 50186.0  (100.00%)TGO
-/home/anna_user2/projects/website-II/json/TGO.json  19757 / 19757.0  (100.00%)THA
-/home/anna_user2/projects/website-II/json/THA.json  134997 / 134997.0  (100.00%)TJK
-/home/anna_user2/projects/website-II/json/TJK.json  50478 / 50478.0  (100.00%)TKM
-/home/anna_user2/projects/website-II/json/TKM.json  66854 / 66854.0  (100.00%)TLS
-/home/anna_user2/projects/website-II/json/TLS.json  11856 / 11856.0  (100.00%)TON
-/home/anna_user2/projects/website-II/json/TON.json  9304 / 9304.0  (100.00%)TTO
-/home/anna_user2/projects/website-II/json/TTO.json  8513 / 8513.0  (100.00%)TUN
-/home/anna_user2/projects/website-II/json/TUN.json  28589 / 28589.0  (100.00%)TUR
-/home/anna_user2/projects/website-II/json/TUR.json  147033 / 147033.0  (100.00%)TUV
-/home/anna_user2/projects/website-II/json/TUV.json  3117 / 3117.0  (100.00%)TWN
-/home/anna_user2/projects/website-II/json/TWN.json  23002 / 23002.0  (100.00%)TZA
-/home/anna_user2/projects/website-II/json/TZA.json  73078 / 73078.0  (100.00%)UGA
-/home/anna_user2/projects/website-II/json/UGA.json  25059 / 25059.0  (100.00%)UKR
-/home/anna_user2/projects/website-II/json/UKR.json  120914 / 120914.0  (100.00%)UMI
-/home/anna_user2/projects/website-II/json/UMI.json  5446 / 5446.0  (100.00%)URY
-/home/anna_user2/projects/website-II/json/URY.json  24977 / 24977.0  (100.00%)USA
-/home/anna_user2/projects/website-II/json/USA.json  262144 / 1486532.0  (17.63%)/home/anna_user2/projects/website-II/json/USA.json  524288 / 1486532.0  (35.27%)/home/anna_user2/projects/website-II/json/USA.json  786432 / 1486532.0  (52.90%)/home/anna_user2/projects/website-II/json/USA.json  1048576 / 1486532.0  (70.54%)/home/anna_user2/projects/website-II/json/USA.json  1310720 / 1486532.0  (88.17%)/home/anna_user2/projects/website-II/json/USA.json  1486532 / 1486532.0  (100.00%)UZB
-/home/anna_user2/projects/website-II/json/UZB.json  67623 / 67623.0  (100.00%)VAT
-/home/anna_user2/projects/website-II/json/VAT.json  499 / 499.0  (100.00%)VCT
-/home/anna_user2/projects/website-II/json/VCT.json  3772 / 3772.0  (100.00%)VEN
-/home/anna_user2/projects/website-II/json/VEN.json  132471 / 132471.0  (100.00%)VGB
-/home/anna_user2/projects/website-II/json/VGB.json  4106 / 4106.0  (100.00%)VIR
-/home/anna_user2/projects/website-II/json/VIR.json  3194 / 3194.0  (100.00%)VNM
-/home/anna_user2/projects/website-II/json/VNM.json  171469 / 171469.0  (100.00%)VUT
-/home/anna_user2/projects/website-II/json/VUT.json  42901 / 42901.0  (100.00%)WLF
-/home/anna_user2/projects/website-II/json/WLF.json  1897 / 1897.0  (100.00%)WSM
-/home/anna_user2/projects/website-II/json/WSM.json  5929 / 5929.0  (100.00%)YEM
-/home/anna_user2/projects/website-II/json/YEM.json  42350 / 42350.0  (100.00%)ZAF
-/home/anna_user2/projects/website-II/json/ZAF.json  92539 / 92539.0  (100.00%)ZMB
-/home/anna_user2/projects/website-II/json/ZMB.json  63728 / 63728.0  (100.00%)ZWE
-/home/anna_user2/projects/website-II/json/ZWE.json  32472 / 32472.0  (100.00%)/home/anna_user2/projects/website-II/json/01.json  262144 / 507047.0  (51.70%)/home/anna_user2/projects/website-II/json/01.json  507047 / 507047.0  (100.00%)/home/anna_user2/projects/website-II/json/02.json  262144 / 469352.0  (55.85%)/home/anna_user2/projects/website-II/json/02.json  469352 / 469352.0  (100.00%)/home/anna_user2/projects/website-II/json/04.json  253599 / 253599.0  (100.00%)/home/anna_user2/projects/website-II/json/05.json  262144 / 566044.0  (46.31%)/home/anna_user2/projects/website-II/json/05.json  524288 / 566044.0  (92.62%)/home/anna_user2/projects/website-II/json/05.json  566044 / 566044.0  (100.00%)/home/anna_user2/projects/website-II/json/06.json  262144 / 978758.0  (26.78%)/home/anna_user2/projects/website-II/json/06.json  524288 / 978758.0  (53.57%)/home/anna_user2/projects/website-II/json/06.json  786432 / 978758.0  (80.35%)/home/anna_user2/projects/website-II/json/06.json  978758 / 978758.0  (100.00%)/home/anna_user2/projects/website-II/json/08.json  262144 / 485975.0  (53.94%)/home/anna_user2/projects/website-II/json/08.json  485975 / 485975.0  (100.00%)/home/anna_user2/projects/website-II/json/09.json  55508 / 55508.0  (100.00%)/home/anna_user2/projects/website-II/json/10.json  24878 / 24878.0  (100.00%)/home/anna_user2/projects/website-II/json/11.json  3805 / 3805.0  (100.00%)/home/anna_user2/projects/website-II/json/12.json  262144 / 595090.0  (44.05%)/home/anna_user2/projects/website-II/json/12.json  524288 / 595090.0  (88.10%)/home/anna_user2/projects/website-II/json/12.json  595090 / 595090.0  (100.00%)/home/anna_user2/projects/website-II/json/13.json  262144 / 1019215.0  (25.72%)/home/anna_user2/projects/website-II/json/13.json  524288 / 1019215.0  (51.44%)/home/anna_user2/projects/website-II/json/13.json  786432 / 1019215.0  (77.16%)/home/anna_user2/projects/website-II/json/13.json  1019215 / 1019215.0  (100.00%)/home/anna_user2/projects/website-II/json/15.json  58227 / 58227.0  (100.00%)/home/anna_user2/projects/website-II/json/16.json  262144 / 475222.0  (55.16%)/home/anna_user2/projects/website-II/json/16.json  475222 / 475222.0  (100.00%)/home/anna_user2/projects/website-II/json/17.json  262144 / 468849.0  (55.91%)/home/anna_user2/projects/website-II/json/17.json  468849 / 468849.0  (100.00%)/home/anna_user2/projects/website-II/json/18.json  262144 / 316201.0  (82.90%)/home/anna_user2/projects/website-II/json/18.json  316201 / 316201.0  (100.00%)/home/anna_user2/projects/website-II/json/19.json  258151 / 258151.0  (100.00%)/home/anna_user2/projects/website-II/json/20.json  256957 / 256957.0  (100.00%)/home/anna_user2/projects/website-II/json/21.json  262144 / 967620.0  (27.09%)/home/anna_user2/projects/website-II/json/21.json  524288 / 967620.0  (54.18%)/home/anna_user2/projects/website-II/json/21.json  786432 / 967620.0  (81.27%)/home/anna_user2/projects/website-II/json/21.json  967620 / 967620.0  (100.00%)/home/anna_user2/projects/website-II/json/22.json  262144 / 658889.0  (39.79%)/home/anna_user2/projects/website-II/json/22.json  524288 / 658889.0  (79.57%)/home/anna_user2/projects/website-II/json/22.json  658889 / 658889.0  (100.00%)/home/anna_user2/projects/website-II/json/23.json  223050 / 223050.0  (100.00%)/home/anna_user2/projects/website-II/json/24.json  262144 / 266229.0  (98.47%)/home/anna_user2/projects/website-II/json/24.json  266229 / 266229.0  (100.00%)/home/anna_user2/projects/website-II/json/25.json  145132 / 145132.0  (100.00%)/home/anna_user2/projects/website-II/json/26.json  262144 / 430718.0  (60.86%)/home/anna_user2/projects/website-II/json/26.json  430718 / 430718.0  (100.00%)/home/anna_user2/projects/website-II/json/27.json  262144 / 447544.0  (58.57%)/home/anna_user2/projects/website-II/json/27.json  447544 / 447544.0  (100.00%)/home/anna_user2/projects/website-II/json/28.json  262144 / 422016.0  (62.12%)/home/anna_user2/projects/website-II/json/28.json  422016 / 422016.0  (100.00%)/home/anna_user2/projects/website-II/json/29.json  262144 / 516059.0  (50.80%)/home/anna_user2/projects/website-II/json/29.json  516059 / 516059.0  (100.00%)/home/anna_user2/projects/website-II/json/30.json  262144 / 633473.0  (41.38%)/home/anna_user2/projects/website-II/json/30.json  524288 / 633473.0  (82.76%)/home/anna_user2/projects/website-II/json/30.json  633473 / 633473.0  (100.00%)/home/anna_user2/projects/website-II/json/31.json  262144 / 278084.0  (94.27%)/home/anna_user2/projects/website-II/json/31.json  278084 / 278084.0  (100.00%)/home/anna_user2/projects/website-II/json/32.json  102207 / 102207.0  (100.00%)/home/anna_user2/projects/website-II/json/33.json  67267 / 67267.0  (100.00%)/home/anna_user2/projects/website-II/json/34.json  211549 / 211549.0  (100.00%)/home/anna_user2/projects/website-II/json/35.json  169309 / 169309.0  (100.00%)/home/anna_user2/projects/website-II/json/36.json  262144 / 445310.0  (58.87%)/home/anna_user2/projects/website-II/json/36.json  445310 / 445310.0  (100.00%)/home/anna_user2/projects/website-II/json/37.json  262144 / 775697.0  (33.79%)/home/anna_user2/projects/website-II/json/37.json  524288 / 775697.0  (67.59%)/home/anna_user2/projects/website-II/json/37.json  775697 / 775697.0  (100.00%)/home/anna_user2/projects/website-II/json/38.json  262144 / 272129.0  (96.33%)/home/anna_user2/projects/website-II/json/38.json  272129 / 272129.0  (100.00%)/home/anna_user2/projects/website-II/json/39.json  262144 / 325380.0  (80.57%)/home/anna_user2/projects/website-II/json/39.json  325380 / 325380.0  (100.00%)/home/anna_user2/projects/website-II/json/40.json  262144 / 391586.0  (66.94%)/home/anna_user2/projects/website-II/json/40.json  391586 / 391586.0  (100.00%)/home/anna_user2/projects/website-II/json/41.json  262144 / 350124.0  (74.87%)/home/anna_user2/projects/website-II/json/41.json  350124 / 350124.0  (100.00%)/home/anna_user2/projects/website-II/json/42.json  262144 / 435414.0  (60.21%)/home/anna_user2/projects/website-II/json/42.json  435414 / 435414.0  (100.00%)/home/anna_user2/projects/website-II/json/44.json  24966 / 24966.0  (100.00%)/home/anna_user2/projects/website-II/json/45.json  262144 / 530220.0  (49.44%)/home/anna_user2/projects/website-II/json/45.json  524288 / 530220.0  (98.88%)/home/anna_user2/projects/website-II/json/45.json  530220 / 530220.0  (100.00%)/home/anna_user2/projects/website-II/json/46.json  262144 / 304973.0  (85.96%)/home/anna_user2/projects/website-II/json/46.json  304973 / 304973.0  (100.00%)/home/anna_user2/projects/website-II/json/47.json  262144 / 726492.0  (36.08%)/home/anna_user2/projects/website-II/json/47.json  524288 / 726492.0  (72.17%)/home/anna_user2/projects/website-II/json/47.json  726492 / 726492.0  (100.00%)/home/anna_user2/projects/website-II/json/48.json  262144 / 1564769.0  (16.75%)/home/anna_user2/projects/website-II/json/48.json  524288 / 1564769.0  (33.51%)/home/anna_user2/projects/website-II/json/48.json  786432 / 1564769.0  (50.26%)/home/anna_user2/projects/website-II/json/48.json  1048576 / 1564769.0  (67.01%)/home/anna_user2/projects/website-II/json/48.json  1310720 / 1564769.0  (83.76%)/home/anna_user2/projects/website-II/json/48.json  1564769 / 1564769.0  (100.00%)/home/anna_user2/projects/website-II/json/49.json  262144 / 345351.0  (75.91%)/home/anna_user2/projects/website-II/json/49.json  345351 / 345351.0  (100.00%)/home/anna_user2/projects/website-II/json/50.json  69323 / 69323.0  (100.00%)/home/anna_user2/projects/website-II/json/51.json  262144 / 952731.0  (27.52%)/home/anna_user2/projects/website-II/json/51.json  524288 / 952731.0  (55.03%)/home/anna_user2/projects/website-II/json/51.json  786432 / 952731.0  (82.55%)/home/anna_user2/projects/website-II/json/51.json  952731 / 952731.0  (100.00%)/home/anna_user2/projects/website-II/json/53.json  262144 / 459120.0  (57.10%)/home/anna_user2/projects/website-II/json/53.json  459120 / 459120.0  (100.00%)/home/anna_user2/projects/website-II/json/54.json  262144 / 472519.0  (55.48%)/home/anna_user2/projects/website-II/json/54.json  472519 / 472519.0  (100.00%)/home/anna_user2/projects/website-II/json/55.json  262144 / 360855.0  (72.65%)/home/anna_user2/projects/website-II/json/55.json  360855 / 360855.0  (100.00%)/home/anna_user2/projects/website-II/json/56.json  131423 / 131423.0  (100.00%)
-uploaded county features 2020-09-08 00:00:00 to 2020-10-08 00:00:00
+/home/anna_user2/projects/website-II/json*.json  262144 / 628471.0  (41.71%)/home/anna_user2/projects/website-II/json*.json  524288 / 628471.0  (83.42%)/home/anna_user2/projects/website-II/json*.json  628471 / 628471.0  (100.00%)world features uploaded
+/home/anna_user2/projects/website-II/json01.json  262144 / 507017.0  (51.70%)/home/anna_user2/projects/website-II/json01.json  507017 / 507017.0  (100.00%)/home/anna_user2/projects/website-II/json02.json  262144 / 469352.0  (55.85%)/home/anna_user2/projects/website-II/json02.json  469352 / 469352.0  (100.00%)/home/anna_user2/projects/website-II/json04.json  253609 / 253609.0  (100.00%)/home/anna_user2/projects/website-II/json05.json  262144 / 566035.0  (46.31%)/home/anna_user2/projects/website-II/json05.json  524288 / 566035.0  (92.62%)/home/anna_user2/projects/website-II/json05.json  566035 / 566035.0  (100.00%)/home/anna_user2/projects/website-II/json06.json  262144 / 978769.0  (26.78%)/home/anna_user2/projects/website-II/json06.json  524288 / 978769.0  (53.57%)/home/anna_user2/projects/website-II/json06.json  786432 / 978769.0  (80.35%)/home/anna_user2/projects/website-II/json06.json  978769 / 978769.0  (100.00%)/home/anna_user2/projects/website-II/json08.json  262144 / 485948.0  (53.94%)/home/anna_user2/projects/website-II/json08.json  485948 / 485948.0  (100.00%)/home/anna_user2/projects/website-II/json09.json  55507 / 55507.0  (100.00%)/home/anna_user2/projects/website-II/json10.json  24879 / 24879.0  (100.00%)/home/anna_user2/projects/website-II/json11.json  3804 / 3804.0  (100.00%)/home/anna_user2/projects/website-II/json12.json  262144 / 595086.0  (44.05%)/home/anna_user2/projects/website-II/json12.json  524288 / 595086.0  (88.10%)/home/anna_user2/projects/website-II/json12.json  595086 / 595086.0  (100.00%)/home/anna_user2/projects/website-II/json13.json  262144 / 1019233.0  (25.72%)/home/anna_user2/projects/website-II/json13.json  524288 / 1019233.0  (51.44%)/home/anna_user2/projects/website-II/json13.json  786432 / 1019233.0  (77.16%)/home/anna_user2/projects/website-II/json13.json  1019233 / 1019233.0  (100.00%)/home/anna_user2/projects/website-II/json15.json  58227 / 58227.0  (100.00%)/home/anna_user2/projects/website-II/json16.json  262144 / 475219.0  (55.16%)/home/anna_user2/projects/website-II/json16.json  475219 / 475219.0  (100.00%)/home/anna_user2/projects/website-II/json17.json  262144 / 468856.0  (55.91%)/home/anna_user2/projects/website-II/json17.json  468856 / 468856.0  (100.00%)/home/anna_user2/projects/website-II/json18.json  262144 / 316213.0  (82.90%)/home/anna_user2/projects/website-II/json18.json  316213 / 316213.0  (100.00%)/home/anna_user2/projects/website-II/json19.json  258116 / 258116.0  (100.00%)/home/anna_user2/projects/website-II/json20.json  256882 / 256882.0  (100.00%)/home/anna_user2/projects/website-II/json21.json  262144 / 967549.0  (27.09%)/home/anna_user2/projects/website-II/json21.json  524288 / 967549.0  (54.19%)/home/anna_user2/projects/website-II/json21.json  786432 / 967549.0  (81.28%)/home/anna_user2/projects/website-II/json21.json  967549 / 967549.0  (100.00%)/home/anna_user2/projects/website-II/json22.json  262144 / 658857.0  (39.79%)/home/anna_user2/projects/website-II/json22.json  524288 / 658857.0  (79.58%)/home/anna_user2/projects/website-II/json22.json  658857 / 658857.0  (100.00%)/home/anna_user2/projects/website-II/json23.json  223050 / 223050.0  (100.00%)/home/anna_user2/projects/website-II/json24.json  262144 / 266216.0  (98.47%)/home/anna_user2/projects/website-II/json24.json  266216 / 266216.0  (100.00%)/home/anna_user2/projects/website-II/json25.json  145131 / 145131.0  (100.00%)/home/anna_user2/projects/website-II/json26.json  262144 / 430676.0  (60.87%)/home/anna_user2/projects/website-II/json26.json  430676 / 430676.0  (100.00%)/home/anna_user2/projects/website-II/json27.json  262144 / 447577.0  (58.57%)/home/anna_user2/projects/website-II/json27.json  447577 / 447577.0  (100.00%)/home/anna_user2/projects/website-II/json28.json  262144 / 421992.0  (62.12%)/home/anna_user2/projects/website-II/json28.json  421992 / 421992.0  (100.00%)/home/anna_user2/projects/website-II/json29.json  262144 / 516187.0  (50.78%)/home/anna_user2/projects/website-II/json29.json  516187 / 516187.0  (100.00%)/home/anna_user2/projects/website-II/json30.json  262144 / 633444.0  (41.38%)/home/anna_user2/projects/website-II/json30.json  524288 / 633444.0  (82.77%)/home/anna_user2/projects/website-II/json30.json  633444 / 633444.0  (100.00%)/home/anna_user2/projects/website-II/json31.json  262144 / 278014.0  (94.29%)/home/anna_user2/projects/website-II/json31.json  278014 / 278014.0  (100.00%)/home/anna_user2/projects/website-II/json32.json  102208 / 102208.0  (100.00%)/home/anna_user2/projects/website-II/json33.json  67280 / 67280.0  (100.00%)/home/anna_user2/projects/website-II/json34.json  211564 / 211564.0  (100.00%)/home/anna_user2/projects/website-II/json35.json  169293 / 169293.0  (100.00%)/home/anna_user2/projects/website-II/json36.json  262144 / 445337.0  (58.86%)/home/anna_user2/projects/website-II/json36.json  445337 / 445337.0  (100.00%)/home/anna_user2/projects/website-II/json37.json  262144 / 775718.0  (33.79%)/home/anna_user2/projects/website-II/json37.json  524288 / 775718.0  (67.59%)/home/anna_user2/projects/website-II/json37.json  775718 / 775718.0  (100.00%)/home/anna_user2/projects/website-II/json38.json  262144 / 272199.0  (96.31%)/home/anna_user2/projects/website-II/json38.json  272199 / 272199.0  (100.00%)/home/anna_user2/projects/website-II/json39.json  262144 / 325302.0  (80.58%)/home/anna_user2/projects/website-II/json39.json  325302 / 325302.0  (100.00%)/home/anna_user2/projects/website-II/json40.json  262144 / 391555.0  (66.95%)/home/anna_user2/projects/website-II/json40.json  391555 / 391555.0  (100.00%)/home/anna_user2/projects/website-II/json41.json  262144 / 350111.0  (74.87%)/home/anna_user2/projects/website-II/json41.json  350111 / 350111.0  (100.00%)/home/anna_user2/projects/website-II/json42.json  262144 / 435389.0  (60.21%)/home/anna_user2/projects/website-II/json42.json  435389 / 435389.0  (100.00%)/home/anna_user2/projects/website-II/json44.json  24966 / 24966.0  (100.00%)/home/anna_user2/projects/website-II/json45.json  262144 / 530199.0  (49.44%)/home/anna_user2/projects/website-II/json45.json  524288 / 530199.0  (98.89%)/home/anna_user2/projects/website-II/json45.json  530199 / 530199.0  (100.00%)/home/anna_user2/projects/website-II/json46.json  262144 / 304987.0  (85.95%)/home/anna_user2/projects/website-II/json46.json  304987 / 304987.0  (100.00%)/home/anna_user2/projects/website-II/json47.json  262144 / 726519.0  (36.08%)/home/anna_user2/projects/website-II/json47.json  524288 / 726519.0  (72.16%)/home/anna_user2/projects/website-II/json47.json  726519 / 726519.0  (100.00%)/home/anna_user2/projects/website-II/json48.json  262144 / 1564704.0  (16.75%)/home/anna_user2/projects/website-II/json48.json  524288 / 1564704.0  (33.51%)/home/anna_user2/projects/website-II/json48.json  786432 / 1564704.0  (50.26%)/home/anna_user2/projects/website-II/json48.json  1048576 / 1564704.0  (67.01%)/home/anna_user2/projects/website-II/json48.json  1310720 / 1564704.0  (83.77%)/home/anna_user2/projects/website-II/json48.json  1564704 / 1564704.0  (100.00%)/home/anna_user2/projects/website-II/json49.json  262144 / 345351.0  (75.91%)/home/anna_user2/projects/website-II/json49.json  345351 / 345351.0  (100.00%)/home/anna_user2/projects/website-II/json50.json  69323 / 69323.0  (100.00%)/home/anna_user2/projects/website-II/json51.json  262144 / 952707.0  (27.52%)/home/anna_user2/projects/website-II/json51.json  524288 / 952707.0  (55.03%)/home/anna_user2/projects/website-II/json51.json  786432 / 952707.0  (82.55%)/home/anna_user2/projects/website-II/json51.json  952707 / 952707.0  (100.00%)/home/anna_user2/projects/website-II/json53.json  262144 / 459093.0  (57.10%)/home/anna_user2/projects/website-II/json53.json  459093 / 459093.0  (100.00%)/home/anna_user2/projects/website-II/json54.json  262144 / 472505.0  (55.48%)/home/anna_user2/projects/website-II/json54.json  472505 / 472505.0  (100.00%)/home/anna_user2/projects/website-II/json55.json  262144 / 360872.0  (72.64%)/home/anna_user2/projects/website-II/json55.json  360872 / 360872.0  (100.00%)/home/anna_user2/projects/website-II/json56.json  131423 / 131423.0  (100.00%)
+uploaded county features 2020-09-11 00:00:00 to 2020-10-11 00:00:00
 0
 59
-states features date range 2020-09-08 00:00:00 2020-10-08 00:00:00
+states features date range 2020-09-11 00:00:00 2020-10-11 00:00:00
 pushing states features
 states features pushed
+Completed 2.7 KiB/2.7 KiB (10.5 KiB/s) with 1 file(s) remainingupload: ../../../../../var/www/html/js/barchart.js to s3://phoenix-technical-services.com/js/barchart.js
