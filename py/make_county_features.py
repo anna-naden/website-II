@@ -130,9 +130,9 @@ def get_county_deaths(df_us, df_pops, start_date, end_date):
         deaths1 = df1.query('fips==@fips_code').deaths.sum()
         deaths2 = df2.query('fips==@fips_code').deaths.sum()
         deaths = deaths2 - deaths1
-        pop = 0
-        if fips_code in pops_dict.keys():
-            pop = pops_dict[fips_code]
+        df = df_pops[df_pops.fips == fips_code]
+        if not df.empty:
+            pop = df.population.iloc[0]
             deaths = 100000*deaths/pop
             county_deaths[fips_code] = deaths
     return county_deaths
