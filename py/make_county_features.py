@@ -262,7 +262,7 @@ update_world_features(nations, world_deaths)
 
 #Upload
 interval = f'{w_start_date},{w_end_date}'
-path2 = path + '/*.json'
+path2 = path + '/all.json'
 feature_list = []
 for key in nations.keys():
     f = nations[key][0]
@@ -273,7 +273,7 @@ with open(path2, 'w') as f:
     # feature_obj = { 'interval': interval, 'feature_set': nations}
     json.dump(feature_obj, f)
     f.flush()
-    upload_file(path2, 'phoenix-technical-services.com', '*.json')
+    upload_file(path2, 'phoenix-technical-services.com', 'all.json')
     f.close()
 print('world features uploaded')
 

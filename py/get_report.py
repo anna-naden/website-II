@@ -4,8 +4,8 @@ from get_config import get_config
 config = get_config()
 
 path = config['FILES']['us_covid_deaths']
-start_date ='9/8/20'
-end_date = '10/8/20'
+start_date ='9/11/20'
+end_date = '10/11/20'
 with open(path, 'r') as f:
     reader = csv.reader(f, delimiter=',')
     header = True
