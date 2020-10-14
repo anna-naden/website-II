@@ -262,19 +262,18 @@ update_world_features(nations, world_deaths)
 
 #Upload
 interval = f'{w_start_date},{w_end_date}'
-path2 = path + '/all.json'
 feature_list = []
 for key in nations.keys():
     f = nations[key][0]
     feature_list.append(f)
-with open(path2, 'w') as f:
+path = os.path.join(config['DEFAULT']['json'], 'all.json')
+with open(path, 'w') as f:
     feature_obj = { 'interval': interval, 'type': 'FeatureCollection', 'features': feature_list}
-
-    # feature_obj = { 'interval': interval, 'feature_set': nations}
     json.dump(feature_obj, f)
     f.flush()
-    upload_file(path2, 'phoenix-technical-services.com', 'all.json')
+    upload_file(path, 'phoenix-technical-services.com', 'all.json')
     f.close()
+os.remove(path)
 print('world features uploaded')
 
 if False:
@@ -282,13 +281,14 @@ if False:
     for ISO_A3 in nations.keys():
         print(ISO_A3)
         with open(path + ISO_A3 + '.json', 'w') as f:
-            path2 = path + ISO_A3 + '.json'
+            path = os.path.join(config['DEFAULT']['json'], ISO_A3 + '.json')
             feature_set = {'type': 'FeatureCollection', 'features': nations[ISO_A3]}
             feature_obj = { 'interval': interval, 'feature_set': feature_set}
             json.dump(feature_obj, f)
             f.flush()
-            upload_file(path2, 'phoenix-technical-services.com', ISO_A3+'.json')
+            upload_file(path, 'phoenix-technical-services.com', ISO_A3+'.json')
         f.close()
+        os.remove(path)
 
 # Get master data file
 df = df_world[df_world.index.get_level_values('ISO_A3')=='USA']
@@ -297,15 +297,15 @@ end_date = df.date.max()
 start_date = end_date-np.timedelta64(30,'D')
 start_date_graph = end_date-np.timedelta64(6,"M")
 
+# -------------------------------------------------------
 # Make and upload county six-month stats
+# -------------------------------------------------------
 status, df_pops = county_pops_fips()
 
 # Get population
 pops_dict = df_pops.to_dict(orient='dict')
 df_pops['fips'] = df_pops.state_fips + df_pops.county_fips
-# df_pops.set_index(keys='fips', inplace=True)
 df_pops.drop(columns=['state_fips', 'county_fips', 'state', 'county'], inplace=True)
-
 if status is not None:
     print(f'status from county_pops_fips: {status}')
     exit()
@@ -314,13 +314,26 @@ status, county_time_series_json = get_cty_time_series(df, df_pops, '17031', star
 if status is not None:
     print(f'{status} from get_cty_time_series')
     exit(0)
-with open('temp.json', 'w') as f:
+
+# County time series
+config = get_config()
+path = os.path.join(config['DEFAULT']['json'], 'cty-time-series.json')
+with open(path, 'w') as f:
     f.write(county_time_series_json)
+upload_file(path, 'phoenix-technical-services.com', 'cty-time-series.json')
+os.remove(path)
 
+#US time series
 status, us_time_series_json = get_us_time_series(df, start_date_graph, end_date)
-with open('temp2.json', 'w') as f:
+path = os.path.join(config['DEFAULT']['json'], 'us-time-series.json')
+with open(path, 'w') as f:
     f.write(us_time_series_json)
+upload_file(path, 'phoenix-technical-services.com','us-time-series.json')
+os.remove(path)
 
+#--------------------------------------------------------------------------
+# County 30 day fatalities
+#--------------------------------------------------------------------------
 county_deaths = get_county_deaths(df, df_pops, start_date, end_date)
 states = get_counties_features()
 update_county_features(states, county_deaths)
@@ -328,13 +341,14 @@ update_county_features(states, county_deaths)
 #upload
 for state in states.keys():
     # print(state)
-    path2 = path + '/' + state + '.json'
-    with open(path2, 'w') as f:
+    path = os.path.join(config['DEFAULT']['json'], state + '.json') 
+    with open(path, 'w') as f:
         feature_set = {'type': 'FeatureCollection', 'features': states[state]}
         interval = f'{w_start_date},{w_end_date}'
         feature_obj = { 'interval': interval, 'feature_set': feature_set}
         json.dump(feature_set,f)
         f.flush()
-        upload_file(path2, 'phoenix-technical-services.com', state+'.json')
+        upload_file(path, 'phoenix-technical-services.com', state+'.json')
+        os.remove(path)
     f.close()
 print(f'\nuploaded county features {start_date} to {end_date}')
