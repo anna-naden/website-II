@@ -239,6 +239,8 @@ def upload_file(file_name, bucket, object_name=None):
 # ----------------------------------------------------------
 # Main
 # ----------------------------------------------------------
+config = get_config()
+
 status, df_world = get_world_covid_jh()
 if status is not None:
     print(f'status from get_world_covid_jh: {status}')
@@ -247,9 +249,6 @@ if status is not None:
 df_world1 = df_world.reset_index()
 w_end_date = df_world1.date.max()
 w_start_date = w_end_date-np.timedelta64(30,'D')
-
-config = get_config()
-path = config['DEFAULT']['json']
 
 # Make and upload world features
 world_deaths = get_world_deaths(df_world1, w_start_date, w_end_date)
@@ -266,29 +265,27 @@ feature_list = []
 for key in nations.keys():
     f = nations[key][0]
     feature_list.append(f)
-path = os.path.join(config['DEFAULT']['json'], 'all.json')
-with open(path, 'w') as f:
+with open(config['FILES']['scratch'], 'w') as f:
     feature_obj = { 'interval': interval, 'type': 'FeatureCollection', 'features': feature_list}
     json.dump(feature_obj, f)
     f.flush()
-    upload_file(path, 'phoenix-technical-services.com', 'all.json')
+    upload_file(config['FILES']['scratch'], 'phoenix-technical-services.com', 'all.json')
     f.close()
-os.remove(path)
+os.remove(config['FILES']['scratch'])
 print('world features uploaded')
 
 if False:
     print('uploading individual countries')
     for ISO_A3 in nations.keys():
         print(ISO_A3)
-        with open(path + ISO_A3 + '.json', 'w') as f:
-            path = os.path.join(config['DEFAULT']['json'], ISO_A3 + '.json')
+        with open(config['FILES']['scratch'], 'w') as f:
             feature_set = {'type': 'FeatureCollection', 'features': nations[ISO_A3]}
             feature_obj = { 'interval': interval, 'feature_set': feature_set}
             json.dump(feature_obj, f)
             f.flush()
-            upload_file(path, 'phoenix-technical-services.com', ISO_A3+'.json')
         f.close()
-        os.remove(path)
+        upload_file(config['FILES']['scratch'], 'phoenix-technical-services.com', ISO_A3+'.json')
+        os.remove(config['FILES']['scratch'])
 
 # Get master data file
 df = df_world[df_world.index.get_level_values('ISO_A3')=='USA']
@@ -316,20 +313,17 @@ if status is not None:
     exit(0)
 
 # County time series
-config = get_config()
-path = os.path.join(config['DEFAULT']['json'], 'cty-time-series.json')
-with open(path, 'w') as f:
+with open(config['FILES']['scratch'], 'w') as f:
     f.write(county_time_series_json)
-upload_file(path, 'phoenix-technical-services.com', 'cty-time-series.json')
-os.remove(path)
+upload_file(config['FILES']['scratch'], 'phoenix-technical-services.com', 'cty-time-series.json')
+os.remove(config['FILES']['scratch'])
 
 #US time series
 status, us_time_series_json = get_us_time_series(df, start_date_graph, end_date)
-path = os.path.join(config['DEFAULT']['json'], 'us-time-series.json')
-with open(path, 'w') as f:
+with open(config['FILES']['scratch'], 'w') as f:
     f.write(us_time_series_json)
-upload_file(path, 'phoenix-technical-services.com','us-time-series.json')
-os.remove(path)
+upload_file(config['FILES']['scratch'], 'phoenix-technical-services.com','us-time-series.json')
+os.remove(config['FILES']['scratch'])
 
 #--------------------------------------------------------------------------
 # County 30 day fatalities
@@ -341,14 +335,13 @@ update_county_features(states, county_deaths)
 #upload
 for state in states.keys():
     # print(state)
-    path = os.path.join(config['DEFAULT']['json'], state + '.json') 
-    with open(path, 'w') as f:
+    with open(config['FILES']['scratch'], 'w') as f:
         feature_set = {'type': 'FeatureCollection', 'features': states[state]}
         interval = f'{w_start_date},{w_end_date}'
         feature_obj = { 'interval': interval, 'feature_set': feature_set}
         json.dump(feature_set,f)
         f.flush()
-        upload_file(path, 'phoenix-technical-services.com', state+'.json')
-        os.remove(path)
+        upload_file(config['FILES']['scratch'], 'phoenix-technical-services.com', state+'.json')
+        os.remove(config['FILES']['scratch'])
     f.close()
 print(f'\nuploaded county features {start_date} to {end_date}')
