@@ -37,16 +37,9 @@ class ProgressPercentage(object):
                     percentage))
             sys.stdout.flush()
             
-def get_cty_time_series(df, df_pops, fips, start_date, end_date):
+def get_cty_time_series(df1, pop, fips, start_date, end_date):
 
-    # Select county and date range
-    df = df[['fips','date','deaths']]
-    df = df[df.date >= start_date]
-    df = df[df.date <= end_date]
-    df = df[df.fips==fips]
-    df = df[['date','deaths']]
-    
-    pop = df_pops[df_pops.fips == fips].population.iloc[0]
+    df = df1.copy()
     df.deaths *= 100000/pop
 
     jsonstr = df.to_json(orient='records')
@@ -58,7 +51,6 @@ def get_cty_time_series(df, df_pops, fips, start_date, end_date):
         df = pd.read_csv(path, dtype={'FIPS':str, 'county':str, 'state_abbr':str, 'state': str})
     except Exception as inst:
         return f'Exception reading {path} {inst})', None
-    df = df[df.FIPS == fips]
     start_date = format(start_date,"%x")
     end_date = format(end_date,"%x")
     county_state = df.iloc[0].county + ' County, ' + df.iloc[0].state_abbr
@@ -236,6 +228,23 @@ def upload_file(file_name, bucket, object_name=None):
         return False
     return True
 
+def delete_obj(bucket, object_name=None):
+    """Upload a file to an S3 bucket
+
+    :param file_name: File to upload
+    :param bucket: Bucket to upload to
+    :param object_name: S3 object name. If not specified then file_name is used
+    :return: True if file was uploaded, else False
+    """
+
+    s3_client = boto3.resource('s3')
+    try:
+        s3_client.Object(bucket, object_name).delete()
+    except ClientError as e:
+        logging.error(e)
+        return False
+    return True
+
 # ----------------------------------------------------------
 # Main
 # ----------------------------------------------------------
@@ -262,7 +271,8 @@ update_world_features(nations, world_deaths)
 #Upload
 interval = f'{w_start_date},{w_end_date}'
 feature_list = []
-for key in nations.keys():
+# for key in nations.keys():
+for key in ['USA']:
     f = nations[key][0]
     feature_list.append(f)
 with open(config['FILES']['scratch'], 'w') as f:
@@ -307,16 +317,24 @@ if status is not None:
     print(f'status from county_pops_fips: {status}')
     exit()
 
-status, county_time_series_json = get_cty_time_series(df, df_pops, '17031', start_date_graph, end_date)
-if status is not None:
-    print(f'{status} from get_cty_time_series')
-    exit(0)
-
 # County time series
-with open(config['FILES']['scratch'], 'w') as f:
-    f.write(county_time_series_json)
-upload_file(config['FILES']['scratch'], 'phoenix-technical-services.com', 'cty-time-series.json')
-os.remove(config['FILES']['scratch'])
+df_time_series = df[['fips','date','deaths']]
+df_time_series = df_time_series[df_time_series.date>=start_date]
+df_time_series = df_time_series[df_time_series.date<=end_date]
+for county_fips in df.fips.unique():
+    df_county_p = df_pops[df_pops.fips == county_fips]
+    df_county = df_time_series[df_time_series.fips == county_fips]
+    if not df_county.empty and not df_county_p.empty:
+        delete_obj('phoenix-technical-services.com', county_fips + '.json')
+        # pop = df_county_p.population.iloc[0]
+        # status, county_time_series_json = get_cty_time_series(df_county, pop, county_fips, start_date_graph, end_date)
+        # if status is not None:
+        #     print(f'{status} from get_cty_time_series')
+        #     exit(0)
+        # with open(config['FILES']['scratch'], 'w') as f:
+        #     f.write(county_time_series_json)
+        # upload_file(config['FILES']['scratch'], 'phoenix-technical-services.com', county_fips + '.json')
+        # os.remove(config['FILES']['scratch'])
 
 #US time series
 status, us_time_series_json = get_us_time_series(df, start_date_graph, end_date)
