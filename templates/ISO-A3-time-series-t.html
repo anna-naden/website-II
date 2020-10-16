@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+<script src="https://d3js.org/d3.v6.js"></script>
+<script src="../js/make_time_series.js"></script>
+<style>
+    html, body {
+        height: 100vh;
+        height: 100vw;
+    }
+    #map {
+        height: 40vh;
+        height: 40vw;
+    }
+</style>
+<script>
+    function get_ISO_A3_time_series(iSO_A3) {
+        console.log(ISO_A3)
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            var features = JSON.parse(this.responseText);
+            county_data = features.county;
+            us_data = features.us;
+            title = "US and " + county_data.county + '\n Total fatalities to date per 100,000 persons:\n' +
+        county_data.start_date + ' - ' + county_data.end_date;
+ 
+            make_time_series(us_data, county_data, title);
+        };
+        };
+        xhttp.open("GET", "https://qwwj8ox9l9.execute-api.us-east-1.amazonaws.com/stage/fips?fips="+fips, true);
+        xhttp.send();
+    }
+</script>
+<div id="county-time-series"></div>
+<h6>The data for Cook County, for the state of Illinois and for Ottawa has been validated. However, this website is still being tested. To report issues, send email to <a href =mailto:anna@phoenix-computer.com>anna@phoenix-computer.com</a> </h6>
+<script>
+    var ISO_A3 = window.location.search.replace("ISO-A3?=", "")
+    document.getElementById("body").onload = function() {get_ISO_A3_time_series(ISO_A3)};
+</script>
+<div id="map"></div>
+{% endblock %}
