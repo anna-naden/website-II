@@ -39,8 +39,6 @@ class ProgressPercentage(object):
             
 def get_cty_time_series(df1, pop, fips, start_date, end_date):
 
-    if fips == '17031':
-        print('stop')
     df = df1.copy()[['date','deaths']]
     df.deaths *= 100000/pop
 
@@ -341,8 +339,8 @@ for county_fips in df.fips.unique():
             exit(0)
         if county_time_series is not None:
             all_counties.__setitem__(county_fips, county_time_series)
-            with open('temp.json', 'w') as f:
-                json.dump(county_time_series, f)
+            # with open('temp.json', 'w') as f:
+            #     json.dump(county_time_series, f)
 with open(config['FILES']['scratch'], 'w') as f:
     json.dump(all_counties, f)
 upload_file(config['FILES']['scratch'], 'phoenix-technical-services.com', 'all_counties.json')
