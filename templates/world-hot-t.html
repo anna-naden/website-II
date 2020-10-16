@@ -41,21 +41,6 @@
               return;
           }
         </script>
-        <script>
-          function get_state_features(fips)
-          {
-            refresh_map_div();
-            var xhttp = new XMLHttpRequest();
-              xhttp.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                  var state_features = JSON.parse(this.responseText);
-                  make_state_map(fips,state_features);
-                };
-              };
-              xhttp.open("GET", "https://qwwj8ox9l9.execute-api.us-east-1.amazonaws.com/stage/fips?fips="+fips, true);
-              xhttp.send();
-          }
-        </script>
         <div id="state-map-container"></div>
         <h6>The data for Cook County, for the state of Illinois and for Ottawa has been validated. However, this website is still being tested. To report issues, send email to <a href =mailto:anna@phoenix-computer.com>anna@phoenix-computer.com</a> </h6>
         <script>
