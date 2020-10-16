@@ -15,6 +15,7 @@ python make_pickle.py
 # ---------- Extract 30-day fatalities to json and js files, upload to s3
 python make_county_features.py
 python make_states_features.py
+python make_world_features.py
 
 #bar chart
 aws s3 cp /var/www/html/js/barchart.js s3://phoenix-technical-services.com/js/barchart.js --acl public-read
