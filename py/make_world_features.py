@@ -126,7 +126,7 @@ with open(config['FILES']['scratch'], 'w') as f:
     feature_obj = { 'interval': interval, 'type': 'FeatureCollection', 'features': feature_list}
     json.dump(feature_obj, f)
     f.flush()
-    upload_file(config['FILES']['scratch'], 'phoenix-technical-services.com', 'all.json')
+    upload_file(config['FILES']['scratch'], 'phoenix-technical-services.com', 'all.json', 'all.json')
     f.close()
 os.remove(config['FILES']['scratch'])
 print('world features uploaded')
@@ -141,7 +141,7 @@ if False:
             json.dump(feature_obj, f)
             f.flush()
         f.close()
-        upload_file(config['FILES']['scratch'], 'phoenix-technical-services.com', ISO_A3+'.json')
+        upload_file(config['FILES']['scratch'], 'phoenix-technical-services.com', ISO_A3+'.json',title=ISO_A3)
         os.remove(config['FILES']['scratch'])
 
 #US time series
@@ -149,7 +149,7 @@ print('making and uploading US Time series')
 status, us_time_series_json = get_nation_time_series(df, 'United States', start_date_graph, end_date)
 with open(config['FILES']['scratch'], 'w') as f:
     f.write(us_time_series_json)
-upload_file(config['FILES']['scratch'], 'phoenix-technical-services.com','us-time-series.json')
+upload_file(config['FILES']['scratch'], 'phoenix-technical-services.com','USA.json')
 os.remove(config['FILES']['scratch'])
 
 # France time series
@@ -159,6 +159,6 @@ df_fr.reset_index(inplace=True)
 status, france_ts_json = get_nation_time_series(df_fr, 'France', start_date_graph, end_date)
 with open(config['FILES']['scratch'], 'w') as f:
     f.write(france_ts_json)
-upload_file(config['FILES']['scratch'], 'phoenix-technical-services.com', 'france-time-series.json', title='france time series')
+upload_file(config['FILES']['scratch'], 'phoenix-technical-services.com', 'FRA.json', title='FRA.json')
 os.remove(config['FILES']['scratch'])
 
