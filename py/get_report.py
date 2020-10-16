@@ -9,6 +9,8 @@ end_date = '10/15/20'
 illinois_pop = 12671821
 cook_pop = 5150233
 ontario_pop = 12851821
+france_pop = 66977107
+us_pop = 326687501
 
 with open(path, 'r') as f:
     reader = csv.reader(f, delimiter=',')
@@ -25,7 +27,7 @@ with open(path, 'r') as f:
             header=False
         if  row[4] == '17031.0':
             ndeaths_cook = int(row[col_last_date]) - int(row[col_first_date])
-            last_cook_deaths += int(row[col_last_date])
+            last_cook_deaths = int(row[col_last_date])
         if row[6] == 'Illinois':
             illinois_deaths += int(row[col_last_date])-int(row[col_first_date])
 
@@ -42,6 +44,25 @@ with open(config['FILES']['world_covid_deaths'], 'r') as f:
             header=False
         if row[0] == 'Ontario':
             ndeaths_ontario = int(row[col_last_date]) - int(row[col_first_date])
+        elif row[0] == '' and row[1] == 'France':
+            last_ndeaths_france = int(row[col_last_date])
+        elif row[1] == 'US':
+            last_ndeaths_us = int(row[col_last_date])
+
+print('US')
+print(f'Last deaths: {last_ndeaths_us}')
+print(f'per capita {100000*last_ndeaths_us/us_pop}')
+print('\n')
+
+print('FRA')
+print(f'Last deaths {last_ndeaths_us}')
+print(f'per capita {100000*last_ndeaths_france/france_pop}')
+print('\n')
+
+print('ONTARIO')
+print(f'Deaths {ndeaths_ontario}')
+print(f'Per capita {100000*ndeaths_ontario/ontario_pop}')
+print('\n')
 
 print('ILLINOIS')
 print(f'{illinois_deaths} deaths from start date to end date')
@@ -54,6 +75,3 @@ print(f'Last per capita {100000*last_cook_deaths/cook_pop}')
 print(f'{ndeaths_cook} deaths from {start_date} to {end_date}')
 print(f'Per capita {100000*ndeaths_cook/cook_pop}')
 
-print('ONTARIO')
-print(f'Deaths {ndeaths_ontario}')
-print(f'Per capita {100000*ndeaths_ontario/ontario_pop}')

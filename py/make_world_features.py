@@ -121,7 +121,6 @@ interval = f'{w_start_date},{w_end_date}'
 feature_list = []
 for key in nations.keys():
     feature_list.append(nations[key][0])
-# feature_list = [nations['USA'][0]]
 with open(config['FILES']['scratch'], 'w') as f:
     feature_obj = { 'interval': interval, 'type': 'FeatureCollection', 'features': feature_list}
     json.dump(feature_obj, f)
@@ -152,7 +151,7 @@ with open(config['FILES']['scratch'], 'w') as f:
 upload_file(config['FILES']['scratch'], 'phoenix-technical-services.com','USA.json')
 os.remove(config['FILES']['scratch'])
 
-# France time series
+
 print("Making and uploading France Time series")
 df_fr = df_world[df_world.index.get_level_values('ISO_A3')=='FRA']
 df_fr.reset_index(inplace=True)
