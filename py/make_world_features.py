@@ -57,7 +57,7 @@ def update_world_features(nations, deaths):
             feature['properties']['density'] = f'{deaths1}'
     return nations
 
-def get_nation_time_series(df, ISO_A3, start_date, end_date):
+def get_nation_time_series(df1, ISO_A3, start_date, end_date):
 
     # Get population
     config = get_config()
@@ -71,10 +71,6 @@ def get_nation_time_series(df, ISO_A3, start_date, end_date):
                 break;
     if pop < 0:
         return None, None
-
-    if ISO_A3 == 'FRA':
-        print(pop)
-    df1=df[df.ISO_A3==key].copy()
 
     # Select county and date range
     df1 = df1[df1.date >= start_date]
@@ -154,7 +150,7 @@ if False:
 for key in nations.keys():
     if key == 'FRA':
         print('stop')
-    status, time_series_json = get_nation_time_series(df_world1, key, start_date_graph, end_date)
+    status, time_series_json = get_nation_time_series(df_world1[df_world1.ISO_A3==key].copy(), key, start_date_graph, end_date)
     if status is not None:
         print(status)
         exit()
