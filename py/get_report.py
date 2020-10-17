@@ -55,7 +55,7 @@ print(f'per capita {100000*last_ndeaths_us/us_pop}')
 print('\n')
 
 print('FRA')
-print(f'Last deaths {last_ndeaths_us}')
+print(f'Last deaths {last_ndeaths_france}')
 print(f'per capita {100000*last_ndeaths_france/france_pop}')
 print('\n')
 

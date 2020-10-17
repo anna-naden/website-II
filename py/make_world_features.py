@@ -57,25 +57,32 @@ def update_world_features(nations, deaths):
             feature['properties']['density'] = f'{deaths1}'
     return nations
 
-def get_nation_time_series(df, nation_name, start_date, end_date):
+def get_nation_time_series(df, ISO_A3, start_date, end_date):
 
     # Get population
     config = get_config()
+    pop=-1
     path = config['FILES']['world_census']
     with open(path,"r") as f:
         reader = csv.reader(f, delimiter=',')
         for row in reader:
-            if row[0] == nation_name:
+            if row[1] == ISO_A3:
                 pop = int(row[2])
                 break;
+    if pop < 0:
+        return None, None
+
+    if ISO_A3 == 'FRA':
+        print(pop)
+    df1=df[df.ISO_A3==key].copy()
 
     # Select county and date range
-    df = df[df.date >= start_date]
-    df = df[df.date <= end_date]
-    df = df[['date','deaths']]
-    df = df.groupby('date').deaths.sum().reset_index()
-    df.deaths *= 100000/pop
-    jsonstr = df.to_json(orient='records')
+    df1 = df1[df1.date >= start_date]
+    df1 = df1[df1.date <= end_date]
+    df1 = df1[['date','deaths']]
+    df1 = df1.groupby('date').deaths.sum().reset_index()
+    df1.deaths *= 100000/pop
+    jsonstr = df1.to_json(orient='records')
 
     config = get_config()
 
@@ -143,21 +150,27 @@ if False:
         upload_file(config['FILES']['scratch'], 'phoenix-technical-services.com', ISO_A3+'.json',title=ISO_A3)
         os.remove(config['FILES']['scratch'])
 
-#US time series
-print('making and uploading US Time series')
-status, us_time_series_json = get_nation_time_series(df, 'United States', start_date_graph, end_date)
-with open(config['FILES']['scratch'], 'w') as f:
-    f.write(us_time_series_json)
-upload_file(config['FILES']['scratch'], 'phoenix-technical-services.com','USA.json')
-os.remove(config['FILES']['scratch'])
+# Time series all nations
+for key in nations.keys():
+    if key == 'FRA':
+        print('stop')
+    status, time_series_json = get_nation_time_series(df_world1, key, start_date_graph, end_date)
+    if status is not None:
+        print(status)
+        exit()
+    if time_series_json is not None:
+        with open(config['FILES']['scratch'], 'w') as f:
+            f.write(time_series_json)
+            upload_file(config['FILES']['scratch'], 'phoenix-technical-services.com',key+'.json', key)
+            os.remove(config['FILES']['scratch'])
 
 
-print("Making and uploading France Time series")
-df_fr = df_world[df_world.index.get_level_values('ISO_A3')=='FRA']
-df_fr.reset_index(inplace=True)
-status, france_ts_json = get_nation_time_series(df_fr, 'France', start_date_graph, end_date)
-with open(config['FILES']['scratch'], 'w') as f:
-    f.write(france_ts_json)
-upload_file(config['FILES']['scratch'], 'phoenix-technical-services.com', 'FRA.json', title='FRA.json')
-os.remove(config['FILES']['scratch'])
+# print("Making and uploading France Time series")
+# df_fr = df_world[df_world.index.get_level_values('ISO_A3')=='FRA']
+# df_fr.reset_index(inplace=True)
+# status, france_ts_json = get_nation_time_series(df_fr, 'FRA', start_date_graph, end_date)
+# with open(config['FILES']['scratch'], 'w') as f:
+#     f.write(france_ts_json)
+# upload_file(config['FILES']['scratch'], 'phoenix-technical-services.com', 'FRA.json', title='FRA.json')
+# os.remove(config['FILES']['scratch'])
 
