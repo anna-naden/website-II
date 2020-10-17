@@ -3,7 +3,6 @@ from get_config import get_config
 
 config = get_config()
 
-path = config['FILES']['us_covid_deaths']
 start_date ='9/15/20'
 end_date = '10/15/20'
 illinois_pop = 12671821
@@ -11,7 +10,9 @@ cook_pop = 5150233
 ontario_pop = 12851821
 france_pop = 66977107
 us_pop = 326687501
+mex_pop = 126190788
 
+path = config['FILES']['us_covid_deaths']
 with open(path, 'r') as f:
     reader = csv.reader(f, delimiter=',')
     header = True
@@ -48,6 +49,8 @@ with open(config['FILES']['world_covid_deaths'], 'r') as f:
             last_ndeaths_france = int(row[col_last_date])
         elif row[1] == 'US':
             last_ndeaths_us = int(row[col_last_date])
+        elif row[1] == 'Mexico':
+            last_ndeaths_mex = int(row[col_last_date])
 
 print('US')
 print(f'Last deaths: {last_ndeaths_us}')
@@ -57,6 +60,11 @@ print('\n')
 print('FRA')
 print(f'Last deaths {last_ndeaths_france}')
 print(f'per capita {100000*last_ndeaths_france/france_pop}')
+print('\n')
+
+print('MEX')
+print(f'Last deaths {last_ndeaths_mex}')
+print(f'per capita {100000*last_ndeaths_mex/mex_pop}')
 print('\n')
 
 print('ONTARIO')
