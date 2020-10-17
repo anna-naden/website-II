@@ -148,8 +148,6 @@ if False:
 
 # Time series all nations
 for key in nations.keys():
-    if key == 'FRA':
-        print('stop')
     status, time_series_json = get_nation_time_series(df_world1[df_world1.ISO_A3==key].copy(), key, start_date_graph, end_date)
     if status is not None:
         print(status)
@@ -159,14 +157,3 @@ for key in nations.keys():
             f.write(time_series_json)
             upload_file(config['FILES']['scratch'], 'phoenix-technical-services.com',key+'.json', key)
             os.remove(config['FILES']['scratch'])
-
-
-# print("Making and uploading France Time series")
-# df_fr = df_world[df_world.index.get_level_values('ISO_A3')=='FRA']
-# df_fr.reset_index(inplace=True)
-# status, france_ts_json = get_nation_time_series(df_fr, 'FRA', start_date_graph, end_date)
-# with open(config['FILES']['scratch'], 'w') as f:
-#     f.write(france_ts_json)
-# upload_file(config['FILES']['scratch'], 'phoenix-technical-services.com', 'FRA.json', title='FRA.json')
-# os.remove(config['FILES']['scratch'])
-
