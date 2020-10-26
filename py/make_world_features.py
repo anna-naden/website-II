@@ -69,13 +69,12 @@ def get_nation_time_series(df1, ISO_A3, start_date, end_date):
             if row[1] == ISO_A3:
                 pop = int(row[2])
                 break;
-    if pop < 0:
+    if pop <= 0:
         return None, None
 
     # Select county and date range
     df1 = df1[df1.date >= start_date]
-    df1 = df1[df1.date <= end_date]
-    df1 = df1[['date','deaths']]
+    df1 = df1[df1.date <= end_date][['date','deaths']]
     df1 = df1.groupby('date').deaths.sum().reset_index()
     df1.deaths *= 100000/pop
     jsonstr = df1.to_json(orient='records')

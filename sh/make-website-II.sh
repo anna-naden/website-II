@@ -20,4 +20,4 @@ python make_world_features.py
 # -------------------------------------------------------------
 # Upload content
 #--------------------------------------------------------------
-~/projects/website-II/sh/upload-s3.sh
+aws s3 cp /home/anna_user2/projects/website-II/js/barchart.js s3://phoenix-technical-services.com/js/barchart.js --acl public-read
