@@ -1,2 +1,2 @@
-county_lambda.py, make_world_features.py: use ISO_A3 codes for USA, France
-upload-s3.sh: loop over file names
+s3 upload progress gives object name instead of file name or title
+untested module csv_util

@@ -40,7 +40,7 @@ def upload_file(file_name, bucket, object_name=None, title = None):
     # Upload the file
     s3_client = boto3.client('s3')
     try:
-        title1 = file_name
+        title1 = object_name
         if title is not None:
             title1 = title
         response = s3_client.upload_file(file_name, bucket, object_name, Callback=ProgressPercentage(file_name, title1))
