@@ -78,7 +78,7 @@ def transpose_us(lines, index_first_date):
     states = np.empty(shape=nrecords*ndates, dtype=(str,48))
     fips_list = np.empty(shape=nrecords*ndates, dtype=(str,5))
     dates2 = np.empty(shape=nrecords*ndates, dtype=datetime.datetime)
-    deaths_or_cases = np.empty(shape=nrecords*ndates, dtype=np.int32)
+    deaths_or_cases = np.empty(shape=nrecords*ndates, dtype=np.single)
     combined_keys = np.empty(shape=nrecords*ndates, dtype=(str,64))
 
     i=0
@@ -97,7 +97,10 @@ def transpose_us(lines, index_first_date):
                 counties[i]=county
                 fips_list[i]=fips
                 dates2[i]= dates[idate]
-                deaths_or_cases[i]=line[idate + index_first_date]
+                try:
+                    deaths_or_cases[i]=line[idate + index_first_date]
+                except Exception as ex:
+                    print(ex)
                 i += 1
     i -= 1
     states = states[:i]
