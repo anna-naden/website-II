@@ -97,11 +97,7 @@ def transpose_us(lines, index_first_date):
                 counties[i]=county
                 fips_list[i]=fips
                 dates2[i]= dates[idate]
-                try:
-                    deaths_or_cases[i]=line[idate + index_first_date]
-                except Exception as ex:
-                    print(ex)
-                    exit()
+                deaths_or_cases[i]=line[idate + index_first_date]
                 i += 1
     i -= 1
     states = states[:i]
@@ -325,6 +321,10 @@ if __name__ == '__main__':
     from df_utils import *
     import doctest
 
-    status, df=make_pickle()
+    try:
+        status, df=make_pickle()
+    except Exception as ex:
+        print(ex)
+        exit(1)
     print(f'pickle made - end data {df.index.get_level_values("date").max()}')
     #doctest.testmod(verbose=False)
