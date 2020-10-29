@@ -101,6 +101,7 @@ def transpose_us(lines, index_first_date):
                     deaths_or_cases[i]=line[idate + index_first_date]
                 except Exception as ex:
                     print(ex)
+                    exit()
                 i += 1
     i -= 1
     states = states[:i]
