@@ -133,7 +133,8 @@ def build_df(cases_lines, death_lines, us_cases_lines, us_death_lines, keep_inde
         assert (country_names == country_names2).all
         assert (dates == dates2).all
     except Exception as inst:
-        return f'Comparing international cases with international deatths{inst}', None
+        print( f'Comparing international cases with international deatths{inst}')
+        exit(1)
 
     index_first_date = 12
     list1 = transpose_us(us_death_lines, index_first_date)
@@ -158,13 +159,15 @@ def build_df(cases_lines, death_lines, us_cases_lines, us_death_lines, keep_inde
         assert (states_us == states_us2).all
         assert (dates_us == dates_us2).all
     except Exception as inst:
-        return f'Comparing us deaths with us cases: {inst}', None
+        print( f'Comparing us deaths with us cases: {inst}')
+        exit(1)
 
     #Verify that the us data has one-to-one correspondence with the international data
     try:
         assert (ndates==ndates_us)
     except Exception as inst:
-        return f'comparing us data with international data {inst}', None
+        print( f'comparing us data with international data {inst}')
+        exit(1)
 
     #Non-us data
     fips_dummy = np.empty(shape=len(states), dtype=(str,3))
@@ -289,7 +292,8 @@ def make_pickle(keep_index = True):
             for row in reader:
                 us_cases_lines.append(row)
     except Exception as inst:
-        return inst, None
+        print(inst)
+        exit(1)
         
     status, df = build_df(cases_lines, death_lines, us_cases_lines, us_death_lines, keep_index)
     df.to_pickle(config['FILES']['world_data_frame_pickle'])
