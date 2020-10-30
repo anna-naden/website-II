@@ -11,6 +11,10 @@ cp COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_con
 conda activate website-II
 cd ~/projects/website-II/py
 python make_pickle.py
+if [ $? -ne 0 ]
+then echo
+    exit 1
+fi
 
 # ---------- Extract 30-day fatalities to json and js files, upload to s3
 python make_county_features.py
