@@ -1,17 +1,52 @@
 import pandas as pd
 import numpy as np
+import re
 import random
-import tabula
-from tabula import read_pdf
-# import tabula
-from tabulate import tabulate
 
+import PyPDF2
+
+#Presidential
+def parse_pdf(c):
+    c=c.replace('\n','')
+    i=0
+    cats = []
+
+    regexpr = r'Electoral Votes'
+    outer = re.compile(regexpr)
+    regexpr = r'\(\d+\)'
+    inner = re.compile(regexpr)
+    
+    matches = outer.finditer(c)
+    for m in matches:
+        start, end = m.span()
+        cats.append(start)
+    assert(len(cats) == 7)
+    cats.append(len(c))
+    
+    cat_lines=[]
+    for i in range(7):
+        cat_line = c[cats[i]:cats[i+1]]
+        cat_lines.append(cat_line)
+    
+    icat = 1
+    nvotes1 = []
+    for cat_line in cat_lines:
+        matches = inner.finditer(cat_line)
+        sum = 0
+        for match in matches:
+            start, end = match.span()
+            n = int(cat_line[start+1:end-1])
+            nvotes1.append([icat,n])
+        icat += 1
+    
+    return nvotes1
+    
 def proj(nvotes, verbose=False):
-    model = [1, .9,.75,.6, .5, .4, .25, .1, 0.]
+    model = [1, .95,.75,.6, .5, .4, .25, .05, 0.]
     nblue = 0
     for vote in nvotes:
         r = random.random()
-        cat = vote[0]+1
+        cat = vote[0]
         if r<model[cat]:
             nblue += vote[1]
             if verbose:
@@ -21,151 +56,17 @@ def proj(nvotes, verbose=False):
                 print("red")   
     return nblue
 
-# df = read_pdf('election/cook.pdf', pages=1)
-# solidb = df['Unnamed: 0'][3:]
-# likelyb = df['Unnamed: 1'][3:]
-# leanb = df['Unnamed: 2'][3:]
-# tossup = df['Unnamed: 3'][3:]
-# leanr = df['Unnamed: 4'][3:]
-# likelyr = df['Unnamed: 5'][3:]
-# solidr = df['Unnamed: 6'][3:]
-
+#Presidential
 simulate = False
-sum=0
-j=0
-nvotes = []
-nblocks = 0
-list = \
-    [55,7,3,3,4,20,1,10,11,14,5,29,7,4,3,12]
-for n in list:
-    nvotes.append([0,n])
-    sum += n
-    nblocks += 1
-list = \
-    [9,2,13]
-for n in list:
-    nvotes.append([1,n])
-    sum += n
-    nblocks += 1
-list = \
-    [11,16,10,1,6,4,20,10]
-for n in list:
-    nvotes.append([2,n])
-    sum += n
-    nblocks += 1
-list = \
-    [29,16,6,1,15,18,38]
-for n in list:
-    nvotes.append([3,n])
-    sum += n
-    nblocks += 1
-list = \
-    [3,11,6,10,3,9,6]
-for n in list:
-    nvotes.append([5,n])
-    sum += n
-    nblocks += 1
-list = \
-    [9,6,4,8,8,6,2,1,1,3,7,3,11,5,3]
-for n in list:
-    nvotes.append([6,n])
-    sum += n
-    nblocks += 1
-cook_str = """
-14 California (55)
-  28,56  324,14 Connecticut (7)
-  28,56  310,14 Delaware (3)
-  28,56  296,14 Washington DC (3)
-  28,56  282,14 Hawaii (4)
-  28,56  268,14 Illinois (20)
-  28,56  254,14 Maine 1st CD (1)
-  28,56  240,14 Maryland (10)
-  28,56  226,14 Massachusetts (11)
-  28,56  212,14 New Jersey (14)
-  28,56  198,14 New Mexico (5)
-  28,56  184,14 New York (29)
-  28,56  170,14 Oregon (7)
-  28,56  156,14 Rhode Island (4)
-  28,56  142,14 Vermont (3)
-  28,56  128,14 Washington (12)
- 134,73  394,14 3 States
- 175,23  394,14  
- 134,73  366,14 24 Electoral Votes
- 134,73  338,14 Colorado (9) 
- 134,73  324,14 Maine (2)
- 134,73  310,14 Virginia (13) 
- 240,91  394,14 7 States
- 280,94  394,14  
- 284,01  394,14 (+ NE-02)
- 240,91  366,14 78 Electoral Votes
- 240,91  338,14 Arizona (11) 
- 240,91  324,14 Michigan (16)
- 240,91  310,14 Minnesota (10) 
- 240,91  296,14 Nebraska 2nd CD (1)
- 240,91  282,14 Nevada (6)
- 240,91  268,14 New Hampshire (4)
- 240,91  254,14 Pennsylvania (20) 
- 240,91  240,14 Wisconsin (10)
- 347,09  394,14 6 States
- 387,81  394,14  
- 390,89  394,14 (+ ME-02)
- 347,09  366,14 123 Electoral Votes
- 347,09  338,14 Florida (29) 
- 347,09  324,14 Georgia (16)
- 347,09  310,14 Iowa (6)
- 347,09  296,14 Maine 2nd CD (1)
- 347,09  282,14 North Carolina (15)
- 347,09  268,14 Ohio (18)
- 347,09  254,14 Texas (38)
- 453,27  394,93 0 States
- 453,27  366,93 0 Electoral Votes
- 559,45  394,14 7 States
- 559,45  366,14 48 Electoral Votes
- 559,45  338,14 Alaska (3)
- 559,45  324,14 Indiana (11)
- 559,45  310,14 Kansas (6)
- 559,45  296,14 Missouri (10)
- 559,45  282,14 Montana (3)
- 559,45  268,14 South Carolina (9)
- 559,45  254,14 Utah (6)
- 665,63  394,14 13 States
- 710,64  394,14  
- 713,71  394,14 (+ NE-01 & 
- 665,63  380,14 NE-03)
- 665,63  366,14 77 Electoral Votes
- 665,63  338,14 Alabama (9)
- 665,63  324,14 Arkansas (6)
- 665,63  310,14 Idaho (4)
- 665,63  296,14 Kentucky (8)
- 665,63  282,14 Louisiana (8)
- 665,63  268,14 Mississippi (6)
- 665,63  254,14 Nebraska (2)
- 665,63  240,14 Nebraska 1st CD (1)
- 665,63  226,14 Nebraska 3rd CD (1)
- 665,63  212,14 North Dakota (3)
- 665,63  198,14 Oklahoma (7)
- 665,63  184,14 South Dakota (3)
- 665,63  170,14 Tennessee (11)
- 665,63  156,14 West Virginia (5)
- 665,63  142,14 Wyoming (3)
-"""
-# for cat in [solidb, likelyb, leanb, tossup, leanr, likelyr, solidr]:
-#     for i in range(3,len(cat.array)):
-#         s=cat[i]
-#         if type(s) != type(1.0):
-#             nblocks += 1
-#             beg = s.find('(')
-#             end = s.find(')')
-#             n=int(s[beg+1:end])
-#             sum += n
-#             if simulate:
-#                 nvotes.append([3,10])
-#             else:
-#                 nvotes.append([j,n])
-#             print(j,s,n)
-#     j += 1
+reader = PyPDF2.PdfFileReader('election/cook.pdf')
+page = reader.getPage(0)
+c = page.extractText()
+nvotes = parse_pdf(c)
 
 #There are a total of 538 electoral votes
+sum=0
+for it in nvotes:
+    sum += it[1]
 print(sum)
 if not simulate and (sum != 538):
     exit()
@@ -188,7 +89,150 @@ for i in range(nruns):
     else:
         nblue += 1
     sum += pr
-#311.417 0.5788420074349442 (1000 runs)
+#320.506 0.5957360594795539 (1000 runs)
 print(sum/nruns, sum/(nruns*538))
-print(nblocks)
 print(f'blue {nblue} red {nred} tie {ntie}')
+
+#Senate
+nvotes=[]
+#B=0
+#SB=1
+#LIB=2
+#LEB=3
+#T=4
+#LER=5
+#LIR=6
+#SR=7
+#R=8
+
+sv=[]
+#LIR,R USA,Alabama: 
+sv.append([6,8])
+#LIR,R USA,Alaska: 
+sv.append([  6,8])
+#LID,B  USA,Arizona: 
+sv.append([  2,0])
+#SR,R USA,Arkansas: 
+sv.append([  7,8])
+#DDUSA,California: 
+sv.append([  0,0])
+#LID,D, USA,Colorado: 
+sv.append([  2,0])
+#BB USA,Connecticut: 
+sv.append([  0,0])
+#SB,B USA,Delaware: 
+sv.append([  1,0])
+#RR USA,Florida: 
+sv.append([  8,8])
+#T, LED USA,Georgia: 
+sv.append([  4,3])
+#BB USA,Hawaii 
+sv.append([  0,0])
+#SR,R USA,Idaho: 
+sv.append([  7,8])
+#SB,B USA,Illinois: 
+sv.append([  0,1])
+#RR USA,Indiana: 
+sv.append([  8,8])
+#T,R USA,Iowa: 
+sv.append([  4,8])
+#LIR,R USA,Kansas: 
+sv.append([  6,8])
+#SR,R USA,Kentucky: 
+sv.append([  7,8])
+#SR,R USA,Louisiana: 
+sv.append([  7,8])
+#LED,D USA,Maine: 
+sv.append([  3,0])
+#BB USA,Maryland: 
+sv.append([  0,0])
+#SD,B USA,Massachusetts: 
+sv.append([  1,0])
+#LID,B USA,Michigan: 
+sv.append([  2,0])
+#LID,B USA,Minnesota: 
+sv.append([  2,0])
+#LIR,R USA,Mississippi: 
+sv.append([  6,8])
+#RR USA,Missouri: 
+sv.append([  8,8])
+#LER,B USA,Montana: 
+sv.append([  5,0])
+#SR,R USA,Nebraska: 
+sv.append([  7,8])
+#BB USA,Nevada: 
+sv.append([  0,0])
+#SD,B USA,New Hampshire: 
+sv.append([  1,0])
+#SD,B USA,New Jersey: 
+sv.append([  1,0])
+#SD,D USA,New Mexico: 
+sv.append([  1,0])
+#BB USA,New York: 
+sv.append([  0,0])
+#LED,R USA,North Carolina: 
+sv.append([  3,8])
+#RR USA,North Dakota: 
+sv.append([  8,8])
+#RB USA,Ohio: 
+sv.append([  8,0])
+#SR,R USA,Oklahoma: 
+sv.append([  7,8])
+#SB,B USA,Oregon: 
+sv.append([  1,0])
+#BR USA,Pennsylvania: 
+sv.append([  0,8])
+#SB,B USA,Rhode Island: 
+sv.append([  1,0])
+#LIR,R USA,South Carolina: 
+sv.append([  6,8])
+#SR,R USA,South Dakota: 
+sv.append([  7,8])
+#SR,R USA,Tennessee: 
+sv.append([  7,8])
+#LIR,R USA,Texas: 
+sv.append([  7,8])
+#RR USA,Utah: 
+sv.append([  8,8])
+#BB USA,Vermont: 
+sv.append([  0,0])
+#SD,D USA,Virginia: 
+sv.append([  0,1])
+#BBUSA,Washington: 
+sv.append([  0,0])
+#SR,B USA,West Virginia: 
+sv.append([  7,0])
+#BR USA,Wisconsin: 
+sv.append([  0,8])
+#SR,R USA,Wyoming: 
+sv.append([  7,8])
+
+nd=0
+nr=0
+for s in sv:
+    if s[0]==0:
+        nd += 1
+    if s[1]==0:
+        nd += 1
+    if s[0]==8:
+        nr += 1
+    if s[1]==8:
+        nr += 1
+print(f'dem continuing {nd} rep continuing {nr}')
+nvotes = []
+for s in sv:
+    nvotes.append([s[0],1])
+    nvotes.append([s[1],1])
+random.seed(0)
+nb=0
+nr=0
+nt=0
+for i in range(1000):
+    n=proj(nvotes)
+    if n<50:
+        nr += 1
+    elif n>50:
+        nb += 1
+    else:
+        nt += 1
+print(f'blue {nb} red {nr} tie {nt}')

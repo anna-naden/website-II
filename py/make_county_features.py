@@ -95,7 +95,7 @@ config = get_config()
 status, df_world = get_world_covid_jh()
 if status is not None:
     print(f'status from get_world_covid_jh: {status}')
-    exit()
+    exit(1)
 
 df_world1 = df_world.reset_index()
 w_end_date = df_world1.date.max()
@@ -119,7 +119,7 @@ df_pops['fips'] = df_pops.state_fips + df_pops.county_fips
 df_pops.drop(columns=['state_fips', 'county_fips', 'state', 'county'], inplace=True)
 if status is not None:
     print(f'status from county_pops_fips: {status}')
-    exit()
+    exit(1)
 
 # County time series
 df_time_series = df[['fips','date','deaths']]
@@ -129,7 +129,7 @@ all_json = '{'
 first=True
 all_counties = {}
 for county_fips in df.fips.unique():
-    print(county_fips)
+    # print(county_fips)
     df_county_p = df_pops[df_pops.fips == county_fips]
     df_county = df_time_series[df_time_series.fips == county_fips]
     if not df_county.empty and not df_county_p.empty:
@@ -138,7 +138,7 @@ for county_fips in df.fips.unique():
         status, county_time_series = get_cty_time_series(df_county, pop, county_fips, start_date_graph, end_date)
         if status is not None:
             print(f'{status} from get_cty_time_series')
-            exit(0)
+            exit(1 )
         if county_time_series is not None:
             all_counties.__setitem__(county_fips, county_time_series)
             # with open('temp.json', 'w') as f:

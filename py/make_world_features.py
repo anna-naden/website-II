@@ -19,7 +19,7 @@ def get_world_deaths(df_world, start_date, end_date):
     df1 = df_world[df_world.date == start_date]
     df2 = df_world[df_world.date == end_date]
     for ISO_A3 in ISO_A3_codes:
-        print(ISO_A3)
+        # print(ISO_A3)
         deaths1 = df1.query('ISO_A3==@ISO_A3').deaths.sum()
         deaths2 = df2.query('ISO_A3==@ISO_A3').deaths.sum()
         deaths = deaths2 - deaths1
@@ -95,7 +95,7 @@ config = get_config()
 status, df_world = get_world_covid_jh()
 if status is not None:
     print(f'status from get_world_covid_jh: {status}')
-    exit()
+    exit(1)
 
 df_world1 = df_world.reset_index()
 w_end_date = df_world1.date.max()
@@ -135,7 +135,7 @@ print('world features uploaded')
 if False:
     print('uploading individual countries')
     for ISO_A3 in nations.keys():
-        print(ISO_A3)
+        # print(ISO_A3)
         with open(config['FILES']['scratch'], 'w') as f:
             feature_set = {'type': 'FeatureCollection', 'features': nations[ISO_A3]}
             feature_obj = { 'interval': interval, 'feature_set': feature_set}
@@ -150,7 +150,7 @@ for key in nations.keys():
     status, time_series_json = get_nation_time_series(df_world1[df_world1.ISO_A3==key].copy(), key, start_date_graph, end_date)
     if status is not None:
         print(status)
-        exit()
+        exit(1)
     if time_series_json is not None:
         with open(config['FILES']['scratch'], 'w') as f:
             f.write(time_series_json)

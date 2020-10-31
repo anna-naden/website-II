@@ -18,8 +18,23 @@ fi
 
 # ---------- Extract 30-day fatalities to json and js files, upload to s3
 python make_county_features.py
+if [ $? -ne 0 ]
+then echo
+    exit 1
+fi
+
 python make_states_features.py
+if [ $? -ne 0 ]
+then echo
+    exit 1
+fi
+
 python make_world_features.py
+if [ $? -ne 0 ]
+then echo
+    exit 1
+fi
+
 
 # -------------------------------------------------------------
 # Upload content

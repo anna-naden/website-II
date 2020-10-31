@@ -330,5 +330,5 @@ if __name__ == '__main__':
     except Exception as ex:
         print(ex)
         exit(1)
-    print(f'pickle made - end data {df.index.get_level_values("date").max()}')
+    print(f'pickle made - end dat: {df.index.get_level_values("date").max()}')
     #doctest.testmod(verbose=False)
