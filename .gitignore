@@ -1,4 +1,4 @@
-sh/make-out.txt
+make-out.txt
 json/??.json
 py/states_json_write_dynamo.py
 sh/daily-out.txt

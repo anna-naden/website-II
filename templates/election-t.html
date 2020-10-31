@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+
+<body>
+10/31/2020
+<br><br>
+I  ran a projection on the Presidential race. Here is how it works: On October 28, the Cook Political Report classified the outcome for each state (or, in the case of Maine and Nebraska, each state/district). The categories they assigned are solid democrat, likely democrat, leans democrat, tossup, etc. I assigned a win probability of 90% for solid, 75% for likely, 60% for leans and 50% for tossup. Then I simulated the election 1000 times. Biden won in approximately 870 cases and Trump won in 130 cases.
+<br><br>
+I simulated the US senatorial races a thousand times using my model and data from the website "538". The Democrats achieved a majority in 700 cases, the Republicans achieved a majority in 140 cases and there was no majority in 160 cases. If there is no majority, the Vice President's vote is counted with the senators'.
+</body>
+{% endblock %}

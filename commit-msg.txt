@@ -1,3 +1,2 @@
-s3 upload progress gives object name instead of file name or title
-untested module csv_util
-cook political report projections
+senatorial projections
+exit status emitted and terminate the batch update
