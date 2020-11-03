@@ -2,8 +2,12 @@ import pandas as pd
 import numpy as np
 import re
 import random
+import json
 
 import PyPDF2
+states = 'Alabama|Alaska|Arizona|Arkansas|California|Colorado|Connecticut|Delaware|Florida|Georgia|Hawaii|Idaho|Illinois|Indiana|Iowa|Kansas|Kentucky|Louisiana|Maine|Maryland|Massachusetts|Michigan|Minnesota|Mississippi|Missouri|Montana|Nebraska|Nevada|New Hampshire|New Jersey|New Mexico|New York|North Carolina|North Dakota|Ohio|Oklahoma|Oregon|Pennsylvania|Rhode Island|South Carolina|South Dakota|Tennessee|Texas|Utah|Virginia|Vermont|Washington|West Virginia|Wisconsin|Wyoming'
+
+categories = ['democrat', 'solid democrat', 'likely democrat', 'leans democrat', 'tossup', 'leans republican', 'likely republican', 'solid republican', 'republican']
 
 #Presidential
 def parse_pdf(c):
@@ -11,10 +15,16 @@ def parse_pdf(c):
     i=0
     cats = []
 
+    #Each match has all the data for a given category (solid blue, likely blue, etc.)
     regexpr = r'Electoral Votes'
     outer = re.compile(regexpr)
+    
+    #Each match has a vote count for one state or state/district combination
     regexpr = r'\(\d+\)'
-    inner = re.compile(regexpr)
+    re_votes = re.compile(regexpr)
+
+    #Each match is one state
+    re_states = re.compile(states)
     
     matches = outer.finditer(c)
     for m in matches:
@@ -31,14 +41,25 @@ def parse_pdf(c):
     icat = 1
     nvotes1 = []
     for cat_line in cat_lines:
-        matches = inner.finditer(cat_line)
-        sum = 0
+        # print(cat_line)
+        matches = re_states.finditer(cat_line)
+        state_pieces = []
         for match in matches:
             start, end = match.span()
-            n = int(cat_line[start+1:end-1])
-            nvotes1.append([icat,n])
+            state_pieces.append(start)
+        state_pieces.append(len(cat_line))
+        for istate_piece in range(len(state_pieces)-1):
+            state_piece = cat_line[state_pieces[istate_piece]:state_pieces[istate_piece+1]]
+            # print(state_piece)   
+            vmatches = re_votes.finditer(state_piece)
+            for vmatch in vmatches:
+                vstart, vend = vmatch.span()
+                n = int(state_piece[vstart+1:vend-1])
+                nvotes1.append([icat,n, state_piece, categories[icat]])
         icat += 1
-    
+    # with open('election/cook.json', 'w') as f:
+    #     json.dump(nvotes1, f, indent=0)
+    # f.close()
     return nvotes1
     
 def proj(nvotes, verbose=False):
@@ -61,7 +82,17 @@ simulate = False
 reader = PyPDF2.PdfFileReader('election/cook.pdf')
 page = reader.getPage(0)
 c = page.extractText()
-nvotes = parse_pdf(c)
+with open('cook.txt', 'w') as f:
+    f.write(c)
+
+#Decide whether to use the cook report or use the saved json with possible overrides
+get_cook = False
+if get_cook:
+    nvotes = parse_pdf(c)
+else:
+    with open('election/cook.json', 'r') as f:
+        nvotes = json.load(f)
+    f.close()
 
 #There are a total of 538 electoral votes
 sum=0
