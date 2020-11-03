@@ -50,7 +50,7 @@ def parse_pdf(c):
         state_pieces.append(len(cat_line))
         for istate_piece in range(len(state_pieces)-1):
             state_piece = cat_line[state_pieces[istate_piece]:state_pieces[istate_piece+1]]
-            # print(state_piece)   
+            # print(state_piece)
             vmatches = re_votes.finditer(state_piece)
             for vmatch in vmatches:
                 vstart, vend = vmatch.span()
@@ -90,7 +90,7 @@ get_cook = False
 if get_cook:
     nvotes = parse_pdf(c)
 else:
-    with open('election/cook.json', 'r') as f:
+    with open('election/overrides.json', 'r') as f:
         nvotes = json.load(f)
     f.close()
 
@@ -122,121 +122,194 @@ for i in range(nruns):
     sum += pr
 #320.506 0.5957360594795539 (1000 runs)
 print(sum/nruns, sum/(nruns*538))
-print(f'blue {nblue} red {nred} tie {ntie}')
+nbiden = nblue
+ntrump = nred
+n_pres_tie = ntie
 
+################################################
 #Senate
-nvotes=[]
-#B=0
-#SB=1
-#LIB=2
-#LEB=3
-#T=4
-#LER=5
-#LIR=6
-#SR=7
-#R=8
+################################################
 
-sv=[]
-#LIR,R USA,Alabama: 
-sv.append([6,8])
-#LIR,R USA,Alaska: 
-sv.append([  6,8])
-#LID,B  USA,Arizona: 
-sv.append([  2,0])
-#SR,R USA,Arkansas: 
-sv.append([  7,8])
-#DDUSA,California: 
-sv.append([  0,0])
-#LID,D, USA,Colorado: 
-sv.append([  2,0])
-#BB USA,Connecticut: 
-sv.append([  0,0])
-#SB,B USA,Delaware: 
-sv.append([  1,0])
-#RR USA,Florida: 
-sv.append([  8,8])
-#T, LED USA,Georgia: 
-sv.append([  4,3])
-#BB USA,Hawaii 
-sv.append([  0,0])
-#SR,R USA,Idaho: 
-sv.append([  7,8])
-#SB,B USA,Illinois: 
-sv.append([  0,1])
-#RR USA,Indiana: 
-sv.append([  8,8])
-#T,R USA,Iowa: 
-sv.append([  4,8])
-#LIR,R USA,Kansas: 
-sv.append([  6,8])
-#SR,R USA,Kentucky: 
-sv.append([  7,8])
-#SR,R USA,Louisiana: 
-sv.append([  7,8])
-#LED,D USA,Maine: 
-sv.append([  3,0])
-#BB USA,Maryland: 
-sv.append([  0,0])
-#SD,B USA,Massachusetts: 
-sv.append([  1,0])
-#LID,B USA,Michigan: 
-sv.append([  2,0])
-#LID,B USA,Minnesota: 
-sv.append([  2,0])
-#LIR,R USA,Mississippi: 
-sv.append([  6,8])
-#RR USA,Missouri: 
-sv.append([  8,8])
-#LER,B USA,Montana: 
-sv.append([  5,0])
-#SR,R USA,Nebraska: 
-sv.append([  7,8])
-#BB USA,Nevada: 
-sv.append([  0,0])
-#SD,B USA,New Hampshire: 
-sv.append([  1,0])
-#SD,B USA,New Jersey: 
-sv.append([  1,0])
-#SD,D USA,New Mexico: 
-sv.append([  1,0])
-#BB USA,New York: 
-sv.append([  0,0])
-#LED,R USA,North Carolina: 
-sv.append([  3,8])
-#RR USA,North Dakota: 
-sv.append([  8,8])
-#RB USA,Ohio: 
-sv.append([  8,0])
-#SR,R USA,Oklahoma: 
-sv.append([  7,8])
-#SB,B USA,Oregon: 
-sv.append([  1,0])
-#BR USA,Pennsylvania: 
-sv.append([  0,8])
-#SB,B USA,Rhode Island: 
-sv.append([  1,0])
-#LIR,R USA,South Carolina: 
-sv.append([  6,8])
-#SR,R USA,South Dakota: 
-sv.append([  7,8])
-#SR,R USA,Tennessee: 
-sv.append([  7,8])
-#LIR,R USA,Texas: 
-sv.append([  7,8])
-#RR USA,Utah: 
-sv.append([  8,8])
-#BB USA,Vermont: 
-sv.append([  0,0])
-#SD,D USA,Virginia: 
-sv.append([  0,1])
-#BBUSA,Washington: 
-sv.append([  0,0])
-#SR,B USA,West Virginia: 
-sv.append([  7,0])
-#BR USA,Wisconsin: 
-sv.append([  0,8])
-#SR,R USA,Wyoming: 
-sv.append([  7,8])
+#Decide whether to load categories collected from 538 site or use overrides
+override_senate = False
+if not override_senate:
+    nvotes=[]
+    #B=0
+    #SB=1
+    #LIB=2
+    #LEB=3
+    #T=4
+    #LER=5
+    #LIR=6
+    #SR=7
+    #R=8
+
+    sv=[]
+    #LIR,R USA,Alabama: 
+    sv.append([6,8, 'AL'])
+
+    #LIR,R USA,Alaska: 
+    sv.append([  6,8, 'AK'])
+
+    #LID,B  USA,Arizona: 
+    sv.append([  2,0, 'AZ'])
+
+    #SR,R USA,Arkansas: 
+    sv.append([  7,8, 'AR Arkansas'])
+
+    #DDUSA,California: 
+    sv.append([  0,0, 'CA'])
+
+    #LID,D, USA,Colorado: 
+    sv.append([  2,0, 'CO'])
+
+    #BB USA,Connecticut: 
+    sv.append([  0,0, 'CT'])
+
+    #SB,B USA,Delaware: 
+    sv.append([  1,0, 'DE'])
+
+    #RR USA,Florida: 
+    sv.append([  8,8, 'FL']
+    )
+    #T, LED USA,Georgia: 
+    sv.append([  4,3, 'GA'])
+
+    #BB USA,Hawaii 
+    sv.append([  0,0, 'HI'])
+
+    #SR,R USA,Idaho: 
+    sv.append([  7,8, 'Idaho'])
+
+    #SB,B USA,Illinois: 
+    sv.append([  0,1, 'IL'])
+
+    #RR USA,Indiana: 
+    sv.append([  8,8, 'Indiana'])
+
+    #T,R USA,Iowa: 
+    sv.append([  4,8, 'Iowa'])
+
+    #LIR,R USA,Kansas: 
+    sv.append([  6,8, 'Kansas'])
+
+    #SR,R USA,Kentucky: 
+    sv.append([  7,8, 'Kentucky'])
+
+    #SR,R USA,Louisiana: 
+    sv.append([  7,8, 'LA'])
+
+    #LED,D USA,Maine: 
+    sv.append([  3,0, 'ME'])
+
+    #BB USA,Maryland: 
+    sv.append([  0,0, 'Maryland'])
+
+    #SD,B USA,Massachusetts: 
+    sv.append([  1,0, 'Massachusetts'])
+
+    #LID,B USA,Michigan: 
+    sv.append([  2,0, 'Michigan'])
+
+    #LID,B USA,Minnesota: 
+    sv.append([  2,0, 'Minnesota'])
+
+    #LIR,R USA,Mississippi: 
+    sv.append([  6,8, 'Mississippi'])
+
+    #RR USA,Missouri: 
+    sv.append([  8,8, 'Missouri'])
+
+    #LER,B USA,Montana: 
+    sv.append([  5,0, 'Montana'])
+
+    #SR,R USA,Nebraska: 
+    sv.append([  7,8, 'Nebraska'])
+
+    #BB USA,Nevada: 
+    sv.append([  0,0, 'Nevada'])
+
+    #SD,B USA,New Hampshire: 
+    sv.append([  1,0, 'New Hampshire'])
+
+    #SD,B USA,New Jersey: 
+    sv.append([  1,0, "New Jersey"])
+
+    #SD,D USA,New Mexico: 
+    sv.append([  1,0, 'New Mexico'])
+
+    #BB USA,New York: 
+    sv.append([  0,0, 'NY'])
+
+    #LED,R USA,North Carolina: 
+    sv.append([  3,8, "NC"])
+
+    #RR USA,North Dakota: 
+    sv.append([  8,8, 'ND'])
+
+    #RB USA,Ohio: 
+    sv.append([  8,0, 'Ohio'])
+
+    #SR,R USA,Oklahoma: 
+    sv.append([  7,8, 'Oklahoma'])
+
+    #SB,B USA,Oregon: 
+    sv.append([  1,0, 'Oregon'])
+
+    #BR USA,Pennsylvania: 
+    sv.append([  0,8, 'PA'])
+
+    #SB,B USA,Rhode Island: 
+    sv.append([  1,0, 'Rhode Island'])
+
+    #LIR,R USA,South Carolina: 
+    sv.append([  6,8, 'South Carolina'])
+
+    #SR,R USA,South Dakota: 
+    sv.append([  7,8, 'South Dakota'])
+
+    #SR,R USA,Tennessee: 
+    sv.append([  7,8, 'Tennessee'])
+
+    #LIR,R USA,Texas: 
+    sv.append([  7,8, 'TX'])
+
+    #RR USA,Utah: 
+    sv.append([  8,8, 'UT'])
+
+    #BB USA,Vermont: 
+    sv.append([  0,0, 'VT'])
+
+    #SD,D USA,Virginia: 
+    sv.append([  0,1, 'VA'])
+
+    #BBUSA,Washington: 
+    sv.append([  0,0, 'WA'])
+
+    #SR,B USA,West Virginia: 
+    sv.append([  7,0, 'West Virginia'])
+
+    #BR USA,Wisconsin: 
+    sv.append([  0,8, 'Wisconsin'])
+
+    #SR,R USA,Wyoming: 
+    sv.append([  7,8, 'Wyoming'])
+
+    sv2 = []
+    for v in sv:
+        sv2.append([\
+            v[0],v[1],v[2], \
+            categories[v[0]], \
+            categories[v[1]] \
+              ] )
+
+    with open('election/senate.json', 'w') as f:
+        json.dump(sv2,f, indent=2)
+    f.close()
+else:
+    with open ('election/senate.json', 'r') as f:
+        sv = json.load(f)
+    f.close()
 
 nd=0
 nr=0
@@ -266,4 +339,9 @@ for i in range(1000):
         nb += 1
     else:
         nt += 1
-print(f'blue {nb} red {nr} tie {nt}')
+#blue 700 red 140 tie 160
+
+print('---------- PRESIDENTIAL ------------------')
+print(f'Biden {nbiden} Trump {ntrump} Tie {n_pres_tie}\n')
+print('----------  SENATE -----------------------')
+print(f'Democrat majority {nb} Republican majority {nr} Tie {nt}')
