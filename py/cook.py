@@ -9,6 +9,12 @@ states = 'Alabama|Alaska|Arizona|Arkansas|California|Colorado|Connecticut|Delawa
 
 categories = ['democrat', 'solid democrat', 'likely democrat', 'leans democrat', 'tossup', 'leans republican', 'likely republican', 'solid republican', 'republican']
 
+#Decide whether to use the cook report or use the saved json with possible overrides
+get_cook = False
+
+#Decide whether to load categories collected from 538 site or use overrides
+override_senate = True
+
 #Presidential
 def parse_pdf(c):
     c=c.replace('\n','')
@@ -85,8 +91,6 @@ c = page.extractText()
 with open('cook.txt', 'w') as f:
     f.write(c)
 
-#Decide whether to use the cook report or use the saved json with possible overrides
-get_cook = False
 if get_cook:
     nvotes = parse_pdf(c)
 else:
@@ -130,8 +134,6 @@ n_pres_tie = ntie
 #Senate
 ################################################
 
-#Decide whether to load categories collected from 538 site or use overrides
-override_senate = False
 if not override_senate:
     nvotes=[]
     #B=0
@@ -307,7 +309,7 @@ if not override_senate:
         json.dump(sv2,f, indent=2)
     f.close()
 else:
-    with open ('election/senate.json', 'r') as f:
+    with open ('election/senate-overrides.json', 'r') as f:
         sv = json.load(f)
     f.close()
 
