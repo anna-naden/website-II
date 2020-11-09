@@ -3,6 +3,7 @@ import numpy as np
 import re
 import random
 import json
+import os
 
 import PyPDF2
 states = 'Alabama|Alaska|Arizona|Arkansas|California|Colorado|Connecticut|Delaware|Florida|Georgia|Hawaii|Idaho|Illinois|Indiana|Iowa|Kansas|Kentucky|Louisiana|Maine|Maryland|Massachusetts|Michigan|Minnesota|Mississippi|Missouri|Montana|Nebraska|Nevada|New Hampshire|New Jersey|New Mexico|New York|North Carolina|North Dakota|Ohio|Oklahoma|Oregon|Pennsylvania|Rhode Island|South Carolina|South Dakota|Tennessee|Texas|Utah|Virginia|Vermont|Washington|West Virginia|Wisconsin|Wyoming'
@@ -15,7 +16,17 @@ get_cook = False
 #Decide whether to load categories collected from 538 site or use overrides
 override_senate = True
 
+#Data source for presidential election if get_cook False
+pres_source = 'overrides.json'
+
+#Data source for senate
+senate_source = 'senate-overrides.json'
+
 #Presidential
+
+model = [1, .95,.75,.6, .5, .4, .25, .05, 0.]
+#        0  1    2   3   4   5   6    7   8
+
 def parse_pdf(c):
     c=c.replace('\n','')
     i=0
@@ -61,24 +72,27 @@ def parse_pdf(c):
             for vmatch in vmatches:
                 vstart, vend = vmatch.span()
                 n = int(state_piece[vstart+1:vend-1])
-                nvotes1.append([icat,n, state_piece, categories[icat]])
+                nvotes1.append([icat,n,  model[icat], state_piece, categories[icat],])
         icat += 1
-    # with open('election/cook.json', 'w') as f:
-    #     json.dump(nvotes1, f, indent=0)
-    # f.close()
+    nvotes1 = sorted(nvotes1, key=lambda v: v[3])
+    with open('election/cook.json', 'w') as f:
+        json.dump(nvotes1, f, indent=0)
+    f.close()
     return nvotes1
     
 def proj(nvotes, verbose=False):
-    model = [1, .95,.75,.6, .5, .4, .25, .05, 0.]
     nblue = 0
     for vote in nvotes:
         r = random.random()
+
+
         cat = vote[0]
-        if r<model[cat]:
+        if r<vote[2]:
             nblue += vote[1]
             if verbose:
                 print(f'blue {r} {model[cat]}')
         else:
+            
             if verbose:
                 print("red")   
     return nblue
@@ -94,15 +108,16 @@ with open('cook.txt', 'w') as f:
 if get_cook:
     nvotes = parse_pdf(c)
 else:
-    with open('election/overrides.json', 'r') as f:
+    with open(os.path.join('/home/anna_user2/projects/website-II/election',pres_source), 'r') as f:
         nvotes = json.load(f)
     f.close()
 
+for v in nvotes:
+    print(v[3], v[2])
 #There are a total of 538 electoral votes
 sum=0
 for it in nvotes:
     sum += it[1]
-print(sum)
 if not simulate and (sum != 538):
     exit()
 
@@ -125,7 +140,7 @@ for i in range(nruns):
         nblue += 1
     sum += pr
 #320.506 0.5957360594795539 (1000 runs)
-print(sum/nruns, sum/(nruns*538))
+# print(sum/nruns, sum/(nruns*538))
 nbiden = nblue
 ntrump = nred
 n_pres_tie = ntie
@@ -305,30 +320,40 @@ if not override_senate:
             categories[v[1]] \
               ] )
 
+    nvotes = []
+    for s in sv:
+        nvotes.append([ \
+            s[0],\
+            1, \
+            model[s[0]], \
+            s[2]\
+        ])
+        nvotes.append(\
+            [s[1],\
+            1, \
+            model[s[1]],\
+            s[2]])
+    nvotes = sorted(nvotes, key=lambda v: v[3])
     with open('election/senate.json', 'w') as f:
-        json.dump(sv2,f, indent=2)
+        json.dump(nvotes,f, indent=2)
     f.close()
 else:
-    with open ('election/senate-overrides.json', 'r') as f:
-        sv = json.load(f)
+    with open (os.path.join('/home/anna_user2/projects/website-II/election', senate_source), 'r') as f:
+        nvotes = json.load(f)
     f.close()
 
 nd=0
 nr=0
-for s in sv:
-    if s[0]==0:
-        nd += 1
-    if s[1]==0:
-        nd += 1
-    if s[0]==8:
-        nr += 1
-    if s[1]==8:
-        nr += 1
-print(f'dem continuing {nd} rep continuing {nr}')
-nvotes = []
-for s in sv:
-    nvotes.append([s[0],1])
-    nvotes.append([s[1],1])
+# for s in sv:
+#     if s[0]==0:
+#         nd += 1
+#     if s[1]==0:
+#         nd += 1
+#     if s[0]==8:
+#         nr += 1
+#     if s[1]==8:
+#         nr += 1
+# print(f'dem continuing {nd} rep continuing {nr}')
 random.seed(0)
 nb=0
 nr=0
@@ -343,6 +368,13 @@ for i in range(1000):
         nt += 1
 #blue 700 red 140 tie 160
 
+states2 = states.replace('|','\n')
+with open("election/states.txt", "w") as f:
+    f.write(states2)
+f.close()
+
+print('\n\n\n------------------------------------------')
+print(f'Presidential data source: {pres_source} Senate data source: {senate_source}\n')
 print('---------- PRESIDENTIAL ------------------')
 print(f'Biden {nbiden} Trump {ntrump} Tie {n_pres_tie}\n')
 print('----------  SENATE -----------------------')
