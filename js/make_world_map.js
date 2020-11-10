@@ -88,7 +88,7 @@ function make_world_map(features) {
 
     function world_time_series(e) {
         ISO_A3 = e.target.feature.id.replace("?ISO_A3=","");
-        window.location.href = "ISO-A3-time-series.html?ISO_A3=" + ISO_A3;
+        window.location.href = "ISO-A3-time-series2.html?ISO_A3=" + ISO_A3;
     }
     function onEachFeature(feature, layer) {
         layer.on({

@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    html, body {
+        height: 100vh;
+        height: 100vw;
+    }
+    #map {
+        height: 40vh;
+        height: 40vw;
+    }
+</style>
+<div id="county-time-series"></div>
+<h6>The most recent data for the US and France has been validated. However, this website is still being tested. To report issues, send email to <a href =mailto:anna@phoenix-computer.com>anna@phoenix-computer.com</a> </h6>
+<script>
+    var ISO_A3 = window.location.search.replace("?ISO_A3=", "")
+    var ts =  document.getElementById('county-time-series');
+    ts.innerHTML = "<img src=" + ISO_A3 + ".jpg></img>"
+</script>
+{% endblock %}

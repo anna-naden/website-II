@@ -35,6 +35,12 @@ then echo
     exit 1
 fi
 
+python make_world_plots.py
+if [ $? -ne 0 ]
+then echo
+    exit 1
+fi
+
 
 # -------------------------------------------------------------
 # Upload content

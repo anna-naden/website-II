@@ -40,7 +40,7 @@ def proj():
 random.seed(0)
 nd=0
 nr=0
-for i in range(100000):
+for i in range(1000000):
     d = proj()
     if d>=50:
         nd += 1

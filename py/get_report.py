@@ -3,8 +3,8 @@ from get_config import get_config
 
 config = get_config()
 
-start_date ='9/15/20'
-end_date = '10/15/20'
+start_date ='10/8/20'
+end_date = '11/8/20'
 illinois_pop = 12671821
 cook_pop = 5150233
 ontario_pop = 12851821
