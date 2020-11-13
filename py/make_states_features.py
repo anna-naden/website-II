@@ -42,30 +42,30 @@ def desample_deep(l):
 def stringify(num):
     return f'{num}'
 
-def stringify_deep_poly(l):
-    out=[]
-    for c in l:
-        out1=[]
-        for c2 in c:
-            map1 = map(stringify,c2)
-            result = list(map1)
-            out1.append(result)
-        out.append(out1)
-    return out
+# def stringify_deep_poly(l):
+#     out=[]
+#     for c in l:
+#         out1=[]
+#         for c2 in c:
+#             map1 = map(stringify,c2)
+#             result = list(map1)
+#             out1.append(result)
+#         out.append(out1)
+#     return out
 
-def stringify_deep_multi_poly(l):
-    out=[]
-    for c in l:
-        out1=[]
-        for c2 in c:
-            out2 = []
-            for c3 in c2:
-                map1 = map(stringify,c3)
-                result = list(map1)
-                out2.append(result)
-            out1.append(out2)
-        out.append(out1)
-    return out
+# def stringify_deep_multi_poly(l):
+#     out=[]
+#     for c in l:
+#         out1=[]
+#         for c2 in c:
+#             out2 = []
+#             for c3 in c2:
+#                 map1 = map(stringify,c3)
+#                 result = list(map1)
+#                 out2.append(result)
+#             out1.append(out2)
+#         out.append(out1)
+#     return out
 
 def make_features():
     status, df = get_world_covid_jh()
@@ -123,13 +123,13 @@ def make_features():
         deaths = state_deaths[feature['id']]
         feature['properties']['density'] = f'{deaths}'
 
-        map_type = feature['geometry']['type']
-        if map_type == 'MultiPolygon':
-            coordinates = stringify_deep_multi_poly(feature['geometry']['coordinates'])
-        else:
-            coordinates = stringify_deep_poly(feature['geometry']['coordinates'])
+        # map_type = feature['geometry']['type']
+        # if map_type == 'MultiPolygon':
+        #     coordinates = stringify_deep_multi_poly(feature['geometry']['coordinates'])
+        # else:
+        #     coordinates = stringify_deep_poly(feature['geometry']['coordinates'])
 
-        feature['geometry']['coordinates'] = coordinates
+        # feature['geometry']['coordinates'] = coordinates
     
     features = obj_can['features']
     features2 = []
@@ -145,15 +145,15 @@ def make_features():
         feature['properties']['density'] = f'{deaths}'
         coordinates = desample_deep(feature['geometry']['coordinates'])
 
-        map_type = feature['geometry']['type']
-        if map_type == 'MultiPolygon':
-            coordinates = stringify_deep_multi_poly(feature['geometry']['coordinates'])
-        else:
-            coordinates = stringify_deep_poly(feature['geometry']['coordinates'])
+        # map_type = feature['geometry']['type']
+        # if map_type == 'MultiPolygon':
+        #     coordinates = stringify_deep_multi_poly(feature['geometry']['coordinates'])
+        # else:
+        #     coordinates = stringify_deep_poly(feature['geometry']['coordinates'])
 
-        cart = feature['properties']['cartodb_id']
-        feature['properties']['cartodb_id'] = f'{cart}'
-        feature['geometry']['coordinates'] = coordinates
+        # cart = feature['properties']['cartodb_id']
+        # feature['properties']['cartodb_id'] = f'{cart}'
+        # feature['geometry']['coordinates'] = coordinates
 
     obj = obj_us
     obj['features'] = obj_us['features'] + obj_can['features']
