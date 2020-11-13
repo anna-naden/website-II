@@ -14,33 +14,33 @@ import pandas as pd
 import  os
 from canadian_province_id import canadian_province_id
 
-def desample(coords):
-    desample_factor = 80
-    if (len(coords)<160):
-        return coords
+# def desample(coords):
+#     desample_factor = 80
+#     if (len(coords)<160):
+#         return coords
 
-    coorda = []
-    for i in range(len(coords)):
-        if i%desample_factor == 0:
-            coorda.append(coords[i])
-        i += 1
-    coorda.append(coords[0])
-    return coorda
+#     coorda = []
+#     for i in range(len(coords)):
+#         if i%desample_factor == 0:
+#             coorda.append(coords[i])
+#         i += 1
+#     coorda.append(coords[0])
+#     return coorda
 
-def desample_deep(l):
-    out=[]
-    for c in l:
-        out1=[]
-        for c2 in c:
-            out2 = []
-            map1 = map(desample,c2)
-            result = list(map1)
-            out1.append(result)
-        out.append(out1)
-    return out
+# def desample_deep(l):
+#     out=[]
+#     for c in l:
+#         out1=[]
+#         for c2 in c:
+#             out2 = []
+#             map1 = map(desample,c2)
+#             result = list(map1)
+#             out1.append(result)
+#         out.append(out1)
+#     return out
 
-def stringify(num):
-    return f'{num}'
+# def stringify(num):
+#     return f'{num}'
 
 # def stringify_deep_poly(l):
 #     out=[]
@@ -143,7 +143,7 @@ def make_features():
         feature['id'] = 'CAN' + id
         deaths = state_deaths[feature['id']]
         feature['properties']['density'] = f'{deaths}'
-        coordinates = desample_deep(feature['geometry']['coordinates'])
+        # coordinates = desample_deep(feature['geometry']['coordinates'])
 
         # map_type = feature['geometry']['type']
         # if map_type == 'MultiPolygon':
