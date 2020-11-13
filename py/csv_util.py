@@ -26,18 +26,13 @@ def csv_get_dict(path, key_col, value_col):
             for row in csv_reader:
                 key = row[key_col]
                 if key in dict:
-                    return "Duplicate Key"
+                    return None
                 dict[key] = row[value_col]
     except Exception as ex:
         return ex, None
     return dict
 
-# print("Untested!")
-# exit()
-# path = "/home/anna_user2/projects/website-II/json/electoral-votes.json"
-# status, dict = csv_get_dict(path, 0,1)
-# total = 0
-# for key in dict.keys():
-#     print(key,dict[key])
-#     total += int(dict[key])
-# print(total)
+from get_config import *
+config = get_config()
+status, name = csv_lookup(config['FILES']['nation_props'], 0, 'USA', 1)
+print(name) 
