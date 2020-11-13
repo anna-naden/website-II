@@ -40,6 +40,7 @@ with open(config['FILES']['world_covid_deaths'], 'r') as f:
             for i in range(len(row)):
                 if row[i] == end_date:
                     col_last_date = i
+                    col_last_week = i-7
                 elif  row[i] == start_date:
                     col_first_date = i
             header=False
@@ -47,6 +48,7 @@ with open(config['FILES']['world_covid_deaths'], 'r') as f:
             ndeaths_ontario = int(row[col_last_date]) - int(row[col_first_date])
         elif row[0] == '' and row[1] == 'France':
             last_ndeaths_france = int(row[col_last_date])
+            last_wk_fr_deaths = int(row[col_last_week])
         elif row[1] == 'US':
             last_ndeaths_us = int(row[col_last_date])
         elif row[1] == 'Mexico':
@@ -58,7 +60,8 @@ print(f'per capita {100000*last_ndeaths_us/us_pop}')
 print('\n')
 
 print('FRA')
-print(f'Last deaths {last_ndeaths_france}')
+print(f'Last deaths {last_wk_fr_deaths}, {last_ndeaths_france}')
+print(f'Last week d per cap: {100000*(last_ndeaths_france-last_wk_fr_deaths)/(7*france_pop)}')
 print(f'per capita {100000*last_ndeaths_france/france_pop}')
 print('\n')
 

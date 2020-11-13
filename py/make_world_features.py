@@ -145,14 +145,16 @@ if False:
         upload_file(config['FILES']['scratch'], 'phoenix-technical-services.com', ISO_A3+'.json',title=ISO_A3)
         os.remove(config['FILES']['scratch'])
 
-# Time series all nations
-for key in nations.keys():
-    status, time_series_json = get_nation_time_series(df_world1[df_world1.ISO_A3==key].copy(), key, start_date_graph, end_date)
-    if status is not None:
-        print(status)
-        exit(1)
-    if time_series_json is not None:
-        with open(config['FILES']['scratch'], 'w') as f:
-            f.write(time_series_json)
-            upload_file(config['FILES']['scratch'], 'phoenix-technical-services.com',key+'.json', key)
-            os.remove(config['FILES']['scratch'])
+if True:
+    # Time series all nations
+    # for key in nations.keys():
+    for key in ['USA']:
+        status, time_series_json = get_nation_time_series(df_world1[df_world1.ISO_A3==key].copy(), key, start_date_graph, end_date)
+        if status is not None:
+            print(status)
+            exit(1)
+        if time_series_json is not None:
+            with open(config['FILES']['scratch'], 'w') as f:
+                f.write(time_series_json)
+                upload_file(config['FILES']['scratch'], 'phoenix-technical-services.com',key+'.json', key)
+                os.remove(config['FILES']['scratch'])

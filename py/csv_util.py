@@ -32,12 +32,12 @@ def csv_get_dict(path, key_col, value_col):
         return ex, None
     return dict
 
-print("Untested!")
-exit()
-path = "/home/anna_user2/projects/website-II/json/electoral-votes.json"
-status, dict = csv_get_dict(path, 0,1)
-total = 0
-for key in dict.keys():
-    print(key,dict[key])
-    total += int(dict[key])
-print(total)
+# print("Untested!")
+# exit()
+# path = "/home/anna_user2/projects/website-II/json/electoral-votes.json"
+# status, dict = csv_get_dict(path, 0,1)
+# total = 0
+# for key in dict.keys():
+#     print(key,dict[key])
+#     total += int(dict[key])
+# print(total)

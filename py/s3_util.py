@@ -49,7 +49,7 @@ def upload_file(file_name, bucket, object_name=None, title = None):
         return False
     return True
 
-def delete_obj(bucket, object_name=None):
+def delete_obj(bucket, object_name):
     """Upload a file to an S3 bucket
 
     :param file_name: File to upload
