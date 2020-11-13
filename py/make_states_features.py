@@ -6,11 +6,12 @@ from state_population_fips import state_population_fips
 from push_states_features import push_states_features
 from state_name_from_fips import state_name_from_fips
 from get_config import get_config
+from s3_util import upload_file
 
 import numpy as np
 import json
 import pandas as pd
-
+import  os
 from canadian_province_id import canadian_province_id
 
 def desample(coords):
@@ -177,8 +178,13 @@ def make_csv_bar_charts(state_deaths):
                 f.write('},\n')
         f.write('];')
     f.close()
-
+config = get_config()
 covid = make_features()
-print("pushing states features")
-push_states_features(covid)
-print("states features pushed")
+with open(config['FILES']['scratch'], 'w') as f:
+    json.dump(covid,f)
+upload_file(config['FILES']['scratch'], 'phoenix-technical-services.com', 'all-states.json', title='all-states.json')
+os.remove(config['FILES']['scratch'])
+
+# print("pushing states features")
+# push_states_features(covid)
+# print("states features pushed")

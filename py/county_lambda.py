@@ -29,7 +29,7 @@ def lambda_handler(event, context):
                 'body': f'{inst}'
             }
             return resp
-    
+
         resp= {
             'statusCode': 200,
             'headers': {

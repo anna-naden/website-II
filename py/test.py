@@ -1,77 +1,61 @@
-import numpy as np
-import matplotlib.pyplot as plt
+import json
+import boto3
 import os
 
-from get_world_covid_jh import get_world_covid_jh
-from world_populations import world_populations
-from s3_util import upload_file
-from get_config import get_config
+def lambda_handler():
+    try:
+        s3 = boto3.client('s3')
+        path = os.path.join('scratch.json')
+        s3.download_file('phoenix-technical-services.com', 'all-states.json', path)
+        with open(path, 'r') as f:
+            obj = f.read()
+    except Exception as inst:
+        resp = {
+            'statusCode': 404,
+            'headers': {
+            "Access-Control-Allow-Origin": "*"
+            },
+            'body': f'{inst}'
+        }
+        return resp
 
-def get_nation_weekly(df, pop):
-    ndays=7
-    l = len(df)
-    nc=np.zeros(l)
-    nd=np.zeros(l)
-    nds=np.zeros(l)
-    cases = df.cases
-    deaths = df.deaths
-
-    for i in range(1,l):
-        ci = cases[i]
-        ci1 = cases[i-1]
-
-        di = deaths[i]
-        di1 = deaths[i-1]
-
-        nc[i] = ci - ci1
-        nd[i] = di - di1
-
-    nc = 100000*nc/(ndays*pop)
-    nd=100000*nd/(ndays*pop)
+    resp= {
+        'statusCode': 200,
+        'headers': {
+            "Access-Control-Allow-Origin": "*"
+        },
+        'body': obj
+        }
+    # os.remove(path)
+    return resp
     
-    dates = df.index.get_level_values('date')
-    return dates, nd
+    # table_name = 'state-features'
+    # dynamodb=boto3.resource('dynamodb')
+    # client = boto3.client('dynamodb')
+    # table = dynamodb.Table(table_name)
+    
+    # try :
+    #     response = table.scan()
+    #     items = response['Items']
+    # except Exception as inst:
+    #     resp = {
+    #         'statusCode': 404,
+    #         'body': f'{inst}'
+    #     }
+    #     return resp
+    
+    # features = []
+    # for item in items:
+    #     features.append(item['feature'])
+        
+    # obj={'type': 'FeatureCollection', 'features': features}
 
-config = get_config()
-
-try:
-    status, pops_dict = world_populations()
-    assert(status is None)
-except Exception as inst:
-    print(inst)
-    exit(1)
-
-status, df=get_world_covid_jh()
-ISO_A3_codes = df.index.get_level_values('ISO_A3').unique()
-df_us=df[df.index.get_level_values('ISO_A3')=='USA']
-df_us=df_us.groupby(axis='index', by=['date']).sum()
-df_us=df_us.resample('W', level='date').first()
-
-pop = pops_dict['USA']['population']
-dates, nd = get_nation_weekly(df_us, pop)
-for ISO_A3 in ['FRA']:
-    # print(ISO_A3)
-    df_nation=df[df.index.get_level_values('ISO_A3')==ISO_A3]
-    df_nation=df_nation.groupby(axis='index', by=['date']).sum()
-    print(df_nation.tail(10))
-    x=df_nation.resample('W', level='date',closed='right')
-    df_nation=x.last()
-    print(df_nation.tail())
-    pop = pops_dict[ISO_A3]['population']
-    dates_n,nd_nation = get_nation_weekly(df_nation, pop)
-    plt.plot(dates,nd)
-    fig, ax=plt.subplots()
-    for tick in ax.get_xticklabels():
-        tick.set_rotation(45)
-    ax.plot(dates_n, nd_nation)
-    ax.plot(dates, nd)
-    ax.legend([ISO_A3, 'USA'])
-    ax.set_title('Daily New Fatalities per 100,000 Population')
-    last = len(nd_nation)-1
-    last_date=f'{dates_n[last]}'[:10]
-    ax.annotate(f'{last_date}, {round(nd_nation[last],2)}', [dates_n[last],nd_nation[last]])
-    fig.tight_layout(pad=4)
-    fig.savefig(config['FILES']['scratch_image'])
-    plt.close()
-    upload_file(config['FILES']['scratch_image'], 'phoenix-technical-services.com', ISO_A3 + '.jpg', title=ISO_A3)
-    os.remove(config['FILES']['scratch_image'])
+    # resp= {
+    #     'statusCode': 200,
+    #     'headers': {
+    #         "Access-Control-Allow-Origin": "*"
+    #     },
+    #     'body': json.dumps(obj)
+    #     }
+    # return resp
+print(lambda_handler())

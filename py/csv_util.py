@@ -34,5 +34,5 @@ def csv_get_dict(path, key_col, value_col):
 
 from get_config import *
 config = get_config()
-status, name = csv_lookup(config['FILES']['nation_props'], 0, 'USA', 1)
+status, name = csv_lookup(config['FILES']['nation_props'], 4, 'PAHO', 0)
 print(name) 
