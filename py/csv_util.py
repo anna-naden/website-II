@@ -32,7 +32,7 @@ def csv_get_dict(path, key_col, value_col):
         return ex, None
     return dict
 
-from get_config import *
+from get_config import get_config
 config = get_config()
 status, name = csv_lookup(config['FILES']['nation_props'], 4, 'PAHO', 0)
 print(name) 

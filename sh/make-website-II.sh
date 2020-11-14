@@ -12,32 +12,32 @@ conda activate website-II
 cd ~/projects/website-II/py
 python make_pickle.py
 if [ $? -ne 0 ]
-then echo
+then
     exit 1
 fi
 
 # ---------- Extract 30-day fatalities to json and js files, upload to s3
 python make_county_features.py
 if [ $? -ne 0 ]
-then echo
+then
     exit 1
 fi
 
 python make_states_features.py
 if [ $? -ne 0 ]
-then echo
+then
     exit 1
 fi
 
 python make_world_features.py
 if [ $? -ne 0 ]
-then echo
+then
     exit 1
 fi
 
 python make_world_plots.py
 if [ $? -ne 0 ]
-then echo
+then
     exit 1
 fi
 

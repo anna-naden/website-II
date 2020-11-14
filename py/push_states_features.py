@@ -46,11 +46,6 @@ def push_states_features(covid, json_str=None):
 
         table.meta.client.get_waiter('table_exists')
     
-    # with open('/home/anna_user2/projects/website-II/json/state-month-deaths.json', 'rt') as f:
-    #     covid = f.read()
-    # covid=json.loads(covid, parse_float=stringify, parse_int=stringify)
-    #covid = json.loads(json_str, parse_float=stringify, parse_int=stringify)
-    #covid = json.loads(json_str)
     for feature in covid['features']:
         id = feature['id']
         # print(id)

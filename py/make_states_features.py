@@ -7,65 +7,12 @@ from push_states_features import push_states_features
 from state_name_from_fips import state_name_from_fips
 from get_config import get_config
 from s3_util import upload_file
+from csv_util import csv_get_dict, csv_lookup
 
 import numpy as np
 import json
 import pandas as pd
 import  os
-from canadian_province_id import canadian_province_id
-
-# def desample(coords):
-#     desample_factor = 80
-#     if (len(coords)<160):
-#         return coords
-
-#     coorda = []
-#     for i in range(len(coords)):
-#         if i%desample_factor == 0:
-#             coorda.append(coords[i])
-#         i += 1
-#     coorda.append(coords[0])
-#     return coorda
-
-# def desample_deep(l):
-#     out=[]
-#     for c in l:
-#         out1=[]
-#         for c2 in c:
-#             out2 = []
-#             map1 = map(desample,c2)
-#             result = list(map1)
-#             out1.append(result)
-#         out.append(out1)
-#     return out
-
-# def stringify(num):
-#     return f'{num}'
-
-# def stringify_deep_poly(l):
-#     out=[]
-#     for c in l:
-#         out1=[]
-#         for c2 in c:
-#             map1 = map(stringify,c2)
-#             result = list(map1)
-#             out1.append(result)
-#         out.append(out1)
-#     return out
-
-# def stringify_deep_multi_poly(l):
-#     out=[]
-#     for c in l:
-#         out1=[]
-#         for c2 in c:
-#             out2 = []
-#             for c3 in c2:
-#                 map1 = map(stringify,c3)
-#                 result = list(map1)
-#                 out2.append(result)
-#             out1.append(out2)
-#         out.append(out1)
-#     return out
 
 def make_features():
     status, df = get_world_covid_jh()
@@ -82,19 +29,18 @@ def make_features():
     fips_codes = df_us.state_fips.unique()
     df=df_us.groupby(axis='index', by=['state','date']).sum()
     df.reset_index(inplace=True)
+    state_pops_dict = csv_get_dict(config['FILES']['state_census'],0,1)
     for fips_code in fips_codes:
-        
+
         # The Johns Hopkins data has incorrect FIPS code for unassigned county in Illinois, so instead of keying on FIPS I must key on state name, e.g. Illinois
         state_name = state_name_from_fips(fips_code)
-
-        deaths1 = df.query('date==@start_date and state==@state_name').deaths.sum()
-        deaths2 = df.query('date==@end_date and state==@state_name').deaths.sum()
-        deaths = deaths2-deaths1
-        pop = state_population_fips(ISO_A3, fips_code)
-        if pop != 0:
+        if state_name is not None:
+            deaths1 = df.query('date==@start_date and state==@state_name').deaths.sum()
+            deaths2 = df.query('date==@end_date and state==@state_name').deaths.sum()
+            deaths = deaths2-deaths1
+            pop = int(state_pops_dict[state_name])
             state_deaths[ISO_A3 + fips_code]=100000*deaths/pop
-        else:
-            state_deaths[ISO_A3 + fips_code] = 0
+
     # Write csv file for barcharts
     make_csv_bar_charts(state_deaths)
 
@@ -102,65 +48,47 @@ def make_features():
     ISO_A3 = 'CAN'
     df=df_can.groupby(axis='index', by=['state_fips','date']).sum()
     df.reset_index(inplace=True)
+    canada_pop_dict = csv_get_dict(config['FILES']['canada_census'],0,1)
     fips_codes = df['state_fips'].unique()
     for fips_code in fips_codes:
         deaths1 = df.query('date==@start_date and state_fips==@fips_code').deaths.sum()
         deaths2 = df.query('date==@end_date and state_fips==@fips_code').deaths.sum()
         deaths = deaths2-deaths1
-        pop = state_population_fips(ISO_A3, fips_code)
-        if pop != 0:
+        if fips_code in canada_pop_dict.keys():
+            pop = int(canada_pop_dict[fips_code])
             state_deaths[ISO_A3 + fips_code]=100000*deaths/pop
         else:
-            state_deaths[ISO_A3 + fips_code] = 0
+                state_deaths[ISO_A3 + fips_code] = 0
         
-    with open('/home/anna_user2/projects/website-II/json/states-geometry.json') as f_usa:
+    with open(config['FILES']['states_geometry'], 'r') as f_usa:
         obj_us = json.load(f_usa)
-    with open('/home/anna_user2/datasets/geography/canada.json') as f_can:
+    with open(config['FILES']['canada_geometry'], 'r') as f_can:
         obj_can = json.load(f_can)
 
     for feature in obj_us['features']:
-        feature['id'] = 'USA' + feature['id']
-        deaths = state_deaths[feature['id']]
-        feature['properties']['density'] = f'{deaths}'
+        fid = 'USA' + feature['id']
+        if fid in state_deaths.keys():
+            feature['id'] = fid
+            deaths = state_deaths[feature['id']]
+            feature['properties']['density'] = f'{deaths}'
 
-        # map_type = feature['geometry']['type']
-        # if map_type == 'MultiPolygon':
-        #     coordinates = stringify_deep_multi_poly(feature['geometry']['coordinates'])
-        # else:
-        #     coordinates = stringify_deep_poly(feature['geometry']['coordinates'])
-
-        # feature['geometry']['coordinates'] = coordinates
-    
     features = obj_can['features']
     features2 = []
     for feature in features:
         if feature['properties']['name'] != 'Nunavut' and feature['properties']['name'] != 'Yukon Territory':    #Nunavit region
             features2.append(feature)
     obj_can['features'] = features2
+    province_dict = csv_get_dict(config['FILES']['canada_census'],2,0)
     for feature in obj_can['features']:
         name = feature['properties']['name']
-        id = canadian_province_id(name)
+        id = province_dict[name]
         feature['id'] = 'CAN' + id
         deaths = state_deaths[feature['id']]
         feature['properties']['density'] = f'{deaths}'
-        # coordinates = desample_deep(feature['geometry']['coordinates'])
-
-        # map_type = feature['geometry']['type']
-        # if map_type == 'MultiPolygon':
-        #     coordinates = stringify_deep_multi_poly(feature['geometry']['coordinates'])
-        # else:
-        #     coordinates = stringify_deep_poly(feature['geometry']['coordinates'])
-
-        # cart = feature['properties']['cartodb_id']
-        # feature['properties']['cartodb_id'] = f'{cart}'
-        # feature['geometry']['coordinates'] = coordinates
 
     obj = obj_us
     obj['features'] = obj_us['features'] + obj_can['features']
 
-    # json_str = json.dumps(obj)
-    # with open('/home/anna_user2/projects/website-II/json/state-month-deaths.json', 'wt') as f:
-    #     f.write(json_str)
     return obj
 
 def make_csv_bar_charts(state_deaths):
@@ -178,13 +106,10 @@ def make_csv_bar_charts(state_deaths):
                 f.write('},\n')
         f.write('];')
     f.close()
+
 config = get_config()
 covid = make_features()
 with open(config['FILES']['scratch'], 'w') as f:
     json.dump(covid,f)
 upload_file(config['FILES']['scratch'], 'phoenix-technical-services.com', 'all-states.json', title='all-states.json')
 os.remove(config['FILES']['scratch'])
-
-# print("pushing states features")
-# push_states_features(covid)
-# print("states features pushed")

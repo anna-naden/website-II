@@ -3,11 +3,7 @@
 """
 
 import boto3
-# import logging
-# from botocore.exceptions import ClientError
 import os
-# import sys
-# import threading
 
 import numpy as np
 import json

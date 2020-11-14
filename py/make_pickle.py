@@ -1,10 +1,10 @@
 from get_config import get_config
-from get_world_census import get_country_code
 from read_parse_aliases import read_parse_aliases
 import datetime
 import numpy as np
 import csv
 import pandas as pd
+from csv_util import csv_get_dict
 
 def transpose(lines):
     config = get_config()
@@ -31,6 +31,7 @@ def transpose(lines):
     deaths_or_cases = np.empty(shape=nrecords*ndates, dtype=np.int32)
     states = np.empty(shape=nrecords*ndates, dtype=(str,48))
     i=0
+    country_name_dict = csv_get_dict(config['FILES']['world_census'], 0,1)
     for irecord in range(nrecords):
         line = lines[irecord+1]
         state = line[0]
@@ -39,15 +40,17 @@ def transpose(lines):
             country_name = alias_dict[alias]
         else:
             country_name = alias
-        country_code = get_country_code(country_name)
-        if country_code != 'XXX' and country_code != 'USA':    #Did country code lookup succeed?
-            for idate in range(ndates):
-                states[i] = state
-                country_names[i]=country_name
-                countries[i]=country_code
-                dates2[i]= dates[idate]
-                deaths_or_cases[i]=line[idate+4]
-                i += 1
+        if country_name !='XXX':
+            country_code = country_name_dict[country_name]
+
+            if country_code != 'USA':
+                for idate in range(ndates):
+                    states[i] = state
+                    country_names[i]=country_name
+                    countries[i]=country_code
+                    dates2[i]= dates[idate]
+                    deaths_or_cases[i]=line[idate+4]
+                    i += 1
 
     #We skipped over some countries because we couldn't find a country code
     nrecords = i-1
