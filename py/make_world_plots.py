@@ -80,7 +80,7 @@ for ISO_A3 in ISO_A3_codes:
         ax.set_title('Daily New Fatalities per 100,000 Population')
         last = len(nd_nation)-1
         last_date=f'{dates_n[last]}'[:10]
-        ax.annotate(f'{last_date}, {round(nd_nation[last],2)}', [dates_n[last],nd_nation[last]])
+        ax.annotate(f'{last_date}, {round(nd_nation[last],4)}', [dates_n[last],nd_nation[last]])
         fig.tight_layout(pad=4)
 
         #save and upload

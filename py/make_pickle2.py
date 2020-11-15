@@ -2,6 +2,7 @@ import datetime
 import csv
 import pandas as pd
 import time
+import numpy as np
 
 from get_config import get_config
 from read_parse_aliases import read_parse_aliases
@@ -48,11 +49,6 @@ def save_keys_to_dataframes(keys_global, keys_us):
         if country_name != 'XXX':
             state = key[0]
             
-            states.append(state)
-            country_names.append(key[1])
-            lats.append(key[2])
-            lons.append(key[3])
-
             ISO_A3 = country_name_dict[country_name]
 
             if state != '':
@@ -60,21 +56,25 @@ def save_keys_to_dataframes(keys_global, keys_us):
                     states_of_country[ISO_A3] = [state]
                 else:
                     states_of_country[ISO_A3].append(state)
+            if ISO_A3 != 'USA':
+                states.append(state)
+                country_names.append(key[1])
+                lats.append(key[2])
+                lons.append(key[3])
 
-            ISO_A3s.append(ISO_A3)
+                ISO_A3s.append(ISO_A3)
 
-            if country_name == 'Canada':
-                state_fips_s.append(f'{canada_fips[key[0]]}')
-            else:
-                state_fips_s.append('')
-            
-            keys_global2.append(tuple(key[:2]))
+                if country_name == 'Canada':
+                    state_fips_s.append(f'{canada_fips[key[0]]}')
+                else:
+                    state_fips_s.append('')
+                
+                keys_global2.append(tuple(key[:2]))
 
     keys_global = keys_global2
 
     df_global_keys = pd.DataFrame({'key': keys_global, 'ISO_A3': ISO_A3s, 'state': states, \
         'state_fips': state_fips_s, 'country_name': country_names, 'lat': lats, 'lon': lons}).set_index('key')
-    # status, df = get_world_covid_jh()
 
     UIDs = []
     iso2s = []
@@ -232,15 +232,7 @@ def make_pickle(keep_index = True):
     """
     config = get_config()
 
-    start = time.time()
     death_lines, cases_lines, us_death_lines,us_cases_lines = read_csvs()
-    end = time.time()
-    print(f'read_csvs {end-start}')
-
-    start = time.time()
-    for d in us_death_lines:
-        key = d[:12]
-        # assert (tuple(key[:8]) != ('84038001', 'US', 'USA', '840', '38001.0', 'Adams', 'North Dakota', 'US'))
 
     d_header = death_lines.pop(0)
     d_us_header = us_death_lines.pop(0)
@@ -257,23 +249,12 @@ def make_pickle(keep_index = True):
     assert (c_header[date_start_global:]==c_us_header[dc_us:])
     dates = d_header[date_start_global:]
 
-    end = time.time()
-    print(f'first block {end-start}')
-
     #Separate keys from values
-    start = time.time()
-
     keys_global, keys_us, values_global_d, values_global_c, values_us_d, values_us_c = \
         get_keys(date_start_global, dd_us, dc_us, death_lines, cases_lines, us_death_lines, us_cases_lines)
-    
-    end = time.time()
-    print(f'get_keys {end-start}')
 
     #Save keys to dataframes
-    start = time.time()
     df_global_keys, df_us_keys, states_of_country = save_keys_to_dataframes(keys_global, keys_us)
-    end = time.time()
-    print(f'save keys {end-start}')
 
     #Save values to dataframes
     start = time.time()
@@ -300,34 +281,34 @@ def make_pickle(keep_index = True):
     cases = []
     deaths = []
     dates2=[]
+    deaths = []
+    cases = []
+    expanded_dates = []
+    expanded_keys = []
+
     for date in dates:
         dates2.append(datetime.datetime.strptime(date,'%m/%d/%y'))
+    # i_list_index = 0
+    for k in values_us_d.keys():
+        values_us_d[k] = map(int, values_us_d[k])
+    for k in values_us_c.keys():
+        values_us_c[k] = map(int, values_us_c[k])
     for key in keys_us:
         tkey = tuple(key[:8])
-        valuesc = values_us_c[tkey]
-        valuesd = values_us_d[tkey]
         idate = 0
-        for date in dates:
-            expanded_dates.append(dates2[idate])
-            expanded_keys.append(tkey)
-            deaths1 = int(valuesd[idate])
-            # assert(key[0] != '84038017' or idate != len(dates)-1)
-            cases.append(int(valuesc[idate]))
-            deaths.append(deaths1)
-            idate += 1
+        deaths += values_us_d[tkey]
+        cases += values_us_c[tkey]
+        expanded_dates += dates2
+        expanded_keys += len(dates)*[tkey]
     end = time.time()
     print(f'creating data structure for df_us {end-start}')
 
     start = time.time()
-    df_us = pd.DataFrame({'key': expanded_keys, 'date':expanded_dates, 'cases': cases, 'deaths': deaths}).set_index('key')
+    df_us = pd.DataFrame({'key': tuple(expanded_keys), 'date':expanded_dates, 'cases': cases, 'deaths': deaths}).set_index('key')
     end = time.time()
     print(f'making df_us {end-start}')
 
-    start = time.time()
-
     dfg = df_global_keys.join(df_global, on='key')
-    end = time.time()
-    print(f'join global {end-start}')
 
     start = time.time()
     df_us = df_us_keys.join(df_us, on='key')
@@ -345,39 +326,27 @@ def make_pickle(keep_index = True):
     end = time.time()
     print(f'making pickle {end-start}')
 
-    start = time.time()
-    df2 = df.copy()
-    df2.reset_index(inplace=True)
-    end = time.time()
-    print(f'copying df {end-start}')
-
     #Save record of whether a country has states in the data
-    start = time.time()
-    # df2 = df2[['ISO_A3', 'state']]
     with open(config['FILES']['country_codes'], 'wt') as f:
-        for country_code in df2['ISO_A3'].unique():
+        for country_code in df.index.get_level_values('ISO_A3').unique():
             if country_code in states_of_country.keys():
                 has = '1'
             else:
                 has = '0'
             f.write(country_code + ',' + has+'\n')
-    end = time.time()
-    print(f'saving what countries have states {end-start}')
-
-    start = time.time()
 
     #Save record of the states in a country
     with open(config['FILES']['states_of_country'], 'wt') as f:
-        for country_code in df2['ISO_A3'].unique():
+        for country_code in df.index.get_level_values('ISO_A3').unique():
             if country_code in states_of_country.keys():
                 for state in states_of_country[country_code]:
                     f.write(country_code + ',' + state + '\n')
-    end = time.time()
-    print(f'everything else {end-start}')
     return None, df
 
 if __name__ == '__main__':
     import doctest
+    start = time.time()
     status, df = make_pickle()
-    print(f'pickle made - end date: {df.index.get_level_values("date").max()}')
+    end = time.time()
+    print(f'pickle made - end date: {df.index.get_level_values("date").max()} {end-start} seconds')
     #doctest.testmod(verbose=False)

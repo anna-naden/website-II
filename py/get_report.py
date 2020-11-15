@@ -3,8 +3,11 @@ from get_config import get_config
 
 config = get_config()
 
-start_date ='10/8/20'
-end_date = '11/8/20'
+start_date ='10/14/20'
+end_date = '11/14/20'
+week_start = '11/1/20'
+week_end = '11/8/20'
+
 illinois_pop = 12671821
 cook_pop = 5150233
 ontario_pop = 12851821
@@ -43,25 +46,30 @@ with open(config['FILES']['world_covid_deaths'], 'r') as f:
                     col_last_week = i-7
                 elif  row[i] == start_date:
                     col_first_date = i
+                if row[i] == week_start:
+                    col_week_start = i
+                elif row[i] == week_end:
+                    col_week_end = i
             header=False
         if row[0] == 'Ontario':
             ndeaths_ontario = int(row[col_last_date]) - int(row[col_first_date])
         elif row[0] == '' and row[1] == 'France':
             last_ndeaths_france = int(row[col_last_date])
-            last_wk_fr_deaths = int(row[col_last_week])
+            wk_fr_deaths = int(row[col_week_end]) - int(row[col_week_start])
         elif row[1] == 'US':
             last_ndeaths_us = int(row[col_last_date])
+            wk_us_deaths = int(row[col_week_end]) - int(row[col_week_start])
         elif row[1] == 'Mexico':
             last_ndeaths_mex = int(row[col_last_date])
 
 print('US')
 print(f'Last deaths: {last_ndeaths_us}')
 print(f'per capita {100000*last_ndeaths_us/us_pop}')
+print(f'per capita per day {100000*wk_us_deaths/(7*us_pop)}')
 print('\n')
 
 print('FRA')
-print(f'Last deaths {last_wk_fr_deaths}, {last_ndeaths_france}')
-print(f'Last week d per cap: {100000*(last_ndeaths_france-last_wk_fr_deaths)/(7*france_pop)}')
+print(f'Last week d per cap: {100000*wk_fr_deaths/(7*france_pop)}')
 print(f'per capita {100000*last_ndeaths_france/france_pop}')
 print('\n')
 

@@ -1,10 +1,12 @@
 from get_config import get_config
 from read_parse_aliases import read_parse_aliases
+from csv_util import csv_get_dict
+
 import datetime
 import numpy as np
 import csv
 import pandas as pd
-from csv_util import csv_get_dict
+import time
 
 def transpose(lines):
     config = get_config()
@@ -332,10 +334,12 @@ def make_pickle(keep_index = True):
 if __name__ == '__main__':
     import doctest
 
+    start = time.time()
     try:
         status, df=make_pickle()
     except Exception as ex:
         print(ex)
         exit(1)
-    print(f'pickle made - end date: {df.index.get_level_values("date").max()}')
+    end = time.time()
+    print(f'pickle made - end date: {df.index.get_level_values("date").max()} {round(end-start,2)} seconds')
     #doctest.testmod(verbose=False)
