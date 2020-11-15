@@ -2,16 +2,12 @@
 """
 
 from get_world_covid_jh import get_world_covid_jh
-from state_population_fips import state_population_fips
-from push_states_features import push_states_features
-from state_name_from_fips import state_name_from_fips
 from get_config import get_config
 from s3_util import upload_file
 from csv_util import csv_get_dict, csv_lookup
 
 import numpy as np
 import json
-import pandas as pd
 import  os
 
 def make_features():
@@ -30,11 +26,12 @@ def make_features():
     df=df_us.groupby(axis='index', by=['state','date']).sum()
     df.reset_index(inplace=True)
     state_pops_dict = csv_get_dict(config['FILES']['state_census'],0,1)
+    state_name_dict = csv_get_dict(config['FILES']['state_fips'], 1, 0)
     for fips_code in fips_codes:
 
         # The Johns Hopkins data has incorrect FIPS code for unassigned county in Illinois, so instead of keying on FIPS I must key on state name, e.g. Illinois
-        state_name = state_name_from_fips(fips_code)
-        if state_name is not None:
+        if fips_code in state_name_dict.keys():
+            state_name = state_name_dict[fips_code]
             deaths1 = df.query('date==@start_date and state==@state_name').deaths.sum()
             deaths2 = df.query('date==@end_date and state==@state_name').deaths.sum()
             deaths = deaths2-deaths1
@@ -97,9 +94,10 @@ def make_csv_bar_charts(state_deaths):
     path = config['FILES']['js']+'/barchart.js'
     with open(path, 'w') as f:
         f.write('var data = [\n')
+        state_name_dict = csv_get_dict(config['FILES']['state_fips'], 1, 0)
         for state in state_deaths.keys():
-            state_name = state_name_from_fips(state[3:])
-            if state_name is not None:
+            if state[3:] in state_name_dict.keys():
+                state_name = state_name_dict[state[3:]]
                 f.write('{\n')
                 f.write(f'"name": "{state_name}",\n')
                 f.write(f'"value": {state_deaths[state]},\n')

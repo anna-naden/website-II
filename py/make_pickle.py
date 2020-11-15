@@ -70,12 +70,15 @@ def transpose_us(lines, index_first_date):
         if len(line) != length:
             return 'us covid file format', None
 
+    #Collect and decode dates fro header row
     dates = np.empty(shape=length-index_first_date, dtype=datetime.datetime)
     for i in range(length-index_first_date):
         datestr = header[i+index_first_date]
         dateobj = datetime.datetime.strptime(datestr,'%m/%d/%y')
         dates[i]= dateobj
     ndates = length-index_first_date
+
+    #Containers for output columns
     nrecords = len(lines)-1
     counties = np.empty(shape=nrecords*ndates, dtype=(str,48))
     states = np.empty(shape=nrecords*ndates, dtype=(str,48))
@@ -103,6 +106,8 @@ def transpose_us(lines, index_first_date):
                 deaths_or_cases[i]=line[idate + index_first_date]
                 i += 1
     i -= 1
+
+    #We skipped some lines, so our container has empty space at the end
     states = states[:i]
     combined_keys = combined_keys[:i]
     counties = counties[:i]
