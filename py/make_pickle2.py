@@ -198,12 +198,14 @@ def get_keys(date_start_global, dd_us, dc_us, death_lines, cases_lines, us_death
     return keys_global, keys_us, values_global_d, values_global_c, values_us_d, values_us_c
 
 def make_pickle():
-    """[summary]
+    """
+    Read the four spreadsheets that are provided by Johns Hoplins University and join and concatenate them to create a pickled data frame. This stand-alone program runs nightly.
 
     Args:
         None
 
     Returns:
+        status: None if successful
         DataFrame: Indexed by ISO-A3 nation code, common names of state and country, plus date. Columns are cases and fatalities
     
     >>> status, df = make_pickle()
@@ -223,15 +225,14 @@ def make_pickle():
     23395
     """
     config = get_config()
-
+    
     death_lines, cases_lines, us_death_lines,us_cases_lines = read_csvs()
-
     d_header = death_lines.pop(0)
     d_us_header = us_death_lines.pop(0)
     c_header = cases_lines.pop(0)
     c_us_header = us_cases_lines.pop(0)
     assert (d_header == c_header)
-
+    
     # Where the date info starts
     date_start_global = d_header.index('Long') + 1
     dd_us = d_us_header.index('Population') + 1 #deaths

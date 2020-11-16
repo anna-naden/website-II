@@ -64,7 +64,13 @@ for ISO_A3 in ISO_A3_codes:
         df_nation=df[df.index.get_level_values('ISO_A3')==ISO_A3]
         df_nation=df_nation.groupby(axis='index', by=['date']).sum()
         df_nation=df_nation.resample('W', level='date', closed='right').last()
-        df_nation=df_nation[:len(df_nation)-1]
+
+        #Avoid partial weeks
+        x = df_nation.index.get_level_values('date').max()
+        y=df_nation[:len(df_nation)-1].index.get_level_values('date').max()
+        if x-y != np.timedelta64(24*7,'h'):
+            df_nation=df_nation[:len(df_nation)-1]
+            
         pop = pops_dict[ISO_A3]['population']
 
         #weekly changes
