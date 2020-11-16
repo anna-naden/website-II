@@ -7,6 +7,7 @@ import numpy as np
 from get_config import get_config
 from read_parse_aliases import read_parse_aliases
 from csv_util import csv_get_dict
+from df_utils import *
 
 def save_keys_to_dataframes(keys_global, keys_us):
     config = get_config()
@@ -61,16 +62,12 @@ def save_keys_to_dataframes(keys_global, keys_us):
                 country_names.append(key[1])
                 lats.append(key[2])
                 lons.append(key[3])
-
                 ISO_A3s.append(ISO_A3)
-
                 if country_name == 'Canada':
                     state_fips_s.append(f'{canada_fips[key[0]]}')
                 else:
                     state_fips_s.append('')
-                
                 keys_global2.append(tuple(key[:2]))
-
     keys_global = keys_global2
 
     df_global_keys = pd.DataFrame({'key': keys_global, 'ISO_A3': ISO_A3s, 'state': states, \
@@ -110,13 +107,11 @@ def save_keys_to_dataframes(keys_global, keys_us):
         lons.append(key[9])
         combined_keys.append(key[10])
         populations.append(key[11])
-
         fips_s.append(key[0][3:])
         country_names.append('USA')
         ISO_A3s.append('USA')
         counties.append(key[5])
         state_fips_s.append(key[0][3:5])
-
         keys.append(tuple(key[:8]))
 
         if state != '':
@@ -164,8 +159,6 @@ def get_keys(date_start_global, dd_us, dc_us, death_lines, cases_lines, us_death
         keys_global_d.append(key)
         assert (tuple(key[:2]) not in values_global_d.keys())
         values_global_d[tuple(key[:2])]=d[date_start_global:]
-
-
     keys_global_c = []
     values_global_c = {}
     for c in cases_lines:
@@ -183,7 +176,6 @@ def get_keys(date_start_global, dd_us, dc_us, death_lines, cases_lines, us_death
         assert (tuple(key[:8]) not in values_us_d.keys())
         # assert (tuple(key[:8]) != ('84038017', 'US', 'USA', '840', '38017.0', 'Cass', 'North Dakota', 'US'))
         values_us_d[tuple(key[:8])]=d[dd_us:]
-
     keys_us_c = []
     values_us_c = {}
     for c in us_cases_lines:
@@ -205,30 +197,30 @@ def get_keys(date_start_global, dd_us, dc_us, death_lines, cases_lines, us_death
     keys_us = keys_us_d
     return keys_global, keys_us, values_global_d, values_global_c, values_us_d, values_us_c
 
-def make_pickle(keep_index = True):
+def make_pickle():
     """[summary]
 
     Args:
-        keep_index (bool, optional): Whether to keep data columns as index levels. Defaults to False.
+        None
 
     Returns:
         DataFrame: Indexed by ISO-A3 nation code, common names of state and country, plus date. Columns are cases and fatalities
-
+    
     >>> status, df = make_pickle()
     >>> status
     >>> df = df[df.index.get_level_values('ISO_A3')=='MEX']
     >>> df = df[df.index.get_level_values('date') == '2020-04-10']
-    >>> get_value_by_col(df, 'cases')
+    >>> get_value_by_col(df, 'cases')   #mx
     3844
-    >>> get_value_by_col(df, 'deaths')
+    >>> get_value_by_col(df, 'deaths') #mx
     233
     >>> status, df = make_pickle()
     >>> status
     >>> df = df[df.index.get_level_values('ISO_A3')=='USA']
-    >>> get_value_by_date_col(df, '2020-04-10', 'cases')
-    497943
-    >>> get_value_by_date_col(df, '2020-04-10', 'deaths')
-    23362
+    >>> get_value_by_date_col(df, '2020-04-10', 'cases') #us
+    503274
+    >>> get_value_by_date_col(df, '2020-04-10', 'deaths') #us
+    23395
     """
     config = get_config()
 
@@ -242,8 +234,8 @@ def make_pickle(keep_index = True):
 
     # Where the date info starts
     date_start_global = d_header.index('Long') + 1
-    dd_us = d_us_header.index('Population') + 1
-    dc_us = c_us_header.index('Combined_Key') + 1
+    dd_us = d_us_header.index('Population') + 1 #deaths
+    dc_us = c_us_header.index('Combined_Key') + 1   #cases
     assert (d_header[date_start_global:]==d_us_header[dd_us:])
     assert (d_us_header[dd_us:]== c_header[date_start_global:])
     assert (c_header[date_start_global:]==c_us_header[dc_us:])
@@ -273,7 +265,7 @@ def make_pickle(keep_index = True):
             idate += 1
     df_global = pd.DataFrame({'key': expanded_keys, 'date':expanded_dates, 'cases': cases, 'deaths': deaths}).set_index('key')
     end = time.time()
-    print(f'making df_global {end-start}')
+    # print(f'making df_global {end-start}')
 
     start = time.time()
     expanded_dates = []
@@ -288,11 +280,13 @@ def make_pickle(keep_index = True):
 
     for date in dates:
         dates2.append(datetime.datetime.strptime(date,'%m/%d/%y'))
-    # i_list_index = 0
+
+    #Convert string to integer
     for k in values_us_d.keys():
         values_us_d[k] = map(int, values_us_d[k])
     for k in values_us_c.keys():
         values_us_c[k] = map(int, values_us_c[k])
+
     for key in keys_us:
         tkey = tuple(key[:8])
         idate = 0
@@ -301,30 +295,30 @@ def make_pickle(keep_index = True):
         expanded_dates += dates2
         expanded_keys += len(dates)*[tkey]
     end = time.time()
-    print(f'creating data structure for df_us {end-start}')
+    # print(f'creating data structure for df_us {end-start}')
 
     start = time.time()
     df_us = pd.DataFrame({'key': tuple(expanded_keys), 'date':expanded_dates, 'cases': cases, 'deaths': deaths}).set_index('key')
     end = time.time()
-    print(f'making df_us {end-start}')
+    # print(f'making df_us {end-start}')
 
     dfg = df_global_keys.join(df_global, on='key')
 
     start = time.time()
     df_us = df_us_keys.join(df_us, on='key')
     end = time.time()
-    print(f'join us {end-start}')
+    # print(f'join us {end-start}')
 
     start = time.time()
     df = pd.concat([dfg,df_us])
     end = time.time()
-    print(f'concat {end-start}')
+    # print(f'concat {end-start}')
 
     start = time.time()
     df.set_index(['ISO_A3','state','country_name','date'], inplace=True)
     df.to_pickle(config['FILES']['world_data_frame_pickle'])
     end = time.time()
-    print(f'making pickle {end-start}')
+    # print(f'making pickle {end-start}')
 
     #Save record of whether a country has states in the data
     with open(config['FILES']['country_codes'], 'wt') as f:
@@ -349,4 +343,4 @@ if __name__ == '__main__':
     status, df = make_pickle()
     end = time.time()
     print(f'pickle made - end date: {df.index.get_level_values("date").max()} {end-start} seconds')
-    #doctest.testmod(verbose=False)
+    # doctest.testmod(verbose=False)
