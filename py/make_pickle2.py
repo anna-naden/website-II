@@ -1,3 +1,6 @@
+"""
+    Read the four spreadsheets that are provided by Johns Hoplins University and join and concatenate them to create a pickled data frame. This stand-alone program runs nightly.
+"""
 import datetime
 import csv
 import pandas as pd
@@ -10,6 +13,20 @@ from csv_util import csv_get_dict
 from df_utils import *
 
 def save_keys_to_dataframes(keys_global, keys_us):
+    """Save the "keys" (the first parts of each row in the spreadsheets) to a data frame so it can later be joined to the "values" 
+    (the second parts of each row)
+
+    Args:
+        keys_global: a list, one item for each non-us country or country/state. Each item id a list of the contents of the cells 
+        of the "key" part of the row
+        keys_us ([type]): Like keys_global, except there is one list item fot each county
+
+    Returns:
+        data frame with one row for each non-us country
+        data frame with one row for each us county
+        dictionary of states for eack country that has individual states. The keys are the three-character ISO-A3 
+            country codes
+    """
     config = get_config()
 
     states_of_country = {}
@@ -151,7 +168,31 @@ def read_csvs():
 
     return death_lines, cases_lines, us_death_lines,us_cases_lines
 
-def get_keys(date_start_global, dd_us, dc_us, death_lines, cases_lines, us_death_lines, us_cases_lines):
+def parse_spreadsheet(date_start_global, dd_us, dc_us, death_lines, cases_lines, us_death_lines, us_cases_lines):
+    """Parse the non-header rows of the four spreadsheets
+
+    Args:
+        date_start_global int: The column number in the header row where the dates start for non-us. For other rows, this
+            is where the deaths or cases start
+        dd_us int: column number where deaths start for us
+        dc_us: int: column number where cases start
+
+        death_lines list of lists of strings, one list of strings for each row in the spreadsheet after the header
+        cases_lines: similar
+        us_death_lines: similar
+        us_cases_lines: similar
+
+    Returns:
+        keys_global: List of lists of strings. The "key" portion of the row from the csv file, stripped of the variable floating
+            point part so that only the state (if any) and country part remain.
+        keys_us: list of lists similar to keys_global but representing more than just state but also fips code, county, ect.
+
+        Because the keys for deaths are identical to the keys for cases, only one of the two is returned.
+
+        values_global_d: list of lists of strings. The cumulative deaths for each day for non-us countries
+        values_global_c similar to values_global_d but cases insted of deaths.
+        values_us_d, values_us_c: similar to above, but for us
+    """
     keys_global_d = []
     values_global_d = {}
     for d in death_lines:
@@ -174,7 +215,6 @@ def get_keys(date_start_global, dd_us, dc_us, death_lines, cases_lines, us_death
         key = d[:dd_us]
         keys_us_d.append(key)
         assert (tuple(key[:8]) not in values_us_d.keys())
-        # assert (tuple(key[:8]) != ('84038017', 'US', 'USA', '840', '38017.0', 'Cass', 'North Dakota', 'US'))
         values_us_d[tuple(key[:8])]=d[dd_us:]
     keys_us_c = []
     values_us_c = {}
@@ -226,7 +266,13 @@ def make_pickle():
     """
     config = get_config()
     
+    # Read the downloaded Johns Hopkins spreadsheets
     death_lines, cases_lines, us_death_lines,us_cases_lines = read_csvs()
+
+    ##################################################################################
+    # Map the rows and columns of the spreadsheets
+    ##################################################################################
+
     d_header = death_lines.pop(0)
     d_us_header = us_death_lines.pop(0)
     c_header = cases_lines.pop(0)
@@ -244,12 +290,14 @@ def make_pickle():
 
     #Separate keys from values
     keys_global, keys_us, values_global_d, values_global_c, values_us_d, values_us_c = \
-        get_keys(date_start_global, dd_us, dc_us, death_lines, cases_lines, us_death_lines, us_cases_lines)
+        parse_spreadsheet(date_start_global, dd_us, dc_us, death_lines, cases_lines, us_death_lines, us_cases_lines)
 
     #Save keys to dataframes
     df_global_keys, df_us_keys, states_of_country = save_keys_to_dataframes(keys_global, keys_us)
 
-    #Save values to dataframes
+    #############################################################################
+    # Create data structure for non-US data frame
+    ############################################################################
     start = time.time()
 
     expanded_dates = []
@@ -264,9 +312,14 @@ def make_pickle():
             cases.append(int(values_global_c[tuple(key[:2])][idate]))
             deaths.append(int(values_global_d[tuple(key[:2])][idate]))
             idate += 1
+
     df_global = pd.DataFrame({'key': expanded_keys, 'date':expanded_dates, 'cases': cases, 'deaths': deaths}).set_index('key')
     end = time.time()
     # print(f'making df_global {end-start}')
+
+    #############################################################################
+    # Create data structure for US data frame
+    ############################################################################
 
     start = time.time()
     expanded_dates = []
@@ -279,15 +332,17 @@ def make_pickle():
     expanded_dates = []
     expanded_keys = []
 
+    #Convert date strings to dateobjects
     for date in dates:
         dates2.append(datetime.datetime.strptime(date,'%m/%d/%y'))
 
-    #Convert string to integer
+    #Convert cases and deaths, string to integer
     for k in values_us_d.keys():
         values_us_d[k] = map(int, values_us_d[k])
     for k in values_us_c.keys():
         values_us_c[k] = map(int, values_us_c[k])
 
+    #The resulting lists will have one item for each key/date combination
     for key in keys_us:
         tkey = tuple(key[:8])
         idate = 0
