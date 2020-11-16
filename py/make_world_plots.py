@@ -49,7 +49,10 @@ df_us=df_us.groupby(axis='index', by=['date']).sum()
 df_us=df_us.resample('W', level='date', closed='right').last()
 
 #skip partial week at end
-df_us=df_us[:len(df_us)-1]
+x = df_us.index.get_level_values('date').max()
+y=df_us[:len(df_us)-1].index.get_level_values('date').max()
+if x-y != np.timedelta64(24*7,'h'):
+    df_us=df_us[:len(df_us)-1]
 
 #populations of countries
 pop = pops_dict['USA']['population']
