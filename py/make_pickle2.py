@@ -14,7 +14,12 @@ from df_utils import *
 
 def save_keys_to_dataframes(keys_global, keys_us):
     """Save the "keys" (the first parts of each row in the spreadsheets) to a data frame so it can later be joined to the "values" 
-    (the second parts of each row)
+    (the second parts of each row). A fips column is added to the non-us frame to hold the Canadian version
+    of the fips state identifier.
+
+    This function inserts the three-character ISO A3 country codes based on the country names.
+
+    The keys saved here will determine what goes into the final data frame
 
     Args:
         keys_global: a list, one item for each non-us country or country/state. Each item id a list of the contents of the cells 
@@ -74,6 +79,8 @@ def save_keys_to_dataframes(keys_global, keys_us):
                     states_of_country[ISO_A3] = [state]
                 else:
                     states_of_country[ISO_A3].append(state)
+
+            # If we don't exclude us here, all the national us cases and deaths will be counted twice.
             if ISO_A3 != 'USA':
                 states.append(state)
                 country_names.append(key[1])
@@ -123,7 +130,7 @@ def save_keys_to_dataframes(keys_global, keys_us):
         lats.append(key[8])
         lons.append(key[9])
         combined_keys.append(key[10])
-        populations.append(key[11])
+        populations.append(int(key[11]))
         fips_s.append(key[0][3:])
         country_names.append('USA')
         ISO_A3s.append('USA')
@@ -137,14 +144,36 @@ def save_keys_to_dataframes(keys_global, keys_us):
             elif state not in states_of_country['USA']:
                 states_of_country['USA'].append(state)
 
-    df_us_keys = pd.DataFrame({'key' : keys, 'fips': fips_s, 'state_fips': state_fips_s, \
-        'country_name': country_names, 'ISO_A3': ISO_A3s, 'county': counties, \
-        'UID': UIDs, 'isos2': iso2s, 'isos3': iso3s, 'code3': code3s, \
-        'FIPs': FIPs, 'Admin2': Admin2s, 'state': states, 'country_region': country_regions, 'latitude': lats, \
-            'longitude': lons, 'combined_key': combined_keys, 'population': populations}).set_index('key')
+    df_us_keys = pd.DataFrame(\
+        {'key' : keys, \
+        'fips': fips_s, \
+        'state_fips': state_fips_s, \
+        'country_name': country_names, \
+        'ISO_A3': ISO_A3s, 
+        'county': counties, \
+        'UID': UIDs, \
+        'isos2': iso2s, \
+        'isos3': iso3s, \
+        'code3': code3s, \
+        'FIPs': FIPs, \
+        'Admin2': Admin2s, \
+        'state': states, \
+        'country_region': country_regions, \
+        'latitude': lats, \
+        'longitude': lons, \
+        'combined_key': combined_keys, \
+        'population': populations})\
+        .set_index('key')
     return df_global_keys, df_us_keys, states_of_country
 
 def read_csvs():
+    """Read the four spreadsheets that are downloaded nightly from the Johns Hopkind website 
+    and check that the cases data is consistent with the deaths data
+
+    Returns:
+        For each spreadsheet, a list of lists of strings. Each list of strings represents one
+        row. The header rows are included
+    """
     config = get_config()
     try:
         with open(config['FILES']['world_covid_deaths'], 'rt', newline='') as f:
@@ -169,7 +198,7 @@ def read_csvs():
     return death_lines, cases_lines, us_death_lines,us_cases_lines
 
 def parse_spreadsheet(date_start_global, dd_us, dc_us, death_lines, cases_lines, us_death_lines, us_cases_lines):
-    """Parse the non-header rows of the four spreadsheets
+    """Parse the non-header rows of the four spreadsheets and compare the "cases" keys with the "deaths" keys
 
     Args:
         date_start_global int: The column number in the header row where the dates start for non-us. For other rows, this
@@ -183,9 +212,9 @@ def parse_spreadsheet(date_start_global, dd_us, dc_us, death_lines, cases_lines,
         us_cases_lines: similar
 
     Returns:
-        keys_global: List of lists of strings. The "key" portion of the row from the csv file, stripped of the variable floating
+        keys_global: List of lists of strings. The "key" portion of the each row from the csv file, stripped of the variable floating
             point part so that only the state (if any) and country part remain.
-        keys_us: list of lists similar to keys_global but representing more than just state but also fips code, county, ect.
+        keys_us: list of lists similar to keys_global but representing more than just state/country but also fips code, county, ect.
 
         Because the keys for deaths are identical to the keys for cases, only one of the two is returned.
 
@@ -239,14 +268,16 @@ def parse_spreadsheet(date_start_global, dd_us, dc_us, death_lines, cases_lines,
 
 def make_pickle():
     """
-    Read the four spreadsheets that are provided by Johns Hoplins University and join and concatenate them to create a pickled data frame. This stand-alone program runs nightly.
+    Read the four spreadsheets that are provided by Johns Hoplins Universit,y, compare them, fill in identifiers
+     and combine them to create a pickled, non-normalized data frame. This stand-alone program runs nightly.
 
     Args:
         None
 
     Returns:
         status: None if successful
-        DataFrame: Indexed by ISO-A3 nation code, common names of state and country, plus date. Columns are cases and fatalities
+        DataFrame: Indexed by ISO-A3 nation code, common names of country/state/county, fipd id 
+            and date. Columns are cases and fatalities, population, latitude and longitude
     
     >>> status, df = make_pickle()
     >>> status
@@ -349,7 +380,7 @@ def make_pickle():
         deaths += values_us_d[tkey]
         cases += values_us_c[tkey]
         expanded_dates += dates2
-        expanded_keys += len(dates)*[tkey]
+        expanded_keys += len(dates2)*[tkey]
     end = time.time()
     # print(f'creating data structure for df_us {end-start}')
 
@@ -358,18 +389,22 @@ def make_pickle():
     end = time.time()
     # print(f'making df_us {end-start}')
 
+    #de-normalize non-us data
     dfg = df_global_keys.join(df_global, on='key')
 
+    #denormalize us data
     start = time.time()
     df_us = df_us_keys.join(df_us, on='key')
     end = time.time()
     # print(f'join us {end-start}')
 
+    #Combine us and non-us data
     start = time.time()
     df = pd.concat([dfg,df_us])
     end = time.time()
     # print(f'concat {end-start}')
 
+    #Put data frame in final form and save
     start = time.time()
     df.set_index(['ISO_A3','state','country_name','date'], inplace=True)
     df.to_pickle(config['FILES']['world_data_frame_pickle'])

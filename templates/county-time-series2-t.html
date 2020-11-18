@@ -13,8 +13,8 @@
 <div id="county-time-series"></div>
 <h6>To report issues, send email to <a href =mailto:anna@phoenix-computer.com>anna@phoenix-computer.com</a> </h6>
 <script>
-    var ISO_A3 = window.location.search.replace("?ISO_A3=", "")
+    var fips = window.location.search.replace("?fips=", "")
     var ts =  document.getElementById('county-time-series');
-    ts.innerHTML = "<img src=" + ISO_A3 + ".jpg></img>"
+    ts.innerHTML = "<img src=" + fips + ".jpg></img>"
 </script>
 {% endblock %}

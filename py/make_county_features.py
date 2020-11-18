@@ -1,4 +1,5 @@
-"""Make JSON strings for monthly COVID deaths by county and by nation. Upload to S3
+"""Make JSON strings for leaflet choropleth maps and d3 graphs of
+monthly COVID deaths by county. Upload to S3
 
 """
 
@@ -15,7 +16,19 @@ from county_pops_fips import county_pops_fips
 from get_world_covid_jh import get_world_covid_jh
 from get_config import get_config
 
-def get_cty_time_series(df1, pop, fips, start_date, end_date):
+def make_dict_county_graph(df1, pop, fips, start_date, end_date):
+    """ Make dictionary for Javascript object to drive county d3 graph
+
+    Args:
+        df1 (DataFrame): dates and deaths for county
+        pop (int): population of county
+        fips (str): identifier for county
+        start_date (Pandas timestamp) the start of the interval over which deaths are summed
+        end_date
+
+    Returns:
+        [dictionary) corresponds to Javascript object that d3 will use to make graph
+    """
 
     df = df1.copy()[['date','deaths']]
     df.deaths *= 100000/pop
@@ -34,9 +47,9 @@ def get_cty_time_series(df1, pop, fips, start_date, end_date):
         start_date = format(start_date,"%x")
         end_date = format(end_date,"%x")
         county_state = df.iloc[0].county + ' County, ' + df.iloc[0].state_abbr
-        obj = {"start_date": start_date, "end_date": end_date, "county": county_state, "stats": stats}
+        dict_cty_graph = {"start_date": start_date, "end_date": end_date, "county": county_state, "stats": stats}
 
-        return None, obj
+        return None, dict_cty_graph
     return None, None
 
 def get_counties_features():
@@ -131,7 +144,7 @@ for county_fips in df.fips.unique():
     if not df_county.empty and not df_county_p.empty:
         # delete_obj('phoenix-technical-services.com', county_fips + '.json')
         pop = df_county_p.population.iloc[0]
-        status, county_time_series = get_cty_time_series(df_county, pop, county_fips, start_date_graph, end_date)
+        status, county_time_series = make_dict_county_graph(df_county, pop, county_fips, start_date_graph, end_date)
         if status is not None:
             print(f'{status} from get_cty_time_series')
             exit(1 )
@@ -150,13 +163,13 @@ os.remove(config['FILES']['scratch'])
 #--------------------------------------------------------------------------
 print('making and uploading county 30 day fatalities')
 county_deaths = get_county_deaths(df, df_pops, start_date, end_date)
-states = get_counties_features()
-update_county_features(states, county_deaths)
+deaths_by_state = get_counties_features()
+update_county_features(deaths_by_state, county_deaths)
 
 #upload
-for state in states.keys():
+for state in deaths_by_state.keys():
     with open(config['FILES']['scratch'], 'w') as f:
-        feature_set = {'type': 'FeatureCollection', 'features': states[state]}
+        feature_set = {'type': 'FeatureCollection', 'features': deaths_by_state[state]}
         interval = f'{w_start_date},{w_end_date}'
         feature_obj = { 'interval': interval, 'feature_set': feature_set}
         json.dump(feature_set,f)

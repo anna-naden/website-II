@@ -1,4 +1,6 @@
-""" Read states json and replace density property with deaths in last month
+""" This standalone program creates and uploads json file for choropleth map of us and Canada, placing 30-day fatalities in the "density"
+feature.  
+Make json data file for barchart showing 30-day fatalities by state.
 """
 
 from get_world_covid_jh import get_world_covid_jh
@@ -11,6 +13,11 @@ import json
 import  os
 
 def make_features():
+    """Read us and canada covid data frame, and the map feature json for these countries. Fill in 30-day deaths in "density" feature.
+
+    Returns:
+        Dictionary of choropleth features
+    """
     status, df = get_world_covid_jh()
     df_us = df[df.index.get_level_values('ISO_A3')=='USA']
     df_can = df[df.index.get_level_values('ISO_A3') == 'CAN']
@@ -58,35 +65,35 @@ def make_features():
                 state_deaths[ISO_A3 + fips_code] = 0
         
     with open(config['FILES']['states_geometry'], 'r') as f_usa:
-        obj_us = json.load(f_usa)
+        us_feature_dict = json.load(f_usa)
     with open(config['FILES']['canada_geometry'], 'r') as f_can:
-        obj_can = json.load(f_can)
+        canada_feature_dict = json.load(f_can)
 
-    for feature in obj_us['features']:
+    for feature in us_feature_dict['features']:
         fid = 'USA' + feature['id']
         if fid in state_deaths.keys():
             feature['id'] = fid
             deaths = state_deaths[feature['id']]
             feature['properties']['density'] = f'{deaths}'
 
-    features = obj_can['features']
+    features = canada_feature_dict['features']
     features2 = []
     for feature in features:
         if feature['properties']['name'] != 'Nunavut' and feature['properties']['name'] != 'Yukon Territory':    #Nunavit region
             features2.append(feature)
-    obj_can['features'] = features2
+    canada_feature_dict['features'] = features2
     province_dict = csv_get_dict(config['FILES']['canada_census'],2,0)
-    for feature in obj_can['features']:
+    for feature in canada_feature_dict['features']:
         name = feature['properties']['name']
         id = province_dict[name]
         feature['id'] = 'CAN' + id
         deaths = state_deaths[feature['id']]
         feature['properties']['density'] = f'{deaths}'
 
-    obj = obj_us
-    obj['features'] = obj_us['features'] + obj_can['features']
+    feature_dict = us_feature_dict
+    feature_dict['features'] = us_feature_dict['features'] + canada_feature_dict['features']
 
-    return obj
+    return feature_dict
 
 def make_csv_bar_charts(state_deaths):
     config = get_config()
@@ -106,8 +113,8 @@ def make_csv_bar_charts(state_deaths):
     f.close()
 
 config = get_config()
-covid = make_features()
+map_features = make_features()
 with open(config['FILES']['scratch'], 'w') as f:
-    json.dump(covid,f)
+    json.dump(map_features,f)
 upload_file(config['FILES']['scratch'], 'phoenix-technical-services.com', 'all-states.json', title='all-states.json')
 os.remove(config['FILES']['scratch'])

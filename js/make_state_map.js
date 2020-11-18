@@ -161,7 +161,7 @@ function make_state_map(fips,state_features) {
     }
     function county_time_series(e) {
         fips = e.target.feature.id.replace("?fips=", "");
-        window.location.href = "county-time-series.html?fips=" +  fips;
+        window.location.href = "county-time-series2.html?fips=" +  fips;
     }
     function onEachFeature(feature, layer) {
         container = L.DomUtil.get('map');

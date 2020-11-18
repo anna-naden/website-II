@@ -39,6 +39,32 @@ def get_nation_weekly(df, pop):
     dates = df.index.get_level_values('date')
     return dates, nd
 
+def get_county_weekly(df):
+    """ Generate lists or arrays of x and y values for a single nation based on daily change averaged over seven days
+
+    Args:
+        df Dataframe for a nation
+        pop int, population
+
+    Returns:
+        Pandas date-time index of weekly dates (array-like)
+        Array of average daily deaths per 100,000 people
+    """
+    ndays=7
+    l = len(df)
+    nc=np.zeros(l)
+    nd=np.zeros(l)
+    deaths = df.deaths
+
+    for i in range(1,l):
+        di = deaths[i]
+        di1 = deaths[i-1]
+        nd[i] = di - di1
+    nd=100000*nd/(ndays*df.population)
+    
+    dates = df.index.get_level_values('date')
+    return dates, nd
+
 config = get_config()
 try:
     status, pops_dict = world_populations()
@@ -49,7 +75,6 @@ except Exception as inst:
 
 status, df=get_world_covid_jh()
 dmax = df.index.get_level_values('date').max()
-ISO_A3_codes = df.index.get_level_values('ISO_A3').unique()
 
 #get us data
 df_us=df[df.index.get_level_values('ISO_A3')=='USA']
@@ -68,23 +93,23 @@ dates, nd = get_nation_weekly(df_us, pop)
 #prepare to look up country names
 countries = csv_get_dict(config['FILES']['nation_props'], 0, 1)
 upload_time=0
-for ISO_A3 in ISO_A3_codes:
-    if ISO_A3 in countries.keys():
+df = df[df.index.get_level_values('ISO_A3')=='USA'].reset_index().set_index(['date'])
+for fips in df.fips.unique():
 
         #get weekly data
-        df_nation=df[df.index.get_level_values('ISO_A3')==ISO_A3]
-        df_nation=df_nation.groupby(axis='index', by=['date']).sum()
-        df_nation=df_nation.resample('W', level='date', closed='right').last()
+        df_county=df[df.fips ==fips]
+        df_county=df_county.resample('W', level='date', closed='right').last()
+        county = df_county.iloc[0].county
+        state = df_county.iloc[0].state
+
 
         #Avoid partial weeks
-        y=df_nation[:len(df_nation)-1].index.get_level_values('date').max()
+        y=df_county[:len(df_county)-1].index.get_level_values('date').max()
         if dmax-y != np.timedelta64(24*7,'h'):
-            df_nation=df_nation[:len(df_nation)-1]
+            df_county=df_county[:len(df_county)-1]
             
-        pop = pops_dict[ISO_A3]['population']
-
         #weekly changes
-        dates_n,nd_nation = get_nation_weekly(df_nation, pop)
+        dates_n,nd_nation = get_county_weekly(df_county)
 
         #make plot
         fig, ax=plt.subplots()
@@ -92,7 +117,7 @@ for ISO_A3 in ISO_A3_codes:
             tick.set_rotation(45)
         ax.plot(dates_n, nd_nation)
         ax.plot(dates, nd)
-        ax.legend([countries[ISO_A3].replace('_',','), 'USA'])
+        ax.legend([county + ' County, ' + state, 'USA'])
         ax.set_title('Daily New Fatalities per 100,000 Population')
 
         #Put text showing last date and last value
@@ -105,7 +130,7 @@ for ISO_A3 in ISO_A3_codes:
         start = time.time()
         fig.savefig(config['FILES']['scratch_image'])
         plt.close()
-        upload_file(config['FILES']['scratch_image'], 'phoenix-technical-services.com', ISO_A3 + '.jpg', title=ISO_A3)
+        upload_file(config['FILES']['scratch_image'], 'phoenix-technical-services.com', fips + '.jpg', title=fips)
         os.remove(config['FILES']['scratch_image'])
         upload_time += time.time()-start
 print(upload_time)

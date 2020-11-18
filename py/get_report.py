@@ -3,10 +3,11 @@ from get_config import get_config
 
 config = get_config()
 
-start_date ='10/14/20'
-end_date = '11/14/20'
-week_start = '11/1/20'
-week_end = '11/8/20'
+start_date ='10/15/20'
+end_date = '11/15/20'
+week_start = '11/8/20'
+week_end = '11/15/20'
+doctest_date ='4/10/20' #for testing make_pickle
 
 illinois_pop = 12671821
 cook_pop = 5150233
@@ -26,12 +27,14 @@ with open(path, 'r') as f:
             for i in range(len(row)):
                 if row[i] == end_date:
                     col_last_date = i
-                elif row[i] == start_date:
-                    col_first_date = i
+                    col_first_date = i-30
+                if row[i] == week_end:
+                    col_week_end_us = i
             header=False
         if  row[4] == '17031.0':
             ndeaths_cook = int(row[col_last_date]) - int(row[col_first_date])
             last_cook_deaths = int(row[col_last_date])
+            ndeaths_cook_week = int(row[col_week_end_us]) - int(row[col_week_end_us-7])
         if row[6] == 'Illinois':
             illinois_deaths += int(row[col_last_date])-int(row[col_first_date])
 
@@ -50,6 +53,8 @@ with open(config['FILES']['world_covid_deaths'], 'r') as f:
                     col_week_start = i
                 elif row[i] == week_end:
                     col_week_end = i
+                if row[i] == doctest_date:
+                    col_doctest_global = i
             header=False
         if row[0] == 'Ontario':
             ndeaths_ontario = int(row[col_last_date]) - int(row[col_first_date])
@@ -59,13 +64,16 @@ with open(config['FILES']['world_covid_deaths'], 'r') as f:
         elif row[1] == 'US':
             last_ndeaths_us = int(row[col_last_date])
             wk_us_deaths = int(row[col_week_end]) - int(row[col_week_start])
+            doctest_us_ndeaths = int(row[col_doctest_global])
         elif row[1] == 'Mexico':
             last_ndeaths_mex = int(row[col_last_date])
+            doctest_mx_ndeaths = int(row[col_doctest_global])
 
 print('US')
 print(f'Last deaths: {last_ndeaths_us}')
 print(f'per capita {100000*last_ndeaths_us/us_pop}')
 print(f'per capita per day {100000*wk_us_deaths/(7*us_pop)}')
+print(f'doctest deaths {doctest_us_ndeaths}')
 print('\n')
 
 print('FRA')
@@ -76,6 +84,7 @@ print('\n')
 print('MEX')
 print(f'Last deaths {last_ndeaths_mex}')
 print(f'per capita {100000*last_ndeaths_mex/mex_pop}')
+print(f'doctest deaths {doctest_mx_ndeaths}')
 print('\n')
 
 print('ONTARIO')
@@ -93,4 +102,5 @@ print(f'Last deaths {last_cook_deaths}')
 print(f'Last per capita {100000*last_cook_deaths/cook_pop}')
 print(f'{ndeaths_cook} deaths from {start_date} to {end_date}')
 print(f'Per capita {100000*ndeaths_cook/cook_pop}')
+print(f'Week per cap {100000*ndeaths_cook_week/(7*cook_pop)}')
 
