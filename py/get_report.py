@@ -22,6 +22,7 @@ with open(path, 'r') as f:
     header = True
     illinois_deaths = 0
     last_cook_deaths = 0
+    illinois_deaths_wk = 0
     for row in reader:
         if header:
             for i in range(len(row)):
@@ -37,6 +38,7 @@ with open(path, 'r') as f:
             ndeaths_cook_week = int(row[col_week_end_us]) - int(row[col_week_end_us-7])
         if row[6] == 'Illinois':
             illinois_deaths += int(row[col_last_date])-int(row[col_first_date])
+            illinois_deaths_wk += int(row[col_week_end_us]) - int(row[col_week_end_us-7])
 
 with open(config['FILES']['world_covid_deaths'], 'r') as f:
     reader = csv.reader(f, delimiter=',')
@@ -95,6 +97,7 @@ print('\n')
 print('ILLINOIS')
 print(f'{illinois_deaths} deaths from start date to end date')
 print(f'per capita {100000*illinois_deaths/illinois_pop}')
+print(f'week per cap {100000*illinois_deaths_wk/(7*illinois_pop)}')
 print('\n')
 
 print('COOK')

@@ -27,7 +27,7 @@ function make_us_map(statesData) {
 
     info.update = function (props) {
         this._div.innerHTML = '<h3>COVID-19 by State</h3>' + (props ?
-            '<b>' + props.name + '</b><br />' + formatter.format(props.density)  + ' fatalities per 100,000 people in past 30 days</sup>'
+            '<b>' + props.name + '</b><br />' + formatter.format(props.density) + ' fatalities per 100,000 people in past 30 days</sup>'
             : 'Mouse over a state or province to fatalities per capita.<br/>Click to see state detail map.');
     };
 
@@ -37,13 +37,13 @@ function make_us_map(statesData) {
     // get color depending on population density value
     function getColor(d) {
         return d > 100 ? '#800026' :
-                d > 80  ? '#BD0026' :
-                d > 20  ? '#E31A1C' :
-                d > 10  ? '#FC4E2A' :
-                d > 5   ? '#FD8D3C' :
-                d > 2   ? '#FEB24C' :
-                d > 1   ? '#FED976' :
-                            '#FFEDA0';
+            d > 80 ? '#BD0026' :
+                d > 20 ? '#E31A1C' :
+                    d > 10 ? '#FC4E2A' :
+                        d > 5 ? '#FD8D3C' :
+                            d > 2 ? '#FEB24C' :
+                                d > 1 ? '#FED976' :
+                                    '#FFEDA0';
     }
 
     function style(feature) {
@@ -72,18 +72,24 @@ function make_us_map(statesData) {
         }
 
         info.update(layer.feature.properties);
+        layer.openPopup();
     }
 
     var geojson;
 
     function resetHighlight(e) {
+        var layer = e.target;
         geojson.resetStyle(e.target);
         info.update();
+        layer.closePopup()
     }
 
     function state_hot(e) {
-        fips = e.target.feature.id.substring(3,5);
-        window.location.href = "state-hot.html?fips=" + fips;
+        fips = e.target.feature.id.substring(3, 5);
+        ISO_A3 = e.target.feature.id.substring(0,3);
+        if (ISO_A3 == 'USA') {
+            window.location.href = "state-hot.html?fips=" + fips;
+        }
     }
 
     function onEachFeature(feature, layer) {
@@ -92,6 +98,17 @@ function make_us_map(statesData) {
             mouseout: resetHighlight,
             click: state_hot
         });
+        var ISO_A3 = feature['id'].substr(0,3)
+        if (ISO_A3 == 'USA') {
+            const src = '"' + feature['id'].substr(3,5) + '.jpg"';
+            const h = '"300"';
+            const w = '"300"';
+            // const style = '" style=c'
+            const style = '" style="float: left"'
+            const img_tag = "<img src=" + src + " width=" + w + " height=" + h + style + "></img>";
+            // console.log(img_tag);
+            layer.bindPopup(img_tag, {autoPan: true});
+        }
     }
     geojson = L.geoJson(statesData, {
         style: style,
@@ -101,7 +118,7 @@ function make_us_map(statesData) {
     map.attributionControl.addAttribution('Population data &copy; <a href="http://census.gov/">US Census Bureau</a>');
 
 
-    var legend = L.control({position: 'bottomright'});
+    var legend = L.control({ position: 'bottomright' });
 
     legend.onAdd = function (map) {
 
