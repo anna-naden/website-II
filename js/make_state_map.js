@@ -69,7 +69,7 @@ function make_state_map(fips,state_features) {
     if (fips == texas) {
       zoom_level = 7;
     }
-    var map = L.map('map', {zoomControl: false}).setView(lat_lon, zoom_level);
+    var map = L.map('map', {zoomControl: true}).setView(lat_lon, zoom_level);
 
     L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
         maxZoom: 18,
@@ -90,9 +90,18 @@ function make_state_map(fips,state_features) {
     };
 
     info.update = function (props) {
-        this._div.innerHTML = '<h3>COVID-19 by County</h3>' + (props ?
-            '<b>' + props.name + '</b><br />' + formatter.format(props.density) + ' fatalities per 100,000 people in past 30 days</sup>'
-            : 'Mouse over a county to fatalities per capita.<br/>Click to see graph.');
+        if (props) {
+            const fips = props['FIPS-code'] + props['COUNTY'];
+            // this._div.innerHTML = '<h3>COVID-19 by County</h3>' + (props ?
+            //     '<b>' + props.name + '</b><br />' + formatter.format(props.density) + ' fatalities per 100,000 people in past 30 days</sup>'
+            //     : 'Mouse over a county to fatalities per capita.<br/>Click to see graph.');
+            const src = '"' + fips + '.jpg"';
+            const h = '"300"';
+            const w = '"300"';
+            const style = '" style="float: left"'
+            const img_tag = "<img src=" + src + " width=" + w + " height=" + h + style + "></img>";
+            this._div.innerHTML = img_tag;
+        }
     };
 
     info.addTo(map);
@@ -164,25 +173,26 @@ function make_state_map(fips,state_features) {
         window.location.href = "county-time-series2.html?fips=" +  fips;
     }
     function onEachFeature(feature, layer) {
-        container = L.DomUtil.get('map');
-        label = L.DomUtil.create('label', 'leaflet-label-overlay', container);
-        coords = average_lat(feature.geometry.coordinates[0]);
-        coords2 = [coords[1],coords[0]];
-        name = feature.properties.name;
-        name = name.replace("County","");
-        label.innerHTML = name;
-        var pos = map.latLngToLayerPoint(new L.latLng(coords2));
-        pos.x -= 12;
-        label.style = "position:absolute; left: " + pos.x + 
-        "px;" + "top: " + pos.y + "px; font: 8px Courier; text-align:left;";
-        map.getPanes().popupPane.appendChild(label);
+        // container = L.DomUtil.get('map');
+        // label = L.DomUtil.create('label', 'leaflet-label-overlay', container);
+        // coords = average_lat(feature.geometry.coordinates[0]);
+        // coords2 = [coords[1],coords[0]];
+        // name = feature.properties.name;
+        // name = name.replace("County","");
+        // label.innerHTML = name;
+        // var pos = map.latLngToLayerPoint(new L.latLng(coords2));
+        // pos.x -= 12;
+        // label.style = "position:absolute; left: " + pos.x + 
+        // "px;" + "top: " + pos.y + "px; font: 8px Courier; text-align:left;";
+        // map.getPanes().popupPane.appendChild(label);
         
         layer.on({
         mouseover: highlightFeature,
         mouseout: resetHighlight,
         click: county_time_series
         });
-    }
+
+        }
     geojson = L.geoJson(state_features, {
         style: style,
         onEachFeature: onEachFeature

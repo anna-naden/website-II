@@ -75,6 +75,7 @@ def make_features():
             feature['id'] = fid
             deaths = state_deaths[feature['id']]
             feature['properties']['density'] = f'{deaths}'
+            feature['properties']['fips'] = fid
 
     features = canada_feature_dict['features']
     features2 = []

@@ -114,16 +114,17 @@ for fips in states_fips_s:
             df_state=df_state[:len(df_state)-1]
             
         #weekly changes
-        if fips == '17':
-            print("hello")
         dates_n,nd_state = get_state_weekly(df_state)
 
         #make plot
+
+     c
         fig, ax=plt.subplots()
         for tick in ax.get_xticklabels():
             tick.set_rotation(45)
         ax.plot(dates_n, nd_state)
         ax.plot(dates, nd)
+        ax.set_ylim(0, MAX_Y)
         ax.legend([state, 'USA'])
         ax.set_title('Daily New Fatalities per 100,000 Population')
 

@@ -112,7 +112,9 @@ for fips in df.fips.unique():
         dates_n,nd_nation = get_county_weekly(df_county)
 
         #make plot
+        MAX_Y = float(config['PLOT CONFIGURATION']['max_y'])
         fig, ax=plt.subplots()
+        ax.set_ylim(0,  MAX_Y)
         for tick in ax.get_xticklabels():
             tick.set_rotation(45)
         ax.plot(dates_n, nd_nation)
