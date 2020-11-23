@@ -31,9 +31,19 @@ function make_world_map(features) {
     };
 
     info.update = function (props) {
-        this._div.innerHTML = '<h3>COVID-19 by County</h3>' + (props ?
-            '<b>' + props.name + '</b><br />' + formatter.format(props.density) + ' fatalities per 100,000 people in past 30 days</sup>'
-            : 'Mouse over a county to fatalities per capita.<br/>Click to see graph.');
+        if (props) {
+            ISO_A3 = props.adm0_a3;
+            const src = '"' + ISO_A3 + '.jpg"';
+            const h = '"300"';
+            const w = '"300"';
+            const style = '" style="float: left"'
+            const img_tag = "<img src=" + src + " width=" + w + " height=" + h + style + "></img>";
+            this._div.innerHTML = img_tag;
+
+        }
+        // this._div.innerHTML = '<h3>COVID-19 by County</h3>' + (props ?
+            // '<b>' + props.name + '</b><br />' + formatter.format(props.density) + ' fatalities per 100,000 people in past 30 days</sup>'
+            // : 'Mouse over a county to fatalities per capita.<br/>Click to see graph.');
     };
 
     info.addTo(map);
@@ -88,7 +98,10 @@ function make_world_map(features) {
 
     function world_time_series(e) {
         ISO_A3 = e.target.feature.id.replace("?ISO_A3=","");
-        window.location.href = "ISO-A3-time-series2.html?ISO_A3=" + ISO_A3;
+        // window.location.href = "ISO-A3-time-series2.html?ISO_A3=" + ISO_A3;
+        if (ISO_A3 == 'USA') {
+            window.location.href = 'us-hot2.html';
+        }
     }
     function onEachFeature(feature, layer) {
         layer.on({

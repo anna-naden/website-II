@@ -98,13 +98,12 @@ df.drop(['ISO_A3', 'country_name', 'lat', 'lon', 'cases', 'fips', 'county', 'iso
 states_fips_s = df.state_fips.unique()
 pops_dict = csv_get_dict(config['FILES']['state_census'], 0, 1, header=True)
 df_states = df.groupby(['date','state_fips', 'state']).sum()
+MAX_Y = float(config['PLOT CONFIGURATION']['max_y'])
 for fips in states_fips_s:
 
         #get weekly data
         df_state=df_states[df_states.index.get_level_values('state_fips') ==fips]
         state = df_state.index.get_level_values('state')[0]
-        if fips == '17':
-            print("hello")
         df_state=df_state.resample('W', level='date', closed='right').last()
 
 
@@ -118,7 +117,6 @@ for fips in states_fips_s:
 
         #make plot
 
-     c
         fig, ax=plt.subplots()
         for tick in ax.get_xticklabels():
             tick.set_rotation(45)

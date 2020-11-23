@@ -41,6 +41,12 @@ then
     exit 1
 fi
 
+python make_state_plots.py
+if [ $? -ne 0 ]
+then
+    exit 1
+fi
+
 
 # -------------------------------------------------------------
 # Upload content

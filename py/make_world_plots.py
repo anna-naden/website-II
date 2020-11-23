@@ -88,6 +88,7 @@ for ISO_A3 in ISO_A3_codes:
 
         #make plot
         fig, ax=plt.subplots()
+        ax.set_ylim(0, float(config['PLOT CONFIGURATION']['max_y']))
         for tick in ax.get_xticklabels():
             tick.set_rotation(45)
         ax.plot(dates_n, nd_nation)

@@ -18,6 +18,7 @@ then
 fi
 
 # ---------- Make and upload jpeg files for coumty stats plots
+cd ~/projects/website-II/py
 python make_county_plots.py
 if [ $? -ne 0 ]
 then
