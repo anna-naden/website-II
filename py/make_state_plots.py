@@ -40,17 +40,20 @@ def get_nation_weekly(df, pop):
     dates = df.index.get_level_values('date')
     return dates, nd
 
-def get_state_weekly(df):
+def get_state_weekly(df, pop = None):
     """ Generate lists or arrays of x and y values for a single nation based on daily change averaged over seven days
 
     Args:
         df Dataframe for a nation
-        pop int, population
+        pop int, population (canada only)
 
     Returns:
         Pandas date-time index of weekly dates (array-like)
         Array of average daily deaths per 100,000 people
     """
+    if pop is None:
+        pop = df.population
+
     ndays=7
     l = len(df)
     nc=np.zeros(l)
@@ -61,7 +64,7 @@ def get_state_weekly(df):
         di = deaths[i]
         di1 = deaths[i-1]
         nd[i] = di - di1
-    nd=100000*nd/(ndays*df.population)
+    nd=100000*nd/(ndays*pop)
     
     dates = df.index.get_level_values('date')
     return dates, nd
@@ -138,3 +141,61 @@ for fips in states_fips_s:
         plt.close()
         upload_file(config['FILES']['scratch_image'], 'phoenix-technical-services.com', fips + '.jpg', title=fips)
         os.remove(config['FILES']['scratch_image'])
+
+################################################################
+# Canada
+################################################################
+status, df = get_world_covid_jh()
+province_dict = csv_get_dict(config['FILES']['canada_census'],2,0)
+
+if status is not None:
+    exit(1)
+
+df = df[df.index.get_level_values('ISO_A3')=='CAN'].reset_index().set_index(['date'])
+df.drop(['ISO_A3', 'country_name', 'lat', 'lon', 'cases', 'fips', 'county', 'isos2', 'isos3', 'code3', 'FIPs', 'Admin2', 'country_region', 'latitude', 'longitude', 'combined_key'], axis='columns')
+states_fips_s = df.state_fips.unique()
+pops_dict = csv_get_dict(config['FILES']['state_census'], 0, 1, header=True)
+df_states = df.groupby(['date','state_fips', 'state']).sum()
+MAX_Y = float(config['PLOT CONFIGURATION']['max_y'])
+canada_pop_dict = csv_get_dict(config['FILES']['canada_census'],0,1)
+for fips in states_fips_s:
+
+        #get weekly data
+        df_state=df_states[df_states.index.get_level_values('state_fips') ==fips]
+        state = df_state.index.get_level_values('state')[0]
+        df_state=df_state.resample('W', level='date', closed='right').last()
+
+
+        #Avoid partial weeks
+        y=df_state[:len(df_state)-1].index.get_level_values('date').max()
+        if dmax-y != np.timedelta64(24*7,'h'):
+            df_state=df_state[:len(df_state)-1]
+            
+        #weekly changes
+        if fips in canada_pop_dict.keys():
+            pop = int(canada_pop_dict[fips])
+            dates_n,nd_state = get_state_weekly(df_state, pop)
+
+            #make plot
+
+            fig, ax=plt.subplots()
+            for tick in ax.get_xticklabels():
+                tick.set_rotation(45)
+            ax.plot(dates_n, nd_state)
+            ax.plot(dates, nd)
+            ax.set_ylim(0, MAX_Y)
+            ax.legend([state, 'USA'])
+            ax.set_title('Daily New Fatalities per 100,000 Population')
+
+            #Put text showing last date and last value
+            last = len(nd_state)-1
+            last_date=f'{dates_n[last]}'[:10]
+            ax.annotate(f'{last_date}, {round(nd_state[last],4)}', [dates_n[last],nd_state[last]])
+            fig.tight_layout(pad=4)
+
+            #save and upload
+            start = time.time()
+            fig.savefig(config['FILES']['scratch_image'])
+            plt.close()
+            upload_file(config['FILES']['scratch_image'], 'phoenix-technical-services.com', 'CAN' + fips + '.jpg', title='CAN' + fips)
+            os.remove(config['FILES']['scratch_image'])

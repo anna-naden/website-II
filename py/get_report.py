@@ -3,10 +3,10 @@ from get_config import get_config
 
 config = get_config()
 
-start_date ='10/15/20'
-end_date = '11/15/20'
-week_start = '11/8/20'
-week_end = '11/15/20'
+start_date ='10/22/20'
+end_date = '11/22/20'
+week_start = '11/15/20'
+week_end = '11/22/20'
 doctest_date ='4/10/20' #for testing make_pickle
 
 illinois_pop = 12671821
@@ -60,6 +60,7 @@ with open(config['FILES']['world_covid_deaths'], 'r') as f:
             header=False
         if row[0] == 'Ontario':
             ndeaths_ontario = int(row[col_last_date]) - int(row[col_first_date])
+            week_ndeaths_ontario = int(row[col_week_end]) - int(row[col_week_start])
         elif row[0] == '' and row[1] == 'France':
             last_ndeaths_france = int(row[col_last_date])
             wk_fr_deaths = int(row[col_week_end]) - int(row[col_week_start])
@@ -92,6 +93,7 @@ print('\n')
 print('ONTARIO')
 print(f'Deaths {ndeaths_ontario}')
 print(f'Per capita {100000*ndeaths_ontario/ontario_pop}')
+print(f'week per cap {100000*week_ndeaths_ontario/(7*ontario_pop)}')
 print('\n')
 
 print('ILLINOIS')

@@ -87,7 +87,9 @@ def save_keys_to_dataframes(keys_global, keys_us):
                 lats.append(key[2])
                 lons.append(key[3])
                 ISO_A3s.append(ISO_A3)
-                if country_name == 'Canada':
+
+                if country_name == 'Canada' and key[0] in canada_fips.keys():
+                    # "Repatriated Travellers"
                     state_fips_s.append(f'{canada_fips[key[0]]}')
                 else:
                     state_fips_s.append('')

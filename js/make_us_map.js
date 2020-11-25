@@ -39,6 +39,15 @@ function make_us_map(statesData) {
             const img_tag = "<img src=" + src + " width=" + w + " height=" + h + style + "></img>";
             this._div.innerHTML = img_tag;
         }
+        if (ISO_A3.substr(0,3) == 'CAN') {
+            const src = '"CAN' + props['fips'].substr(3,5) + '.jpg"';
+            const h = '"300"';
+            const w = '"300"';
+            const style = '" style="float: left"'
+            const img_tag = "<img src=" + src + " width=" + w + " height=" + h + style + "></img>";
+            this._div.innerHTML = img_tag;
+
+        }
     }
     };
 
@@ -83,7 +92,7 @@ function make_us_map(statesData) {
         }
 
         info.update(layer.feature.properties);
-        layer.openPopup();
+        // layer.openPopup();
     }
 
     var geojson;

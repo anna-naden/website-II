@@ -90,6 +90,7 @@ def make_features():
         feature['id'] = 'CAN' + id
         deaths = state_deaths[feature['id']]
         feature['properties']['density'] = f'{deaths}'
+        feature['properties']['fips'] = 'CAN' + id
 
     feature_dict = us_feature_dict
     feature_dict['features'] = us_feature_dict['features'] + canada_feature_dict['features']
