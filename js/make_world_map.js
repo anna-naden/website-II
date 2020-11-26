@@ -17,7 +17,8 @@ function make_world_map(features) {
             'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
         id: 'mapbox/light-v9',
         tileSize: 512,
-        zoomOffset: -1
+        zoomOffset: -1,
+        noWrap: true
     }).addTo(map);
 
 

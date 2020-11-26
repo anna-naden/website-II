@@ -76,6 +76,7 @@ function make_state_map(fips,state_features) {
         attribution: 'Data from Johns Hopkins University',
         id: 'mapbox/light-v9',
         tileSize: 512,
+        noWrap: true,
         zoomOffset: -1
     }).addTo(map);
 

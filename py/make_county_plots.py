@@ -26,25 +26,31 @@ def get_nation_weekly(df, pop):
     """
     ndays=7
     l = len(df)
-    nc=np.zeros(l)
-    nd=np.zeros(l)
     deaths = df.deaths
-
-    for i in range(1,l):
-        di = deaths[i]
-        di1 = deaths[i-1]
-        nd[i] = di - di1
-    nd=100000*nd/(ndays*pop)
-    
     dates = df.index.get_level_values('date')
-    return dates, nd
+    nd =[]
+    dates2 =[]
+    for i in range(ndays-1,l,ndays):
+        di = deaths[i]
+        di1 = deaths[i-ndays]
+        nd.append(100000*(di - di1)/(ndays*pop))
+        dates2.append(dates[i])
+        # print(di,di1,di-di1)
+    return dates2, nd
 
-def get_county_weekly(df):
+config = get_config()
+try:
+    status, pops_dict = world_populations()
+    assert(status is None)
+except Exception as inst:
+    print(inst)
+    exit(1)
+
+def get_county_weekly(df, pop):
     """ Generate lists or arrays of x and y values for a single nation based on daily change averaged over seven days
 
     Args:
         df Dataframe for a nation
-        pop int, population
 
     Returns:
         Pandas date-time index of weekly dates (array-like)
@@ -52,18 +58,18 @@ def get_county_weekly(df):
     """
     ndays=7
     l = len(df)
-    nc=np.zeros(l)
-    nd=np.zeros(l)
     deaths = df.deaths
-
-    for i in range(1,l):
-        di = deaths[i]
-        di1 = deaths[i-1]
-        nd[i] = di - di1
-    nd=100000*nd/(ndays*df.population)
-    
     dates = df.index.get_level_values('date')
-    return dates, nd
+    nd =[]
+    dates2 =[]
+    for i in range(ndays-1,l,ndays):
+        di = deaths[i]
+        di1 = deaths[i-ndays]
+        nd.append(100000*(di - di1)/(ndays*pop))
+        dates2.append(dates[i])
+        # print(di,di1,di-di1)
+    return dates2, nd
+
 
 config = get_config()
 try:
@@ -76,63 +82,54 @@ except Exception as inst:
 status, df=get_world_covid_jh()
 dmax = df.index.get_level_values('date').max()
 
+#Make it a whole number of weeks
+df = df[df.index.get_level_values('date') > dmax-np.timedelta64(int(config['PLOT CONFIGURATION']['calendar_window'])*7*24,'h')]
+
 #get us data
 df_us=df[df.index.get_level_values('ISO_A3')=='USA']
 df_us=df_us.groupby(axis='index', by=['date']).sum()
-df_us=df_us.resample('W', level='date', closed='right').last()
-
-#skip partial week at end
-y=df_us[:len(df_us)-1].index.get_level_values('date').max()
-if dmax-y != np.timedelta64(24*7,'h'):
-    df_us=df_us[:len(df_us)-1]
 
 #populations of countries
 pop = pops_dict['USA']['population']
 dates, nd = get_nation_weekly(df_us, pop)
 
 #prepare to look up country names
-countries = csv_get_dict(config['FILES']['nation_props'], 0, 1)
 upload_time=0
 df = df[df.index.get_level_values('ISO_A3')=='USA'].reset_index().set_index(['date'])
 for fips in df.fips.unique():
 
         #get weekly data
         df_county=df[df.fips ==fips]
-        df_county=df_county.resample('W', level='date', closed='right').last()
         county = df_county.iloc[0].county
         state = df_county.iloc[0].state
 
-
-        #Avoid partial weeks
-        y=df_county[:len(df_county)-1].index.get_level_values('date').max()
-        if dmax-y != np.timedelta64(24*7,'h'):
-            df_county=df_county[:len(df_county)-1]
-            
         #weekly changes
-        dates_n,nd_nation = get_county_weekly(df_county)
+        pop = df_county.population.iloc[0]
+        if pop != 0:
+            dates_n,nd_nation = get_county_weekly(df_county, pop)
 
-        #make plot
-        MAX_Y = float(config['PLOT CONFIGURATION']['max_y'])
-        fig, ax=plt.subplots()
-        ax.set_ylim(0,  MAX_Y)
-        for tick in ax.get_xticklabels():
-            tick.set_rotation(45)
-        ax.plot(dates_n, nd_nation)
-        ax.plot(dates, nd)
-        ax.legend([county + ' County, ' + state, 'USA'])
-        ax.set_title('Daily New Fatalities per 100,000 Population')
+            #make plot
+            MAX_Y = float(config['PLOT CONFIGURATION']['max_y'])
+            fig, ax=plt.subplots()
+            ax.set_ylim(0,  MAX_Y)
+            for tick in ax.get_xticklabels():
+                tick.set_rotation(45)
+            ax.plot(dates_n, nd_nation)
+            ax.plot(dates, nd)
+            ax.legend([county + ' County, ' + state, 'USA'])
+            ax.set_title('Daily New Fatalities per 100,000 Population')
 
-        #Put text showing last date and last value
-        last = len(nd_nation)-1
-        last_date=f'{dates_n[last]}'[:10]
-        ax.annotate(f'{last_date}, {round(nd_nation[last],4)}', [dates_n[last],nd_nation[last]])
-        fig.tight_layout(pad=4)
+            #Put text showing last date and last value
+            last = len(nd_nation)-1
+            last_date=f'{dates_n[last]}'[:10]
+            ax.annotate(f'{last_date}, {round(nd_nation[last],4)}', [dates_n[last],nd_nation[last]])
+            fig.tight_layout(pad=4)
 
-        #save and upload
-        start = time.time()
-        fig.savefig(config['FILES']['scratch_image'])
-        plt.close()
-        upload_file(config['FILES']['scratch_image'], 'phoenix-technical-services.com', fips + '.jpg', title=fips)
-        os.remove(config['FILES']['scratch_image'])
-        upload_time += time.time()-start
+            #save and upload
+            start = time.time()
+            fig.savefig(config['FILES']['scratch_image'])
+            plt.close()
+            upload_file(config['FILES']['scratch_image'], 'phoenix-technical-services.com', fips + '.jpg', title=fips)
+            os.remove(config['FILES']['scratch_image'])
+            upload_time += time.time()-start
 print(upload_time)

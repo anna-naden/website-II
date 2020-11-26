@@ -26,18 +26,17 @@ def get_nation_weekly(df, pop):
     """
     ndays=7
     l = len(df)
-    nc=np.zeros(l)
-    nd=np.zeros(l)
     deaths = df.deaths
-
-    for i in range(1,l):
-        di = deaths[i]
-        di1 = deaths[i-1]
-        nd[i] = di - di1
-    nd=100000*nd/(ndays*pop)
-    
     dates = df.index.get_level_values('date')
-    return dates, nd
+    nd =[]
+    dates2 =[]
+    for i in range(ndays-1,l,ndays):
+        di = deaths[i]
+        di1 = deaths[i-ndays]
+        nd.append(100000*(di - di1)/(ndays*pop))
+        dates2.append(dates[i])
+        # print(di,di1,di-di1)
+    return dates2, nd
 
 config = get_config()
 try:
@@ -50,16 +49,11 @@ except Exception as inst:
 status, df=get_world_covid_jh()
 dmax = df.index.get_level_values('date').max()
 ISO_A3_codes = df.index.get_level_values('ISO_A3').unique()
+df = df[df.index.get_level_values('date') > dmax-np.timedelta64(int(config['PLOT CONFIGURATION']['calendar_window'])*7*24,'h')]
 
 #get us data
 df_us=df[df.index.get_level_values('ISO_A3')=='USA']
 df_us=df_us.groupby(axis='index', by=['date']).sum()
-df_us=df_us.resample('W', level='date', closed='right').last()
-
-#skip partial week at end
-y=df_us[:len(df_us)-1].index.get_level_values('date').max()
-if dmax-y != np.timedelta64(24*7,'h'):
-    df_us=df_us[:len(df_us)-1]
 
 #populations of countries
 pop = pops_dict['USA']['population']
@@ -74,13 +68,8 @@ for ISO_A3 in ISO_A3_codes:
         #get weekly data
         df_nation=df[df.index.get_level_values('ISO_A3')==ISO_A3]
         df_nation=df_nation.groupby(axis='index', by=['date']).sum()
-        df_nation=df_nation.resample('W', level='date', closed='right').last()
+        df_nation = df_nation[df_nation.index.get_level_values('date') > dmax-np.timedelta64(39*7*24,'h')]
 
-        #Avoid partial weeks
-        y=df_nation[:len(df_nation)-1].index.get_level_values('date').max()
-        if dmax-y != np.timedelta64(24*7,'h'):
-            df_nation=df_nation[:len(df_nation)-1]
-            
         pop = pops_dict[ISO_A3]['population']
 
         #weekly changes

@@ -5,8 +5,8 @@ config = get_config()
 
 start_date ='10/22/20'
 end_date = '11/22/20'
-week_start = '11/15/20'
-week_end = '11/22/20'
+week_start = '11/18/20'
+week_end = '11/25/20'
 doctest_date ='4/10/20' #for testing make_pickle
 
 illinois_pop = 12671821

@@ -293,9 +293,9 @@ def make_pickle():
     >>> status
     >>> df = df[df.index.get_level_values('ISO_A3')=='USA']
     >>> get_value_by_date_col(df, '2020-04-10', 'cases') #us
-    503274
+    503474.0
     >>> get_value_by_date_col(df, '2020-04-10', 'deaths') #us
-    23395
+    23403.0
     """
     config = get_config()
     
