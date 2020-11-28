@@ -348,7 +348,7 @@ def make_pickle():
 
     df_global = pd.DataFrame({'key': expanded_keys, 'date':expanded_dates, 'cases': cases, 'deaths': deaths}).set_index('key')
     end = time.time()
-    # print(f'making df_global {end-start}')
+    print(f'making df_global {end-start}')
 
     #############################################################################
     # Create data structure for US data frame
@@ -384,7 +384,7 @@ def make_pickle():
         expanded_dates += dates2
         expanded_keys += len(dates2)*[tkey]
     end = time.time()
-    # print(f'creating data structure for df_us {end-start}')
+    print(f'creating data structure for df_us {end-start}')
 
     start = time.time()
     df_us = pd.DataFrame({'key': tuple(expanded_keys), 'date':expanded_dates, 'cases': cases, 'deaths': deaths}).set_index('key')
@@ -398,7 +398,7 @@ def make_pickle():
     start = time.time()
     df_us = df_us_keys.join(df_us, on='key')
     end = time.time()
-    # print(f'join us {end-start}')
+    print(f'join us {end-start}')
 
     #Combine us and non-us data
     start = time.time()
@@ -409,9 +409,10 @@ def make_pickle():
     #Put data frame in final form and save
     start = time.time()
     df.set_index(['ISO_A3','state','country_name','date'], inplace=True)
+    # df.drop(['lat','lon','UID','Admin2','country_region','latitude','longitude','combined_key'], axis='columns')
     df.to_pickle(config['FILES']['world_data_frame_pickle'])
     end = time.time()
-    # print(f'making pickle {end-start}')
+    print(f'making pickle {end-start}')
 
     #Save record of whether a country has states in the data
     with open(config['FILES']['country_codes'], 'wt') as f:

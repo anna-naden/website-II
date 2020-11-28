@@ -1,2 +1,3 @@
-senatorial projections
-exit status emitted and terminate the batch update
+For map javascript, set nowrap
+make pickle doctest cases
+New way to get weekly fatalities
