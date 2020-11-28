@@ -24,4 +24,4 @@ if [ $? -ne 0 ]
 then
     exit 1
 fi
-xecho 'County plots made'
+echo 'County plots made'
