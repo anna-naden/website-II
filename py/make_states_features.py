@@ -107,7 +107,6 @@ def make_csv_bar_charts(state_deaths):
         for state in state_deaths.keys():
             if state[3:] in state_name_dict.keys():
                 state_name = state_name_dict[state[3:]]
-                print(state_name)
                 f.write('{\n')
                 f.write(f'"name": "{state_name}",\n')
                 f.write(f'"value": {state_deaths[state]},\n')

@@ -348,7 +348,7 @@ def make_pickle():
 
     df_global = pd.DataFrame({'key': expanded_keys, 'date':expanded_dates, 'cases': cases, 'deaths': deaths}).set_index('key')
     end = time.time()
-    print(f'making df_global {end-start}')
+    # print(f'making df_global {end-start}')
 
     #############################################################################
     # Create data structure for US data frame
