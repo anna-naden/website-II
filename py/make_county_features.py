@@ -142,7 +142,7 @@ for county_fips in df.fips.unique():
     df_county_p = df_pops[df_pops.fips == county_fips]
     df_county = df_time_series[df_time_series.fips == county_fips]
     if not df_county.empty and not df_county_p.empty:
-        # delete_obj('phoenix-technical-services.com', county_fips + '.json')
+        # delete_obj('covid.phoenix-technical-services.com', county_fips + '.json')
         pop = df_county_p.population.iloc[0]
         status, county_time_series = make_dict_county_graph(df_county, pop, county_fips, start_date_graph, end_date)
         if status is not None:
@@ -155,7 +155,7 @@ for county_fips in df.fips.unique():
 print("Dumping all counties time series to file")
 with open(config['FILES']['scratch'], 'w') as f:
     json.dump(all_counties, f)
-upload_file(config['FILES']['scratch'], 'phoenix-technical-services.com', 'all_counties.json')
+upload_file(config['FILES']['scratch'], 'covid.phoenix-technical-services.com', 'all_counties.json')
 os.remove(config['FILES']['scratch'])
 
 #--------------------------------------------------------------------------
@@ -174,7 +174,7 @@ for state in deaths_by_state.keys():
         feature_obj = { 'interval': interval, 'feature_set': feature_set}
         json.dump(feature_set,f)
         f.flush()
-        upload_file(config['FILES']['scratch'], 'phoenix-technical-services.com', state+'.json', title=state)
+        upload_file(config['FILES']['scratch'], 'covid.phoenix-technical-services.com', state+'.json', title=state)
         os.remove(config['FILES']['scratch'])
     f.close()
 print(f'\nuploaded county 30 day fatalties {start_date} to {end_date}')

@@ -9,9 +9,6 @@ def get_value_by_date_col(df, date, column):
         date (str or datetime): The date for which to get the data
         column (str): The column from which to get the data
 
-        >>> status, df = get_data_by_ISO('USA')
-        >>> get_value_by_date_col(df, '2020-04-10', 'cases')
-        497943.0
     """
 
     dfgb = df.groupby('date').sum()
@@ -77,11 +74,6 @@ def get_str_first_row(df, column):
         df (DataFrame): The data
         column (str): The column
 
-    >>> status, df = get_states_and_counties('USA')
-    >>> df = df[df.state == 'Alabama']
-    >>> df = df[df.county == 'Autauga']
-    >>> get_str_one_row(df, 'FIPS')
-    '01001'
     """
 
     if df.empty:
@@ -90,8 +82,6 @@ def get_str_first_row(df, column):
 
 if __name__ == '__main__':
     import doctest
-    from get_data import get_data_by_ISO
-    from geography import get_states_and_counties
 
     doctest.testmod(verbose=False)
 

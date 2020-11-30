@@ -127,34 +127,20 @@ with open(config['FILES']['scratch'], 'w') as f:
     feature_obj = { 'interval': interval, 'type': 'FeatureCollection', 'features': feature_list}
     json.dump(feature_obj, f)
     f.flush()
-    upload_file(config['FILES']['scratch'], 'phoenix-technical-services.com', 'all.json', 'all.json')
+    upload_file(config['FILES']['scratch'], 'covid.phoenix-technical-services.com', 'all.json', 'all.json')
     f.close()
 os.remove(config['FILES']['scratch'])
 print('world features uploaded')
 
-if False:
-    print('uploading individual countries')
-    for ISO_A3 in nations.keys():
-        # print(ISO_A3)
+# Time series all nations
+# for key in nations.keys():
+for key in ['USA']:
+    status, time_series_json = get_nation_time_series(df_world1[df_world1.ISO_A3==key].copy(), key, start_date_graph, end_date)
+    if status is not None:
+        print(status)
+        exit(1)
+    if time_series_json is not None:
         with open(config['FILES']['scratch'], 'w') as f:
-            feature_set = {'type': 'FeatureCollection', 'features': nations[ISO_A3]}
-            feature_obj = { 'interval': interval, 'feature_set': feature_set}
-            json.dump(feature_obj, f)
-            f.flush()
-        f.close()
-        upload_file(config['FILES']['scratch'], 'phoenix-technical-services.com', ISO_A3+'.json',title=ISO_A3)
-        os.remove(config['FILES']['scratch'])
-
-if True:
-    # Time series all nations
-    # for key in nations.keys():
-    for key in ['USA']:
-        status, time_series_json = get_nation_time_series(df_world1[df_world1.ISO_A3==key].copy(), key, start_date_graph, end_date)
-        if status is not None:
-            print(status)
-            exit(1)
-        if time_series_json is not None:
-            with open(config['FILES']['scratch'], 'w') as f:
-                f.write(time_series_json)
-                upload_file(config['FILES']['scratch'], 'phoenix-technical-services.com',key+'.json', key)
-                os.remove(config['FILES']['scratch'])
+            f.write(time_series_json)
+            upload_file(config['FILES']['scratch'], 'covid.phoenix-technical-services.com',key+'.json', key)
+            os.remove(config['FILES']['scratch'])

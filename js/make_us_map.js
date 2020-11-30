@@ -37,7 +37,8 @@ function make_us_map(statesData) {
             const h = '"300"';
             const w = '"300"';
             const style = '" style="float: left"'
-            const img_tag = "<img src=" + src + " width=" + w + " height=" + h + style + "></img>";
+            // const img_tag = "<img src=" + src + " width=" + w + " height=" + h + style + "></img>";
+            const img_tag = "<img src=" + src + style + "></img>";
             this._div.innerHTML = img_tag;
         }
         if (ISO_A3.substr(0,3) == 'CAN') {
@@ -45,7 +46,8 @@ function make_us_map(statesData) {
             const h = '"300"';
             const w = '"300"';
             const style = '" style="float: left"'
-            const img_tag = "<img src=" + src + " width=" + w + " height=" + h + style + "></img>";
+            // const img_tag = "<img src=" + src + " width=" + w + " height=" + h + style + "></img>";
+            const img_tag = "<img src=" + src + style + "></img>";
             this._div.innerHTML = img_tag;
 
         }

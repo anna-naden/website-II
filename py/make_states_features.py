@@ -118,6 +118,6 @@ config = get_config()
 map_features = make_features()
 with open(config['FILES']['scratch'], 'w') as f:
     json.dump(map_features,f)
-upload_file(config['FILES']['scratch'], 'phoenix-technical-services.com', 'all-states.json', title='all-states.json')
+upload_file(config['FILES']['scratch'], 'covid.phoenix-technical-services.com', 'all-states.json', title='all-states.json')
 os.remove(config['FILES']['scratch'])
 print('states features made')

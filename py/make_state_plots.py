@@ -108,7 +108,7 @@ for fips in states_fips_s:
             dates_n,nd_state = get_state_weekly(df_state, int(pops_dict[state]))
 
             #make plot
-            fig, ax=plt.subplots()
+            fig, ax=plt.subplots(figsize=(5,3))
             for tick in ax.get_xticklabels():
                 tick.set_rotation(45)
             ax.plot(dates_n, nd_state)
@@ -120,14 +120,17 @@ for fips in states_fips_s:
             #Put text showing last date and last value
             last = len(nd_state)-1
             last_date=f'{dates_n[last]}'[:10]
-            ax.annotate(f'{last_date}, {round(nd_state[last],4)}', [dates_n[last],nd_state[last]])
-            fig.tight_layout(pad=4)
+            ax.annotate(f'{last_date}, {round(nd_state[last],3)}*', [dates_n[last],nd_state[last]])
+            fig.tight_layout(pad=2)
+
+            prior = f'{dates_n[last-1]}'[:10]
+            plt.figtext(0.05,0.05,f"*100,000(to date as of {last_date} - to date as of {prior})/(7*population)", fontsize=8)
 
             #save and upload
             start = time.time()
             fig.savefig(config['FILES']['scratch_image'])
             plt.close()
-            upload_file(config['FILES']['scratch_image'], 'phoenix-technical-services.com', fips + '.jpg', title=fips)
+            upload_file(config['FILES']['scratch_image'], 'covid.phoenix-technical-services.com', fips + '.jpg', title=fips)
             os.remove(config['FILES']['scratch_image'])
 
 ################################################################
@@ -160,7 +163,7 @@ for fips in states_fips_s:
 
             #make plot
 
-            fig, ax=plt.subplots()
+            fig, ax=plt.subplots(figsize=(5,3))
             for tick in ax.get_xticklabels():
                 tick.set_rotation(45)
             ax.plot(dates_n, nd_state)
@@ -175,9 +178,12 @@ for fips in states_fips_s:
             ax.annotate(f'{last_date}, {round(nd_state[last],4)}', [dates_n[last],nd_state[last]])
             fig.tight_layout(pad=4)
 
+            prior = f'{dates_n[last-1]}'[:10]
+            plt.figtext(0.05,0.05,f"*100,000(to date as of {last_date} - to date as of {prior})/(7*population)", fontsize=8)
+
             #save and upload
             start = time.time()
             fig.savefig(config['FILES']['scratch_image'])
             plt.close()
-            upload_file(config['FILES']['scratch_image'], 'phoenix-technical-services.com', 'CAN' + fips + '.jpg', title='CAN' + fips)
+            upload_file(config['FILES']['scratch_image'], 'covid.phoenix-technical-services.com', 'CAN' + fips + '.jpg', title='CAN' + fips)
             os.remove(config['FILES']['scratch_image'])

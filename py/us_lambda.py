@@ -8,7 +8,7 @@ def lambda_handler(event, context):
         s3 = boto3.client('s3')
         with tempfile.TemporaryDirectory() as tmpdir:
             path = os.path.join(tmpdir, 'scratch.json')
-            s3.download_file('phoenix-technical-services.com', 'all-states.json', path)
+            s3.download_file('covid.phoenix-technical-services.com', 'all-states.json', path)
             with open(path, 'r') as f:
                 obj = f.read()
     except Exception as inst:

@@ -76,7 +76,7 @@ for ISO_A3 in ISO_A3_codes:
         dates_n,nd_nation = get_nation_weekly(df_nation, pop)
 
         #make plot
-        fig, ax=plt.subplots()
+        fig, ax=plt.subplots(figsize=(5,3))
         ax.set_ylim(0, float(config['PLOT CONFIGURATION']['max_y']))
         for tick in ax.get_xticklabels():
             tick.set_rotation(45)
@@ -91,11 +91,14 @@ for ISO_A3 in ISO_A3_codes:
         ax.annotate(f'{last_date}, {round(nd_nation[last],4)}', [dates_n[last],nd_nation[last]])
         fig.tight_layout(pad=4)
 
+        prior = f'{dates_n[last-1]}'[:10]
+        plt.figtext(0.05,0.05,f"*100,000(to date as of {last_date} - to date as of {prior})/(7*population)", fontsize=8)
+        
         #save and upload
         start = time.time()
         fig.savefig(config['FILES']['scratch_image'])
         plt.close()
-        upload_file(config['FILES']['scratch_image'], 'phoenix-technical-services.com', ISO_A3 + '.jpg', title=ISO_A3)
+        upload_file(config['FILES']['scratch_image'], 'covid.phoenix-technical-services.com', ISO_A3 + '.jpg', title=ISO_A3)
         os.remove(config['FILES']['scratch_image'])
         upload_time += time.time()-start
 print(upload_time)

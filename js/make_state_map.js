@@ -100,7 +100,8 @@ function make_state_map(fips,state_features) {
             const h = '"300"';
             const w = '"300"';
             const style = '" style="float: left"'
-            const img_tag = "<img src=" + src + " width=" + w + " height=" + h + style + "></img>";
+            // const img_tag = "<img src=" + src + " width=" + w + " height=" + h + style + "></img>";
+            const img_tag = "<img src=" + src + style + "></img>";
             this._div.innerHTML = img_tag;
         }
     };
