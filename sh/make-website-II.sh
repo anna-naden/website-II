@@ -48,9 +48,4 @@ then
 fi
 
 
-# -------------------------------------------------------------
-# Upload content
-#--------------------------------------------------------------
-aws s3 cp /home/anna_user2/projects/website-II/js/barchart.js s3://phoenix-technical-services.com/js/barchart.js --acl public-read
-
 echo "Done"
