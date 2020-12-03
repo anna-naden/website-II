@@ -27,6 +27,7 @@ function make_us_map(statesData) {
     };
 
     info.update = function (props) {
+        this._div.innerHTML='';
         if (props) {
         // this._div.innerHTML = '<h3>COVID-19 by State</h3>' + (props ?
         //     '<b>' + props.name + '</b><br />' + formatter.format(props.density) + ' fatalities per 100,000 people in past 30 days</sup>'

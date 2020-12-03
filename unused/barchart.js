@@ -113,7 +113,7 @@ var data = [
 },
 {
 "name": "Nevada",
-"value": 25.03119971845582,
+"value": 13.570741222197837,
 },
 {
 "name": "New Hampshire",

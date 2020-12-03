@@ -96,7 +96,8 @@ dates, nd = get_nation_weekly(df_us, pop)
 #prepare to look up country names
 upload_time=0
 df = df[df.index.get_level_values('ISO_A3')=='USA'].reset_index().set_index(['date'])
-for fips in df.fips.unique():
+# for fips in df.fips.unique():
+for fips in ['17031']:
 
         #get weekly data
         df_county=df[df.fips ==fips]
@@ -118,7 +119,7 @@ for fips in df.fips.unique():
             ax.plot(dates_n, nd_nation)
             ax.plot(dates, nd)
             ax.legend([county + ' County, ' + state, 'USA'], fontsize=9)
-            ax.set_title('Daily New Fatalities per 100,000 Population', fontsize=9)
+            ax.set_title(f'Daily New Fatalities per 100,000 Population ({int(pop)})', fontsize=9)
 
             #Put text showing last date and last value
             last = len(nd_nation)-1

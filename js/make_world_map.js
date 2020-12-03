@@ -32,6 +32,7 @@ function make_world_map(features) {
     };
 
     info.update = function (props) {
+        this._div.innerHTML = '';
         if (props) {
             ISO_A3 = props.adm0_a3;
             var src = '"' + ISO_A3 + '.jpg"';

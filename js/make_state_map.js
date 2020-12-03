@@ -91,6 +91,7 @@ function make_state_map(fips,state_features) {
     };
 
     info.update = function (props) {
+        this._div.innerHTML = '';
         if (props) {
             const fips = props['FIPS-code'] + props['COUNTY'];
             // this._div.innerHTML = '<h3>COVID-19 by County</h3>' + (props ?
