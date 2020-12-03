@@ -36,6 +36,7 @@
             make_state_map(fips,state_features);
         };
         };
+        // API gateway county-hot3. Lambda county_hot
         xhttp.open("GET", "https://qwwj8ox9l9.execute-api.us-east-1.amazonaws.com/stage/fips?fips="+fips, true);
         xhttp.send();
     }

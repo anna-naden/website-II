@@ -14,6 +14,7 @@ cd /home/anna_user2/projects/website-II/py
 python make_pickle2.py
 if [ $? -ne 0 ]
 then
+    echo 'nonzero from make pickle'
     exit 1
 fi
 
@@ -22,6 +23,7 @@ cd ~/projects/website-II/py
 python make_county_plots.py
 if [ $? -ne 0 ]
 then
+    echo 'nonzero fron county plots'
     exit 1
 fi
 echo 'County plots made'

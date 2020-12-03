@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
+<!-- Render map of US and Candada -->
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css">
         <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
         <script src="https://d3js.org/d3.v6.js"></script>
@@ -7,6 +8,7 @@
         <script type="text/javascript">
           function get_us_features()
           {
+            // API Gateway US-hot-API. Lambda us_hot
             url = "https://vpw7dxy2uf.execute-api.us-east-1.amazonaws.com/stage/us_hot";
             var xhttp = new XMLHttpRequest();
               xhttp.onreadystatechange = function() {

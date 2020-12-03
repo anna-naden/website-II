@@ -16,6 +16,7 @@
                   make_world_map(us_features);
                 }
               };
+              // API gateway world-hot --> lambda county_hot
               xhttp.open("GET", "https://a3155m5nk4.execute-api.us-east-1.amazonaws.com/stage?iso-a3=all", true);
               xhttp.send();
           }
@@ -28,6 +29,11 @@
             #map {
                 height: 40vh;
                 height: 40vw;
+            }
+            .info {
+              position: relative;
+              left: -50%;
+              top: -10%;
             }
         </style>
         <script>

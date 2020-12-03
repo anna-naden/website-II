@@ -6,6 +6,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 import time
+from PIL import Image
+import numpy as np
 
 from get_world_covid_jh import get_world_covid_jh
 from world_populations import world_populations
@@ -76,24 +78,27 @@ for ISO_A3 in ISO_A3_codes:
         dates_n,nd_nation = get_nation_weekly(df_nation, pop)
 
         #make plot
-        fig, ax=plt.subplots(figsize=(3,3), constrained_layout=True)
+        fig, ax=plt.subplots(figsize=(5,5))
         ax.set_ylim(0, float(config['PLOT CONFIGURATION']['max_y']))
         for tick in ax.get_xticklabels():
             tick.set_rotation(45)
         ax.plot(dates_n, nd_nation)
         ax.plot(dates, nd)
         ax.legend([countries[ISO_A3].replace('_',','), 'USA'])
-        ax.set_title('Daily New Fatalities per 100,000 Population', fontsize=9)
+        ax.set_title('Daily New Fatalities per 100,000 Population')
 
         #Put text showing last date and last value
         last = len(nd_nation)-1
         last_date=f'{dates_n[last]}'[:10]
-        x = dates_n[last]
-        y = nd_nation[last]
-        ax.annotate(f'{last_date}, {round(nd_nation[last],4)}', [x,y], 
-            xycoords='data',
-            xytext=(dates_n[last-20],y+.5), textcoords='data',
-            arrowprops=dict(arrowstyle="->"))
+        ax.annotate(f'{last_date}, {round(nd_nation[last],4)}', [dates_n[last],nd_nation[last]])
+        
+        plt.tight_layout(pad=5)
+
+        #Show formula used
+        im = Image.open('covid-formula2.png')
+        im.resize((32,32))
+        im = np.array(im).astype(np.float)/255
+        plt.figimage(im,xo=315,yo=275)
 
         #save and upload
         start = time.time()

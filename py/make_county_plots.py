@@ -109,24 +109,22 @@ for fips in df.fips.unique():
             dates_n,nd_nation = get_county_weekly(df_county, pop)
 
             #make plot
-            MAX_Y = float(config['PLOT CONFIGURATION']['max_y'])
-            fig, ax=plt.subplots(figsize=(5,3))
+            MAX_Y = 4*float(config['PLOT CONFIGURATION']['max_y'])
+            fig, ax=plt.subplots(figsize=(4,2.4), constrained_layout=True)
+            plt.xticks(fontsize=9)
             ax.set_ylim(0,  MAX_Y)
             for tick in ax.get_xticklabels():
                 tick.set_rotation(45)
             ax.plot(dates_n, nd_nation)
             ax.plot(dates, nd)
-            ax.legend([county + ' County, ' + state, 'USA'])
-            ax.set_title('Daily New Fatalities per 100,000 Population')
+            ax.legend([county + ' County, ' + state, 'USA'], fontsize=9)
+            ax.set_title('Daily New Fatalities per 100,000 Population', fontsize=9)
 
             #Put text showing last date and last value
             last = len(nd_nation)-1
             last_date=f'{dates_n[last]}'[:10]
-            ax.annotate(f'{last_date}, {round(nd_nation[last],4)}', [dates_n[last],nd_nation[last]])
-            fig.tight_layout(pad=4)
-
-            prior = f'{dates_n[last-1]}'[:10]
-            plt.figtext(0.05,0.05,f"*100,000(to date as of {last_date} - to date as of {prior})/(7*population)", fontsize=8)
+            ax.annotate(f'{last_date}, {round(nd_nation[last],4)}', [dates_n[last],nd_nation[last]], fontsize=9)
+            # fig.tight_layout(pad=4)
 
             #save and upload
             start = time.time()

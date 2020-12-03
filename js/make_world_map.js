@@ -18,12 +18,12 @@ function make_world_map(features) {
         id: 'mapbox/light-v9',
         tileSize: 512,
         zoomOffset: -1,
-        noWrap: true
+        noWrap: false
     }).addTo(map);
 
 
     // control that shows state info on hover
-    var info = L.control();
+    var info = L.control({options: {position: 'topleft'}});
 
     info.onAdd = function (map) {
         this._div = L.DomUtil.create('div', 'info');
@@ -34,13 +34,15 @@ function make_world_map(features) {
     info.update = function (props) {
         if (props) {
             ISO_A3 = props.adm0_a3;
-            const src = '"' + ISO_A3 + '.jpg"';
-            const h = '"300"';
+            var src = '"' + ISO_A3 + '.jpg"';
+            const h = '"250"';
             const w = '"300"';
             const style = '" style="float: left"'
             // const img_tag = "<img src=" + src + " width=" + w + " height=" + h + style + "></img>";
             const img_tag = "<img src=" + src + style + "></img>";
-            this._div.innerHTML = img_tag;
+            src = '"covid-formula2.png"'
+            const img_tag2 = "<img src=" + src + style + "></img>";
+            this._div.innerHTML = img_tag + "<br/>"+img_tag2;
 
         }
         // this._div.innerHTML = '<h3>COVID-19 by County</h3>' + (props ?

@@ -104,7 +104,7 @@ for fips in states_fips_s:
             dates_n,nd_state = get_state_weekly(df_state, int(pops_dict[state]))
 
             #make plot
-            fig, ax=plt.subplots(figsize=(5,3))
+            fig, ax=plt.subplots()
             for tick in ax.get_xticklabels():
                 tick.set_rotation(45)
             ax.plot(dates_n, nd_state)
@@ -123,7 +123,7 @@ for fips in states_fips_s:
             start = time.time()
             fig.savefig(config['FILES']['scratch_image'])
             plt.close()
-            upload_file(config['FILES']['scratch_image'], 'covid.phoenix-technical-services.com', fips + '.jpg', title=fips)
+            upload_file(config['FILES']['scratch_image'], 'phoenix-technical-services.com', fips + '.jpg', title=fips)
             os.remove(config['FILES']['scratch_image'])
 
 ################################################################
@@ -156,7 +156,7 @@ for fips in states_fips_s:
 
             #make plot
 
-            fig, ax=plt.subplots(figsize=(5,3))
+            fig, ax=plt.subplots()
             for tick in ax.get_xticklabels():
                 tick.set_rotation(45)
             ax.plot(dates_n, nd_state)
@@ -175,5 +175,5 @@ for fips in states_fips_s:
             start = time.time()
             fig.savefig(config['FILES']['scratch_image'])
             plt.close()
-            upload_file(config['FILES']['scratch_image'], 'covid.phoenix-technical-services.com', 'CAN' + fips + '.jpg', title='CAN' + fips)
+            upload_file(config['FILES']['scratch_image'], 'phoenix-technical-services.com', 'CAN' + fips + '.jpg', title='CAN' + fips)
             os.remove(config['FILES']['scratch_image'])

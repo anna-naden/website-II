@@ -1,9 +1,4 @@
-import json
-import boto3
-import tempfile
-import os
-import ast
-
+#second
 def lambda_handler(event, context):
 
     params = event['queryStringParameters']
