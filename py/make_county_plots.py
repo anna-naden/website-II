@@ -96,8 +96,7 @@ dates, nd = get_nation_weekly(df_us, pop)
 #prepare to look up country names
 upload_time=0
 df = df[df.index.get_level_values('ISO_A3')=='USA'].reset_index().set_index(['date'])
-# for fips in df.fips.unique():
-for fips in ['17031']:
+for fips in df.fips.unique():
 
         #get weekly data
         df_county=df[df.fips ==fips]
