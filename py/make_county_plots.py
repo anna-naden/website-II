@@ -110,7 +110,7 @@ for fips in df.fips.unique():
 
             #make plot
             MAX_Y = 4*float(config['PLOT CONFIGURATION']['max_y'])
-            fig, ax=plt.subplots(figsize=(4,2.4), constrained_layout=True)
+            fig, ax=plt.subplots(figsize=(4.5,2.4), constrained_layout=True)
             plt.xticks(fontsize=9)
             ax.set_ylim(0,  MAX_Y)
             for tick in ax.get_xticklabels():
@@ -118,7 +118,9 @@ for fips in df.fips.unique():
             ax.plot(dates_n, nd_nation)
             ax.plot(dates, nd)
             ax.legend([county + ' County, ' + state, 'USA'], fontsize=9)
-            ax.set_title(f'Daily New Fatalities per 100,000 Population ({int(pop)})', fontsize=9)
+            pop = int(pop)
+            spop = "{:,}".format(pop)
+            ax.set_title(f'Daily New Fatalities per 100,000 Population ({spop})', fontsize=9)
 
             #Put text showing last date and last value
             last = len(nd_nation)-1
