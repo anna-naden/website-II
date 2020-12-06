@@ -10,6 +10,7 @@ import numpy as np
 import json
 import pandas as pd
 import csv
+import time
 
 from s3_util import *
 from county_pops_fips import county_pops_fips
@@ -99,6 +100,7 @@ def update_county_features(states, deaths):
 # ----------------------------------------------------------
 # Main
 # ----------------------------------------------------------
+start = time.time()
 config = get_config()
 
 status, df_world = get_world_covid_jh()
@@ -174,7 +176,8 @@ for state in deaths_by_state.keys():
         feature_obj = { 'interval': interval, 'feature_set': feature_set}
         json.dump(feature_set,f)
         f.flush()
-        upload_file(config['FILES']['scratch'], 'covid.phoenix-technical-services.com', state+'.json', title=state)
+        upload_file(config['FILES']['scratch'], 'covid.phoenix-technical-services.com', state+'.json', title=state+'.json')
         os.remove(config['FILES']['scratch'])
     f.close()
-print(f'\nuploaded county 30 day fatalties {start_date} to {end_date}')
+end = time.time()
+print(f'\nuploaded county 30 day fatalties {str(start_date)[:10]} to {str(end_date)[:10]} elapsed time {round(end-start,2)} seconds')

@@ -125,8 +125,7 @@ for fips in df.fips.unique():
             #Put text showing last date and last value
             last = len(nd_nation)-1
             last_date=f'{dates_n[last]}'[:10]
-            ax.annotate(f'{last_date}, {round(nd_nation[last],4)}', [dates_n[last],nd_nation[last]], fontsize=9)
-            # fig.tight_layout(pad=4)
+            ax.annotate(f'{last_date}, {round(nd_nation[last],3)}', [dates_n[last],nd_nation[last]], fontsize=9)
 
             #save and upload
             start = time.time()
