@@ -1,11 +1,13 @@
 import numpy as np
 import json
 import csv
+import time
 
-from s3_util import *
 from get_config import get_config
 from get_world_covid_jh import get_world_covid_jh
 from world_populations import world_populations
+from s3_util import upload_file
+import os
 
 def get_world_deaths(df_world, start_date, end_date):
     ISO_A3_codes = df_world.ISO_A3.unique()
@@ -91,6 +93,7 @@ def get_nation_time_series(df1, ISO_A3, start_date, end_date):
 # Main
 # ----------------------------------------------------------
 config = get_config()
+start = time.time()
 
 status, df_world = get_world_covid_jh()
 if status is not None:
@@ -133,8 +136,8 @@ os.remove(config['FILES']['scratch'])
 print('world features uploaded')
 
 # Time series all nations
-# for key in nations.keys():
-for key in ['USA']:
+for key in nations.keys():
+# for key in ['USA']:
     status, time_series_json = get_nation_time_series(df_world1[df_world1.ISO_A3==key].copy(), key, start_date_graph, end_date)
     if status is not None:
         print(status)
@@ -144,3 +147,7 @@ for key in ['USA']:
             f.write(time_series_json)
             upload_file(config['FILES']['scratch'], 'covid.phoenix-technical-services.com',key+'.json', key)
             os.remove(config['FILES']['scratch'])
+    else:
+        print(f'\nskipping {key}')
+end = time.time()
+print(f'\nworld features made {round(end-start,2)} secs')
