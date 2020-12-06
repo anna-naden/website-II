@@ -11,6 +11,7 @@ from csv_util import csv_get_dict, csv_lookup
 import numpy as np
 import json
 import  os
+import time
 
 def make_features():
     """Read us and canada covid data frame, and the map feature json for these countries. Fill in 30-day deaths in "density" feature.
@@ -24,7 +25,7 @@ def make_features():
     df.reset_index(inplace=True)
     end_date = df.date.max()
     start_date = end_date-np.timedelta64(30,'D')
-    print(f'states features date range {start_date} {end_date}')
+    print(f'states features date range {str(start_date)[:10]} {str(end_date)[:10]}')
     state_deaths = {}
     
     #USA
@@ -39,6 +40,7 @@ def make_features():
         # The Johns Hopkins data has incorrect FIPS code for unassigned county in Illinois, so instead of keying on FIPS I must key on state name, e.g. Illinois
         if fips_code in state_name_dict.keys():
             state_name = state_name_dict[fips_code]
+            # print(state_name)
             deaths1 = df.query('date==@start_date and state==@state_name').deaths.sum()
             deaths2 = df.query('date==@end_date and state==@state_name').deaths.sum()
             deaths = deaths2-deaths1
@@ -59,6 +61,7 @@ def make_features():
         deaths2 = df.query('date==@end_date and state_fips==@fips_code').deaths.sum()
         deaths = deaths2-deaths1
         if fips_code in canada_pop_dict.keys():
+            # print(fips_code)
             pop = int(canada_pop_dict[fips_code])
             state_deaths[ISO_A3 + fips_code]=100000*deaths/pop
         else:
@@ -114,10 +117,14 @@ def make_csv_bar_charts(state_deaths):
         f.write('];')
     f.close()
 
+start = time.time()
+
 config = get_config()
 map_features = make_features()
 with open(config['FILES']['scratch'], 'w') as f:
     json.dump(map_features,f)
 upload_file(config['FILES']['scratch'], 'covid.phoenix-technical-services.com', 'all-states.json', title='all-states.json')
 os.remove(config['FILES']['scratch'])
-print('states features made')
+
+end = time.time()
+print(f'\nstates features made {round(end-start,2)} secs')
