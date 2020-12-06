@@ -24,7 +24,7 @@ class ProgressPercentage(object):
                     self._filename + ': ' + self._title, self._seen_so_far, self._size,
                     percentage))
             sys.stdout.flush()
-def upload_file(file_name, bucket, object_name=None, title = None):
+def upload_file(file_name, bucket, object_name=None, title = None, show_progress=False):
     """Upload a file to an S3 bucket
 
     :param file_name: File to upload
@@ -43,7 +43,12 @@ def upload_file(file_name, bucket, object_name=None, title = None):
         title1 = object_name
         if title is not None:
             title1 = title
-        response = s3_client.upload_file(file_name, bucket, object_name, Callback=ProgressPercentage(file_name, title1))
+        if show_progress:
+            response = s3_client.upload_file(file_name, bucket, object_name, Callback=ProgressPercentage(file_name, title1))
+        else:
+            response = s3_client.upload_file(file_name, bucket, object_name)
+            # print(f'uploading {object_name}')
+
     except ClientError as e:
         logging.error(e)
         return False
