@@ -102,9 +102,10 @@ if status is not None:
 print('making and uploading county 30 day fatalities')
 county_deaths = get_county_deaths(df, df_pops, start_date, end_date)
 
-#Collect info for markers of top counties in the country
+#Collect info for markers of worst counties in the country
 county_deaths_sorted = sorted(county_deaths, key=county_deaths.get, reverse=True)
-top_deaths = county_deaths_sorted[:5]
+n_worst = int(config['MARKERS']['n_worst_counties'])
+top_deaths = county_deaths_sorted[:n_worst]
 markers = {}
 for key in top_deaths:
     df_cty = df[df.fips==key].iloc[0]

@@ -6,7 +6,7 @@ import time
 from get_config import get_config
 from get_world_covid_jh import get_world_covid_jh
 from world_populations import world_populations
-from s3_util import upload_file
+from s3_util import upload_file, delete_obj
 import os
 
 def get_world_deaths(df_world, start_date, end_date):
@@ -114,6 +114,24 @@ start_date_graph = end_date-np.timedelta64(6,"M")
 
 # Make and upload world features
 world_deaths = get_world_deaths(df_world1, w_start_date, w_end_date)
+
+#Collect info for markers of worst counties in the country
+world_deaths_sorted = sorted(world_deaths, key=world_deaths.get, reverse=True)
+n_worst = int(config['MARKERS']['n_worst_nations'])
+top_deaths = world_deaths_sorted[:n_worst]
+markers = {}
+for key in top_deaths:
+    df_nation = df_world1[df_world1.ISO_A3==key].iloc[0]
+    lat = df_nation.lat
+    lon = df_nation.lon
+    markers[key] = [lat, lon]
+
+with open(config['FILES']['scratch'], 'w') as f:
+    json.dump(markers, f)
+upload_file(config['FILES']['scratch'], 'covid.phoenix-technical-services.com', 'world-markers.json', title='world-markers.json')
+
+
+#Make map features
 nations = get_world_features()
 update_world_features(nations, world_deaths)
 
@@ -135,19 +153,5 @@ with open(config['FILES']['scratch'], 'w') as f:
 os.remove(config['FILES']['scratch'])
 print('world features uploaded')
 
-# Time series all nations
-for key in nations.keys():
-# for key in ['USA']:
-    status, time_series_json = get_nation_time_series(df_world1[df_world1.ISO_A3==key].copy(), key, start_date_graph, end_date)
-    if status is not None:
-        print(status)
-        exit(1)
-    if time_series_json is not None:
-        with open(config['FILES']['scratch'], 'w') as f:
-            f.write(time_series_json)
-            upload_file(config['FILES']['scratch'], 'covid.phoenix-technical-services.com',key+'.json', key)
-            os.remove(config['FILES']['scratch'])
-    else:
-        print(f'\nskipping {key}')
 end = time.time()
 print(f'\nworld features made {round(end-start,2)} secs')

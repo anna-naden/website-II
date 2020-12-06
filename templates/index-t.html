@@ -10,10 +10,19 @@
             var xhttp = new XMLHttpRequest();
               xhttp.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
-                  var us_features =JSON.parse(this.responseText);
-                  console.log(us_features.interval)
-                  us_features = us_features['features']
-                  make_world_map(us_features);
+                  var world_features =JSON.parse(this.responseText);
+                  // console.log(world_features.interval)
+                  world_features = world_features['features']
+                  // API gateway county-hot3. Lambda county_hot
+                  var xhttp = new XMLHttpRequest();
+                  xhttp.open("GET", "https://qwwj8ox9l9.execute-api.us-east-1.amazonaws.com/stage/fips?w_markers=true", true);
+                  xhttp.send();
+                  xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var markers = JSON.parse(this.responseText);
+                        make_world_map(world_features, markers)
+                    }
+                  }
                 }
               };
               // API gateway world-hot --> lambda county_hot

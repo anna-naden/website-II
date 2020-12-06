@@ -38,6 +38,36 @@ def lambda_handler(event, context):
             }
         return resp
     
+    #---------------------------------------
+    # Markers for worst nations
+    #---------------------------------------
+    if 'w_markers' in params:
+        try:
+            s3 = boto3.client('s3')
+            with tempfile.TemporaryDirectory() as tmpdir:
+                path = os.path.join(tmpdir, 'scratch.json')
+                s3.download_file('covid.phoenix-technical-services.com', 'world-markers.json', path)
+                with open(path, 'r') as f:
+                    obj = f.read()
+        except Exception as inst:
+            resp = {
+                'statusCode': 404,
+                'headers': {
+                "Access-Control-Allow-Origin": "*"
+                },
+                'body': f'{inst}'
+            }
+            return resp
+    
+        resp= {
+            'statusCode': 200,
+            'headers': {
+                "Access-Control-Allow-Origin": "*"
+            },
+            'body': obj
+            }
+        return resp
+    
     #-----------------------------------
     # World map geojson
     #-----------------------------------
