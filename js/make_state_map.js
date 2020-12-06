@@ -1,4 +1,4 @@
-function make_state_map(fips,state_features) {
+function make_state_map(fips,state_features, marker_dict) {
     const formatter = new Intl.NumberFormat('en-US', {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
@@ -57,29 +57,142 @@ function make_state_map(fips,state_features) {
         '56':[	42.755966	,-107.302490]
     };
 
-    // fips codes
-    alaska = '02';
-    texas = '48';
-    lat_lon = state_lat_long[fips];
-    zoom_level = 7;
-    if (fips==alaska) {
-      lat_lon = [64.835365, -147.776749];
-      zoom_level = 4;
-    };
-    if (fips == texas) {
-      zoom_level = 7;
+     // fips codes
+     alaska = '02';
+     texas = '48';
+     lat_lon = state_lat_long[fips];
+     zoom_level = 7;
+     if (fips==alaska) {
+       lat_lon = [64.835365, -147.776749];
+       zoom_level = 4;
+     };
+     if (fips == texas) {
+       zoom_level = 7;
+     }
+     var map = L.map('map', {zoomControl: true}).setView(lat_lon, zoom_level);
+ 
+     L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+         maxZoom: 18,
+         attribution: 'Data from Johns Hopkins University',
+         id: 'mapbox/light-v9',
+         tileSize: 512,
+         noWrap: true,
+         zoomOffset: -1
+     }).addTo(map);
+     
+   // Markers for worst counties in the country
+    var MyCustomMarker = L.Marker.extend({
+    
+        bindPopup: function(htmlContent, fips, options) {
+                    
+            if (options && options.showOnMouseOver) {
+                
+                // call the super method
+                L.Marker.prototype.bindPopup.apply(this, [htmlContent, options]);
+                
+                // unbind the click event
+                this.off("click", this.openPopup, this);
+                
+                // bind to mouse over
+                this.on("mouseover", function(e) {
+                    
+                    // get the element that the mouse hovered onto
+                    var target = e.originalEvent.fromElement || e.originalEvent.relatedTarget;
+                    var parent = this._getParent(target, "leaflet-popup");
+    
+                    // check to see if the element is a popup, and if it is this marker's popup
+                    if (parent == this._popup._container)
+                        return true;
+                    
+                    // show the popup
+                    this.openPopup();
+                    
+                }, this);
+                
+                // and mouse out
+                this.on("mouseout", function(e) {
+                    
+                    // get the element that the mouse hovered onto
+                    var target = e.originalEvent.toElement || e.originalEvent.relatedTarget;
+                    
+                    // check to see if the element is a popup
+                    if (this._getParent(target, "leaflet-popup")) {
+    
+                        L.DomEvent.on(this._popup._container, "mouseout", this._popupMouseOut, this);
+                        return true;
+    
+                    }
+                    
+                    // hide the popup
+                    this.closePopup();
+                    
+                }, this);
+                
+            }
+            
+        },
+    
+        _popupMouseOut: function(e) {
+            
+            // detach the event
+            L.DomEvent.off(this._popup, "mouseout", this._popupMouseOut, this);
+    
+            // get the element that the mouse hovered onto
+            var target = e.toElement || e.relatedTarget;
+            
+            // check to see if the element is a popup
+            if (this._getParent(target, "leaflet-popup"))
+                return true;
+            
+            // check to see if the marker was hovered back onto
+            if (target == this._icon)
+                return true;
+            
+            // hide the popup
+            this.closePopup();
+            
+        },
+        
+        _getParent: function(element, className) {
+            
+            var parent = element.parentNode;
+            
+            while (parent != null) {
+                
+                if (parent.className && L.DomUtil.hasClass(parent, className))
+                    return parent;
+                
+                parent = parent.parentNode;
+                
+            }
+            
+            return false;
+            
+        },
+        fips:this.fips
+    });
+
+    var markers = new L.FeatureGroup();
+
+    function populate(marker_dict) {
+        for (const fips in marker_dict) {
+            var marker = new MyCustomMarker(new L.LatLng(marker_dict[fips][0], marker_dict[fips][1]));
+            const src = '"' + fips + '.jpg"';
+            const img_tag = "<img src=" + src + style + "></img>";
+            marker.bindPopup(img_tag, fips, {
+                showOnMouseOver: true
+            });
+            markers.addLayer(marker);
+        }
+        return false;
     }
-    var map = L.map('map', {zoomControl: true}).setView(lat_lon, zoom_level);
 
-    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
-        maxZoom: 18,
-        attribution: 'Data from Johns Hopkins University',
-        id: 'mapbox/light-v9',
-        tileSize: 512,
-        noWrap: true,
-        zoomOffset: -1
-    }).addTo(map);
+    map.addLayer(markers);
 
+    populate(marker_dict);
+
+
+ 
 
     // control that shows state info on hover
     var info = L.control();

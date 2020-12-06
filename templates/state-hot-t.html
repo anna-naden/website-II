@@ -33,7 +33,16 @@
         xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             var state_features = JSON.parse(this.responseText);
-            make_state_map(fips,state_features);
+                  // API gateway county-hot3. Lambda county_hot
+                  var xhttp = new XMLHttpRequest();
+                  xhttp.open("GET", "https://qwwj8ox9l9.execute-api.us-east-1.amazonaws.com/stage/fips?markers=true", true);
+                  xhttp.send();
+                  xhttp.onreadystatechange = function() {
+                  if (this.readyState == 4 && this.status == 200) {
+                      var markers = JSON.parse(this.responseText);
+                      make_state_map(fips, state_features, markers)
+                  }
+                }
         };
         };
         // API gateway county-hot3. Lambda county_hot

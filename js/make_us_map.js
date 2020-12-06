@@ -8,7 +8,7 @@ function make_us_map(statesData, marker_dict) {
 // Markers for worst counties in the country
     var MyCustomMarker = L.Marker.extend({
  
-        bindPopup: function(htmlContent, options) {
+        bindPopup: function(htmlContent, fips, options) {
                       
             if (options && options.showOnMouseOver) {
                 
@@ -16,7 +16,13 @@ function make_us_map(statesData, marker_dict) {
                 L.Marker.prototype.bindPopup.apply(this, [htmlContent, options]);
                 
                 // unbind the click event
-                this.off("click", this.openPopup, this);
+                // this.off("click", this.openPopup, this);
+                
+                // bind the click event
+                this.on("click", function(e) {
+                    state_fips = fips.substring(0,2)
+                    window.location.href = "state-hot.html?fips=" + state_fips;
+                });
                 
                 // bind to mouse over
                 this.on("mouseover", function(e) {
@@ -93,19 +99,18 @@ function make_us_map(statesData, marker_dict) {
             
             return false;
             
-        }
-     
+        },
+        fips:this.fips
     });
     
     var markers = new L.FeatureGroup();
 
     function populate(marker_dict) {
-        for (const key in marker_dict) {
-            var marker = new MyCustomMarker(new L.LatLng(marker_dict[key][0], marker_dict[key][1]));
-            //     : 'Mouse over a county to fatalities per capita.<br/>Click to see graph.');
-            const src = '"' + key + '.jpg"';
+        for (const fips in marker_dict) {
+            var marker = new MyCustomMarker(new L.LatLng(marker_dict[fips][0], marker_dict[fips][1]));
+            const src = '"' + fips + '.jpg"';
             const img_tag = "<img src=" + src + style + "></img>";
-            marker.bindPopup(img_tag, {
+            marker.bindPopup(img_tag, fips, {
                 showOnMouseOver: true
             });
             markers.addLayer(marker);
