@@ -6,21 +6,31 @@
         <script src="https://d3js.org/d3.v6.js"></script>
         <script src="../js/make_us_map.js"></script>
         <script type="text/javascript">
-          function get_us_features()
-          {
+          function get_us_features() {
+
             // API Gateway US-hot-API. Lambda us_hot
             url = "https://vpw7dxy2uf.execute-api.us-east-1.amazonaws.com/stage/us_hot";
             var xhttp = new XMLHttpRequest();
-              xhttp.onreadystatechange = function() {
+            xhttp.open("GET", url, true);
+            xhttp.send();
+            xhttp.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
                   var us_features =JSON.parse(this.responseText);
                   us_features = us_features['features']
-                  make_us_map(us_features);
+
+                  // API gateway county-hot3. Lambda county_hot
+                  var xhttp = new XMLHttpRequest();
+                  xhttp.open("GET", "https://qwwj8ox9l9.execute-api.us-east-1.amazonaws.com/stage/fips?markers=true", true);
+                  xhttp.send();
+                  xhttp.onreadystatechange = function() {
+                  if (this.readyState == 4 && this.status == 200) {
+                      var markers = JSON.parse(this.responseText);
+                      make_us_map(us_features, markers)
+                  }
                 }
-              };
-              xhttp.open("GET", url, true);
-              xhttp.send();
-          }
+          };
+        }
+      }
         </script>
         <style>
             html, body {

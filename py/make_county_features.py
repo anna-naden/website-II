@@ -116,7 +116,7 @@ for key in top_deaths:
 
 with open(config['FILES']['scratch'], 'w') as f:
     json.dump(markers, f)
-upload_file(config['FILES']['scratch'], 'covid.phoenix-technical-services.com', 'county_markers.json', title='county_markers.json')
+upload_file(config['FILES']['scratch'], 'covid.phoenix-technical-services.com', 'county-markers.json', title='county-markers.json')
 
 # Features for each state, one feature for each county
 deaths_by_state = get_counties_features()
