@@ -70,6 +70,8 @@ def get_county_weekly(df, pop):
         # print(di,di1,di-di1)
     return dates2, nd
 
+# Main
+start = time.time()
 
 config = get_config()
 try:
@@ -134,4 +136,5 @@ for fips in df.fips.unique():
             upload_file(config['FILES']['scratch_image'], 'covid.phoenix-technical-services.com', fips + '.jpg', title=fips)
             os.remove(config['FILES']['scratch_image'])
             upload_time += time.time()-start
-print(upload_time)
+end = time.time()
+print(f'\nCounty plots made. Upload time {round(upload_time,2)} elapsed time {round(end-start, 2)}')

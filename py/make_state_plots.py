@@ -64,7 +64,8 @@ def get_state_weekly(df, pop = None):
         # print(di,di1,di-di1)
     return dates2, nd
 
-config = get_config()
+# Main
+start = time.time()
 
 config = get_config()
 try:
@@ -177,3 +178,5 @@ for fips in states_fips_s:
             plt.close()
             upload_file(config['FILES']['scratch_image'], 'covid.phoenix-technical-services.com', 'CAN' + fips + '.jpg', title='CAN' + fips)
             os.remove(config['FILES']['scratch_image'])
+end = time.time()
+print(f'\nState plots made {round(end-start,2)} secs')

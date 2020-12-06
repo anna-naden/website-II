@@ -38,6 +38,9 @@ def get_nation_weekly(df, pop):
         # print(di,di1,di-di1)
     return dates2, nd
 
+# Main
+start = time.time()
+
 config = get_config()
 try:
     status, pops_dict = world_populations()
@@ -96,10 +99,11 @@ for ISO_A3 in ISO_A3_codes:
             arrowprops=dict(arrowstyle="->"))
 
         #save and upload
-        start = time.time()
+        start_upload = time.time()
         fig.savefig(config['FILES']['scratch_image'])
         plt.close()
         upload_file(config['FILES']['scratch_image'], 'covid.phoenix-technical-services.com', ISO_A3 + '.jpg', title=ISO_A3)
         os.remove(config['FILES']['scratch_image'])
-        upload_time += time.time()-start
-print(upload_time)
+        upload_time += time.time()-start_upload
+end = time.time()
+print(f'\nWorld plots made. Upload time {round(upload_time,2)} elapsed time {round(end-start,2)} secs.')
