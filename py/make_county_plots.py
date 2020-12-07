@@ -111,7 +111,7 @@ for fips in df.fips.unique():
             dates_n,nd_nation = get_county_weekly(df_county, pop)
 
             #make plot
-            MAX_Y = 4*float(config['PLOT CONFIGURATION']['max_y'])
+            MAX_Y = 10*float(config['PLOT CONFIGURATION']['max_y'])
             fig, ax=plt.subplots(figsize=(4.5,2.4), constrained_layout=True)
             plt.xticks(fontsize=9)
             ax.set_ylim(0,  MAX_Y)

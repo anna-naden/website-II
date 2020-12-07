@@ -25,8 +25,9 @@ function make_world_map(features, marker_dict) {
             
             // bind the click event
             this.on("click", function(e) {
-                state_fips = fips.substring(0,2)
+                // state_fips = fips.substring(0,2)
                 // window.location.href = "state-hot.html?fips=" + state_fips;
+                map.zoomIn(2);
             });
             
             // bind to mouse over
