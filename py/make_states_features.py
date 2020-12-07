@@ -1,6 +1,5 @@
 """ This standalone program creates and uploads json file for choropleth map of us and Canada, placing 30-day fatalities in the "density"
 feature.  
-Make json data file for barchart showing 30-day fatalities by state.
 """
 
 from get_world_covid_jh import get_world_covid_jh
@@ -47,8 +46,8 @@ def make_features():
             pop = int(state_pops_dict[state_name])
             state_deaths[ISO_A3 + fips_code]=100000*deaths/pop
 
-    # Write csv file for barcharts
-    make_csv_bar_charts(state_deaths)
+    # Write csv file forgi barcharts
+    # make_csv_bar_charts(state_deaths)
 
     #Canada
     ISO_A3 = 'CAN'
@@ -99,23 +98,6 @@ def make_features():
     feature_dict['features'] = us_feature_dict['features'] + canada_feature_dict['features']
 
     return feature_dict
-
-def make_csv_bar_charts(state_deaths):
-    config = get_config()
-
-    path = config['FILES']['js']+'/barchart.js'
-    with open(path, 'w') as f:
-        f.write('var data = [\n')
-        state_name_dict = csv_get_dict(config['FILES']['state_fips'], 1, 0)
-        for state in state_deaths.keys():
-            if state[3:] in state_name_dict.keys():
-                state_name = state_name_dict[state[3:]]
-                f.write('{\n')
-                f.write(f'"name": "{state_name}",\n')
-                f.write(f'"value": {state_deaths[state]},\n')
-                f.write('},\n')
-        f.write('];')
-    f.close()
 
 start = time.time()
 
