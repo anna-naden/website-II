@@ -175,18 +175,6 @@ function make_us_map(statesData, marker_dict) {
 
     info.addTo(map);
 
-    // get color depending on feature data value
-    function getColor(d) {
-        return d > 25 ? '#800026' :
-                d > 20  ? '#BD0026' :
-                d > 5  ? '#E31A1C' :
-                d > 2.5  ? '#FC4E2A' :
-                d > 1.25   ? '#FD8D3C' :
-                d > .5   ? '#FEB24C' :
-                d > .25   ? '#FED976' :
-                            '#FFEDA0';
-    }
-
     function style(feature) {
         return {
             weight: 2,
@@ -261,7 +249,7 @@ function make_us_map(statesData, marker_dict) {
     legend.onAdd = function (map) {
 
         var div = L.DomUtil.create('div', 'info legend'),
-        grades = [0, .25, .5, 1.25, 2.5, 5, 20, 25],
+        grades = map_grades(),
         labels = [],
             from, to;
 
@@ -274,7 +262,7 @@ function make_us_map(statesData, marker_dict) {
                 from + (to ? '&ndash;' + to : '+'));
         }
 
-        div.innerHTML = labels.join('<br>');
+        div.innerHTML = 'Fatalities per 100,000 in past seven days' + '<br/>' + labels.join('<br>');
         return div;
     };
 

@@ -5,7 +5,7 @@ do
     aws s3 cp /var/www/html/$file s3://covid.phoenix-technical-services.com --acl public-read
 done
 
-for file in make_state_map.js make_us_map.js make_world_map.js
+for file in make_state_map.js make_us_map.js make_world_map.js map_colors.js
 do
     aws s3 cp /home/anna_user2/projects/website-II/js/$file s3://covid.phoenix-technical-services.com/js/$file --acl public-read
 done
