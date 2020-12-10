@@ -222,16 +222,15 @@ function make_state_map(fips,state_features, marker_dict) {
 
     info.addTo(map);
 
-
-    // get color depending on population density value
+    // get color depending on feature data value
     function getColor(d) {
-        return d > 100 ? '#800026' :
-                d > 80  ? '#BD0026' :
-                d > 20  ? '#E31A1C' :
-                d > 10  ? '#FC4E2A' :
-                d > 5   ? '#FD8D3C' :
-                d > 2   ? '#FEB24C' :
-                d > 1   ? '#FED976' :
+        return d > 25 ? '#800026' :
+                d > 20  ? '#BD0026' :
+                d > 50  ? '#E31A1C' :
+                d > 2.5  ? '#FC4E2A' :
+                d > 1.25   ? '#FD8D3C' :
+                d > .5   ? '#FEB24C' :
+                d > .25   ? '#FED976' :
                             '#FFEDA0';
     }
 
