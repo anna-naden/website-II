@@ -436,5 +436,6 @@ if __name__ == '__main__':
     start = time.time()
     status, df = make_pickle()
     end = time.time()
-    print(f'pickle made - end date: {str(df.index.get_level_values("date").max())[:10]} {round(end-start,2)} seconds')
+    seconds = round(end-start,1)
+    print(f'pickle made. End date: {str(df.index.get_level_values("date").max())[:10]}. Elapsed time: {datetime.timedelta(seconds=seconds).total_seconds():0.1f} seconds')
     # doctest.testmod(verbose=False)

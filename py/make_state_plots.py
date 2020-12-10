@@ -6,6 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 import time
+import datetime
 
 from get_world_covid_jh import get_world_covid_jh
 from world_populations import world_populations
@@ -93,6 +94,7 @@ states_fips_s = df.state_fips.unique()
 pops_dict = csv_get_dict(config['FILES']['state_census'], 0, 1, header=True)
 df_states = df.groupby(['date','state_fips', 'state']).sum()
 MAX_Y = float(config['PLOT CONFIGURATION']['max_y'])
+nfigs = 0
 for fips in states_fips_s:
 
         #get weekly data
@@ -121,12 +123,12 @@ for fips in states_fips_s:
             fig.tight_layout(pad=4)
 
             #save and upload
-            start = time.time()
             fig.savefig(config['FILES']['scratch_image'])
             plt.close()
             upload_file(config['FILES']['scratch_image'], 'covid.phoenix-technical-services.com', fips + '.jpg', title=fips)
             os.remove(config['FILES']['scratch_image'])
 
+            nfigs += 1
 ################################################################
 # Canada
 ################################################################
@@ -173,10 +175,13 @@ for fips in states_fips_s:
             fig.tight_layout(pad=4)
 
             #save and upload
-            start = time.time()
             fig.savefig(config['FILES']['scratch_image'])
             plt.close()
             upload_file(config['FILES']['scratch_image'], 'covid.phoenix-technical-services.com', 'CAN' + fips + '.jpg', title='CAN' + fips)
             os.remove(config['FILES']['scratch_image'])
+
+            nfigs += 1
+
 end = time.time()
-print(f'\nState plots made {round(end-start,2)} secs')
+seconds = round(end-start)
+print(f'\nState plots made. {nfigs} figures uploaded. Elapsed time: {str(datetime.timedelta(seconds=seconds))} secs')

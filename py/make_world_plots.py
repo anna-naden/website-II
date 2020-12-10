@@ -6,6 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 import time
+import datetime
 
 from get_world_covid_jh import get_world_covid_jh
 from world_populations import world_populations
@@ -65,6 +66,7 @@ dates, nd = get_nation_weekly(df_us, pop)
 #prepare to look up country names
 countries = csv_get_dict(config['FILES']['nation_props'], 0, 1)
 upload_time=0
+nfigs = 0
 for ISO_A3 in ISO_A3_codes:
     if ISO_A3 in countries.keys():
 
@@ -105,5 +107,7 @@ for ISO_A3 in ISO_A3_codes:
         upload_file(config['FILES']['scratch_image'], 'covid.phoenix-technical-services.com', ISO_A3 + '.jpg', title=ISO_A3)
         os.remove(config['FILES']['scratch_image'])
         upload_time += time.time()-start_upload
+        nfigs += 1
 end = time.time()
-print(f'\nWorld plots made. Upload time {round(upload_time,2)} elapsed time {round(end-start,2)} secs.')
+seconds = round(end-start)
+print(f'\nWorld plots made: {nfigs} figures uploaded. Upload time: {round(upload_time,2)}. Elapsed time: {str(datetime.timedelta(seconds=seconds))} secs.')

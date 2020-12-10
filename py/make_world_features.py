@@ -2,6 +2,7 @@ import numpy as np
 import json
 import csv
 import time
+import datetime
 
 from get_config import get_config
 from get_world_covid_jh import get_world_covid_jh
@@ -153,5 +154,5 @@ with open(config['FILES']['scratch'], 'w') as f:
 os.remove(config['FILES']['scratch'])
 print('world features uploaded')
 
-end = time.time()
-print(f'\nworld features made {round(end-start,2)} secs')
+seconds = round(time.time()-start)
+print(f'\nWorld features made. Elapsed time: {str(datetime.timedelta(seconds = seconds))} secs')

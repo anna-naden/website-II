@@ -6,6 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 import time
+import datetime
 
 from get_world_covid_jh import get_world_covid_jh
 from world_populations import world_populations
@@ -98,6 +99,7 @@ dates, nd = get_nation_weekly(df_us, pop)
 #prepare to look up country names
 upload_time=0
 df = df[df.index.get_level_values('ISO_A3')=='USA'].reset_index().set_index(['date'])
+nfigs = 0
 for fips in df.fips.unique():
 
         #get weekly data
@@ -130,11 +132,13 @@ for fips in df.fips.unique():
             ax.annotate(f'{last_date}, {round(nd_nation[last],3)}', [dates_n[last],nd_nation[last]], fontsize=9)
 
             #save and upload
-            start = time.time()
+            start_up = time.time()
             fig.savefig(config['FILES']['scratch_image'])
             plt.close()
             upload_file(config['FILES']['scratch_image'], 'covid.phoenix-technical-services.com', fips + '.jpg', title=fips)
             os.remove(config['FILES']['scratch_image'])
-            upload_time += time.time()-start
+            upload_time += time.time()-start_up
+            nfigs += 1
 end = time.time()
-print(f'\nCounty plots made. Upload time {round(upload_time,2)} elapsed time {round(end-start, 2)}')
+seconds = round(end-start)
+print(f'\nCounty plots made. {nfigs} figures uploaded. Upload time: {round(upload_time,2)}. Elapsed time: {str(datetime.timedelta(seconds=seconds))}')

@@ -11,6 +11,7 @@ import numpy as np
 import json
 import  os
 import time
+import datetime
 
 def make_features():
     """Read us and canada covid data frame, and the map feature json for these countries. Fill in 30-day deaths in "density" feature.
@@ -109,4 +110,5 @@ upload_file(config['FILES']['scratch'], 'covid.phoenix-technical-services.com', 
 os.remove(config['FILES']['scratch'])
 
 end = time.time()
-print(f'\nstates features made {round(end-start,2)} secs')
+seconds = round(end-start)
+print(f'\nstates features made. Elapsed time {str(datetime.timedelta(seconds=seconds))} secs')

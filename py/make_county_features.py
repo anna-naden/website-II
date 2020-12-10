@@ -10,6 +10,7 @@ import json
 import pandas as pd
 import csv
 import time
+import datetime
 
 from s3_util import *
 from county_pops_fips import county_pops_fips
@@ -135,4 +136,5 @@ for state in deaths_by_state.keys():
         os.remove(config['FILES']['scratch'])
     f.close()
 end = time.time()
-print(f'\nuploaded county 30 day fatalties {str(start_date)[:10]} to {str(end_date)[:10]} elapsed time {round(end-start,2)} seconds')
+seconds = round(end-start)
+print(f'\nuploaded county 30 day fatalties {str(start_date)[:10]} to {str(end_date)[:10]}. Elapsed time: {str(datetime.timedelta(seconds=seconds))} seconds')
