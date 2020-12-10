@@ -1,4 +1,4 @@
-""" This standalone program creates and uploads json file for choropleth map of us and Canada, placing 30-day fatalities in the "density"
+""" This standalone program creates and uploads json file for choropleth map of us and Canada, placing period fatalities in the "density"
 feature.  
 """
 
@@ -14,7 +14,7 @@ import time
 import datetime
 
 def make_features():
-    """Read us and canada covid data frame, and the map feature json for these countries. Fill in 30-day deaths in "density" feature.
+    """Read us and canada covid data frame, and the map feature json for these countries. Fill in period deaths in "density" feature.
 
     Returns:
         Dictionary of choropleth features
@@ -24,7 +24,9 @@ def make_features():
     df_can = df[df.index.get_level_values('ISO_A3') == 'CAN']
     df.reset_index(inplace=True)
     end_date = df.date.max()
-    start_date = end_date-np.timedelta64(30,'D')
+
+    n_days_map = int(config['MAPS']['n_days_fatalities'])
+    start_date = end_date-np.timedelta64(n_days_map,'D')
     print(f'states features date range {str(start_date)[:10]} {str(end_date)[:10]}')
     state_deaths = {}
     
@@ -110,5 +112,5 @@ upload_file(config['FILES']['scratch'], 'covid.phoenix-technical-services.com', 
 os.remove(config['FILES']['scratch'])
 
 end = time.time()
-seconds = round(end-start)
-print(f'\nstates features made. Elapsed time {str(datetime.timedelta(seconds=seconds))} secs')
+seconds = round(end-start,1)
+print(f'\nStates features made. Elapsed time {seconds:0.1f} secs')

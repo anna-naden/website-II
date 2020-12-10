@@ -81,7 +81,10 @@ w_start_date = w_end_date-np.timedelta64(30,'D')
 df = df_world[df_world.index.get_level_values('ISO_A3')=='USA']
 df.reset_index(inplace=True)
 end_date = df.date.max()
-start_date = end_date-np.timedelta64(30,'D')
+
+ndays_map = int(config['MAPS']['n_days_fatalities'])
+start_date = end_date-np.timedelta64(ndays_map,'D')
+
 start_date_graph = end_date-np.timedelta64(6,"M")
 
 # -------------------------------------------------------
@@ -100,7 +103,7 @@ if status is not None:
 #--------------------------------------------------------------------------
 # County 30 day fatalities
 #--------------------------------------------------------------------------
-print('making and uploading county 30 day fatalities')
+print(f'making and uploading county {ndays_map} day fatalities')
 county_deaths = get_county_deaths(df, df_pops, start_date, end_date)
 
 #Collect info for markers of worst counties in the country

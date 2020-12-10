@@ -11,6 +11,17 @@ from s3_util import upload_file, delete_obj
 import os
 
 def get_world_deaths(df_world, start_date, end_date):
+    """ Compute number of deaths in calendar interval for each nation of the world, including USA
+
+    Args:
+        df_world (data frame): the master data structure for COVID fatalties
+        start_date (date time): the start date of the interval
+        end_date : the end date of the interval
+
+    Returns:
+        (dictionary): ISO_A3 nation code -> number of deaths
+    """
+
     ISO_A3_codes = df_world.ISO_A3.unique()
     try:
         status, pops_dict = world_populations()
@@ -60,35 +71,6 @@ def update_world_features(nations, deaths):
             feature['properties']['density'] = f'{deaths1}'
     return nations
 
-def get_nation_time_series(df1, ISO_A3, start_date, end_date):
-
-    # Get population
-    config = get_config()
-    pop=-1
-    path = config['FILES']['world_census']
-    with open(path,"r") as f:
-        reader = csv.reader(f, delimiter=',')
-        for row in reader:
-            if row[1] == ISO_A3:
-                pop = int(row[2])
-                break;
-    if pop <= 0:
-        return None, None
-
-    # Select county and date range
-    df1 = df1[df1.date >= start_date]
-    df1 = df1[df1.date <= end_date][['date','deaths']]
-    df1 = df1.groupby('date').deaths.sum().reset_index()
-    df1.deaths *= 100000/pop
-    jsonstr = df1.to_json(orient='records')
-
-    config = get_config()
-
-    start_date = format(start_date,"%x")
-    end_date = format(end_date,"%x")
-    jsonstr = '{' + f'"start_date": "{start_date}", "end_date": "{end_date}", "stats":' + jsonstr + '}'
-
-    return None, jsonstr
 
 # ----------------------------------------------------------
 # Main
@@ -103,15 +85,16 @@ if status is not None:
 
 df_world1 = df_world.reset_index()
 w_end_date = df_world1.date.max()
-w_start_date = w_end_date-np.timedelta64(30,'D')
+
+n_days_map = int(config['MAPS']['n_days_fatalities'])
+w_start_date = w_end_date-np.timedelta64(n_days_map,'D')
 
 # Get US data file
 df = df_world[df_world.index.get_level_values('ISO_A3')=='USA']
 df.reset_index(inplace=True)
 
-end_date = df.date.max()
-start_date = end_date-np.timedelta64(30,'D')
-start_date_graph = end_date-np.timedelta64(6,"M")
+# end_date = df.date.max()
+# start_date_graph = end_date-np.timedelta64(6,"M")
 
 # Make and upload world features
 world_deaths = get_world_deaths(df_world1, w_start_date, w_end_date)

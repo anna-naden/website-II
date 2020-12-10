@@ -435,7 +435,8 @@ if __name__ == '__main__':
     import doctest
     start = time.time()
     status, df = make_pickle()
+    if status is not None:
+        exit(1)
     end = time.time()
-    seconds = round(end-start,1)
-    print(f'pickle made. End date: {str(df.index.get_level_values("date").max())[:10]}. Elapsed time: {datetime.timedelta(seconds=seconds).total_seconds():0.1f} seconds')
+    print(f'Pickle made. End date: {str(df.index.get_level_values("date").max())[:10]}. Elapsed time: {(end-start):0.1f} seconds')
     # doctest.testmod(verbose=False)
