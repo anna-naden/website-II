@@ -243,7 +243,7 @@ populate(marker_dict);
     legend.onAdd = function (map) {
 
         var div = L.DomUtil.create('div', 'info legend'),
-            grades = [0, 1, 2, 5, 10, 20, 80, 100],
+            grades = [0, .25, .5, 1.25, 2.5, 5, 20, 25],
             labels = [],
             from, to;
 

@@ -226,7 +226,7 @@ function make_state_map(fips,state_features, marker_dict) {
     function getColor(d) {
         return d > 25 ? '#800026' :
                 d > 20  ? '#BD0026' :
-                d > 50  ? '#E31A1C' :
+                d > 5  ? '#E31A1C' :
                 d > 2.5  ? '#FC4E2A' :
                 d > 1.25   ? '#FD8D3C' :
                 d > .5   ? '#FEB24C' :
@@ -318,7 +318,8 @@ function make_state_map(fips,state_features, marker_dict) {
     legend.onAdd = function (map) {
 
         var div = L.DomUtil.create('div', 'info legend'),
-            grades = [0, 1, 2, 5, 10, 20, 80, 100],
+        grades = [0, .25, .5, 1.25, 2.5, 5, 20, 25],
+ 
             labels = [],
             from, to;
 
