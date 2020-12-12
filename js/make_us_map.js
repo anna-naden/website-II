@@ -1,3 +1,5 @@
+const max_deaths = 40;
+
 function make_us_map(statesData, marker_dict) {
     const formatter = new Intl.NumberFormat('en-US', {
         minimumFractionDigits: 2,
@@ -182,7 +184,7 @@ function make_us_map(statesData, marker_dict) {
             color: 'white',
             dashArray: '3',
             fillOpacity: 0.7,
-            fillColor: getColor(feature.properties.density)
+            fillColor: getColor(feature.properties.density, max_deaths)
         };
     }
 
@@ -249,20 +251,19 @@ function make_us_map(statesData, marker_dict) {
     legend.onAdd = function (map) {
 
         var div = L.DomUtil.create('div', 'info legend'),
-        grades = map_grades(),
+        grades = map_grades(max_deaths),
         labels = [],
             from, to;
-
         for (var i = 0; i < grades.length; i++) {
             from = grades[i];
             to = grades[i + 1];
 
             labels.push(
-                '<label style="background-color:' + getColor(from + 1) + '"></i> ' +
+                '<label style="background-color:' + getColor(from*1.01, max_deaths) + '"></i> ' +
                 from + (to ? '&ndash;' + to : '+'));
         }
 
-        div.innerHTML = 'Fatalities per 100,000 in past seven days' + '<br/>' + labels.join('<br>');
+        div.innerHTML = 'Fatalities per 100,000 in past 28 days' + '<br/>' + labels.join('<br>');
         return div;
     };
 

@@ -37,6 +37,7 @@ def get_counties_features():
 def get_county_deaths(df_us, df_pops, start_date, end_date):
     fips_codes = df_us.fips.unique()
     county_deaths = {}
+    n_deaths = {}
     df1 = df_us[df_us.date == start_date]
     df2 = df_us[df_us.date == end_date]
     for fips_code in fips_codes:
@@ -47,9 +48,10 @@ def get_county_deaths(df_us, df_pops, start_date, end_date):
         df = df_pops[df_pops.fips == fips_code]
         if not df.empty:
             pop = df.population.iloc[0]
+            n_deaths[fips_code] = deaths
             deaths = 100000*deaths/pop
             county_deaths[fips_code] = deaths
-    return county_deaths
+    return county_deaths, n_deaths
 
 def update_county_features(states, deaths):
     for state in states.keys():
@@ -104,7 +106,7 @@ if status is not None:
 # County 30 day fatalities
 #--------------------------------------------------------------------------
 print(f'making and uploading county {ndays_map} day fatalities')
-county_deaths = get_county_deaths(df, df_pops, start_date, end_date)
+county_deaths, ndeaths = get_county_deaths(df, df_pops, start_date, end_date)
 
 #Collect info for markers of worst counties in the country
 county_deaths_sorted = sorted(county_deaths, key=county_deaths.get, reverse=True)
@@ -118,7 +120,7 @@ for key in top_deaths:
     state = df_cty.state
     cty = df_cty.county
     markers[key] = [lat, lon, state, cty]
-
+    # print(ndeaths[key])
 with open(config['FILES']['scratch'], 'w') as f:
     json.dump(markers, f)
 upload_file(config['FILES']['scratch'], 'covid.phoenix-technical-services.com', 'county-markers.json', title='county-markers.json')
@@ -140,4 +142,4 @@ for state in deaths_by_state.keys():
     f.close()
 end = time.time()
 seconds = round(end-start)
-print(f'\nuploaded county 30 day fatalties {str(start_date)[:10]} to {str(end_date)[:10]}. Elapsed time: {str(datetime.timedelta(seconds=seconds))} seconds')
+print(f'\nUploaded county 30 day fatalties {str(start_date)[:10]} to {str(end_date)[:10]}. Elapsed time: {str(datetime.timedelta(seconds=seconds))} seconds')

@@ -1,3 +1,4 @@
+max_deaths = 10;
 function make_world_map(features, marker_dict) {
     const formatter = new Intl.NumberFormat('en-US', {
         minimumFractionDigits: 2,
@@ -131,9 +132,10 @@ populate(marker_dict);
 
     L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
         maxZoom: 18,
-        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
-            '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-            'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        // attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+        //     '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+        //     'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        attribution: 'Data downloaded nightly from Johns Hoplins University',
         id: 'mapbox/light-v9',
         tileSize: 512,
         zoomOffset: -1,
@@ -179,7 +181,7 @@ populate(marker_dict);
             color: 'white',
             dashArray: '3',
             fillOpacity: 0.7,
-            fillColor: getColor(feature.properties.density)
+            fillColor: getColor(feature.properties.density, max_deaths)
         };
     }
 
@@ -231,7 +233,7 @@ populate(marker_dict);
     legend.onAdd = function (map) {
 
         var div = L.DomUtil.create('div', 'info legend'),
-            grades = map_grades(),
+            grades = map_grades(max_deaths),
             labels = [],
             from, to;
 
@@ -240,11 +242,11 @@ populate(marker_dict);
             to = grades[i + 1];
 
             labels.push(
-                '<label style="background-color:' + getColor(from*1.01) + '"></i> ' +
+                '<label style="background-color:' + getColor(from*1.01, max_deaths) + '"></i> ' +
                 from + (to ? '&ndash;' + to : '+'));
         }
 
-        div.innerHTML = 'Fatalities per 100,000 in past seven days' + '<br/>' + labels.join('<br>');
+        div.innerHTML = 'Fatalities per 100,000 in past 7 days' + '<br/>' + labels.join('<br>');
         return div;
     };
 

@@ -86,7 +86,7 @@ if status is not None:
 df_world1 = df_world.reset_index()
 w_end_date = df_world1.date.max()
 
-n_days_map = int(config['MAPS']['n_days_fatalities'])
+n_days_map = int(config['MAPS']['n_days_fatalities_world'])
 w_start_date = w_end_date-np.timedelta64(n_days_map,'D')
 
 # Get US data file
