@@ -81,7 +81,7 @@ function make_us_map_m(statesData, marker_dict) {
                 from + (to ? '&ndash;' + to : '+'));
         }
 
-        div.innerHTML = 'Fatalities per 100,000 in past 28 days' + '<br/>' + labels.join('<br>');
+        div.innerHTML = 'Fatalities per 100K<br/>past 28 days<br/>' + labels.join('<br>');
         return div;
     };
 
