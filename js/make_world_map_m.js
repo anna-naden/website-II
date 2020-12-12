@@ -80,7 +80,7 @@ function make_world_map_m(features, marker_dict) {
                 from + (to ? '&ndash;' + to : '+'));
         }
 
-        div.innerHTML = 'Fatalities per 100,000 in past 7 days' + '<br/>' + labels.join('<br>');
+        div.innerHTML = 'Fatalities per 100K<br/>past 7 days<br/>' + labels.join('<br>');
         return div;
     };
 
