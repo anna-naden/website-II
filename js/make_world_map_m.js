@@ -4,19 +4,19 @@ function make_world_map_m(features, marker_dict) {
     lat_lon = [42.7339, 25.4858]
     var map = L.map('map').setView(lat_lon, zoom_level);
 
-    // Markers for worst counties in the country
-    var MyCusto
-
+    function make_img_tag(ISO_A3) {
+        w = document.getElementById('map').clientWidth/2;
+        h = document.getElementById('map').clientHeight/2;
+        const src = '"' + ISO_A3 + '.jpg"';
+        ws = ' width="' + w +'"';
+        wh = ' height="' + h + '"';
+        return "<img src=" + src + ws + wh + "></img>";
+    }
+    // Markers for worst countries in the world
     function populate(marker_dict) {
-        for (const fips in marker_dict) {
-            var marker = L.marker(new L.LatLng(marker_dict[fips][0], marker_dict[fips][1]), {}).addTo(map);
-            w = document.getElementById('map').clientWidth/2;
-            h = document.getElementById('map').clientHeight/2;
-            const src = '"' + fips + '.jpg"';
-            ws = ' width="' + w +'"';
-            wh = ' height="' + h + '"';
-            const img_tag = "<img src=" + src + ws + wh + "></img>";
-            marker.bindPopup(img_tag);
+        for (const ISO_A3 in marker_dict) {
+            var marker = L.marker(new L.LatLng(marker_dict[ISO_A3][0], marker_dict[ISO_A3][1]), {}).addTo(map);
+            marker.bindPopup(make_img_tag(ISO_A3));
         }
         return false;
     }
@@ -49,15 +49,13 @@ function make_world_map_m(features, marker_dict) {
 
     var geojson;
 
-    function world_time_series(e) {
+    function show_plot_image(e) {
         ISO_A3 = e.target.feature.id.replace("?ISO_A3=","");
-        if (ISO_A3 == 'USA') {
-            window.location.href = 'us-hot2.html';
-        }
+        const popup = L.popup().setLatLng(e['latlng']).setContent(make_img_tag(ISO_A3)).openOn(map);
     }
     function onEachFeature(feature, layer) {
         layer.on({
-            click: world_time_series
+            click: show_plot_image
         });
     }
     geojson = L.geoJson(features, {
