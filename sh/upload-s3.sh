@@ -1,6 +1,6 @@
 #!/bin/bash
 
-for file in index.html county-time-series2.html us-hot2.html state-hot.html
+for file in index.html county-time-series2.html us-hot2.html state-hot.html index-m.html
 do
     aws s3 cp /var/www/html/$file s3://covid.phoenix-technical-services.com --acl public-read
 done

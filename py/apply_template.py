@@ -5,7 +5,7 @@ config = get_config()
 file_loader = FileSystemLoader(config['DEFAULT']['templates'])
 env = Environment(loader=file_loader)
 
-files = ['index', 'us-hot2', 'state-hot', 'county-time-series2']
+files = ['index', 'us-hot2', 'state-hot', 'county-time-series2', 'index-m']
 for file in files:
     input = file+'-t'+'.html'
     output_file = file + '.html'

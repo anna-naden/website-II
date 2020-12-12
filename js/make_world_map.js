@@ -1,5 +1,5 @@
 max_deaths = 10;
-function make_world_map(features, marker_dict) {
+function make_world_map(features, marker_dict, mobile) {
     const formatter = new Intl.NumberFormat('en-US', {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
@@ -7,14 +7,13 @@ function make_world_map(features, marker_dict) {
 
     // features = features['features']
 
-    zoom_level = 1;
-   lat_lon = [54.835365, 0.0]
+    zoom_level = 5;
+   lat_lon = [42.7339, 25.4858]
    var map = L.map('map').setView(lat_lon, zoom_level);
 
    // Markers for worst counties in the country
    var MyCustomMarker = L.Marker.extend({
- 
-    bindPopup: function(htmlContent, fips, options) {
+        bindPopup: function(htmlContent, fips, options) {
                   
         if (options && options.showOnMouseOver) {
             
@@ -26,9 +25,20 @@ function make_world_map(features, marker_dict) {
             
             // bind the click event
             this.on("click", function(e) {
-                // state_fips = fips.substring(0,2)
-                // window.location.href = "state-hot.html?fips=" + state_fips;
-                map.zoomIn(2);
+                if (mobile) {
+                    var src = '"' + fips + '.jpg"';
+                    const h = '"250"';
+                    const w = '"300"';
+                    const style = '" style="float: left"'
+                    // const img_tag = "<img src=" + src + " width=" + w + " height=" + h + style + "></img>";
+                    const img_tag = "<img src=" + src + style + "></img>";
+                    src = '"covid-formula2.png"'
+                    const img_tag2 = "<img src=" + src + style + "></img>";
+                    document.getElementById('map').innerHTML = img_tag + "<br/>"+img_tag2;
+                }
+                else {
+                    map.zoomIn(2);
+                }
             });
             
             // bind to mouse over
@@ -43,8 +53,9 @@ function make_world_map(features, marker_dict) {
                     return true;
                 
                 // show the popup
-                this.openPopup();
-                
+                if (!mobile) {
+                    this.openPopup();
+                }
             }, this);
             
             // and mouse out
@@ -107,40 +118,41 @@ function make_world_map(features, marker_dict) {
         return false;
         
     },
-    fips:this.fips
-});
+    fips:this.fips,
+    mobile: this.mobile
+    });
 
-var markers = new L.FeatureGroup();
+    var markers = new L.FeatureGroup();
 
-function populate(marker_dict) {
-    for (const fips in marker_dict) {
-        var marker = new MyCustomMarker(new L.LatLng(marker_dict[fips][0], marker_dict[fips][1]));
-        const src = '"' + fips + '.jpg"';
-        const img_tag = "<img src=" + src + style + "></img>";
-        marker.bindPopup(img_tag, fips, {
-            showOnMouseOver: true
-        });
-        markers.addLayer(marker);
+    function populate(marker_dict) {
+        for (const fips in marker_dict) {
+            var marker = new MyCustomMarker(new L.LatLng(marker_dict[fips][0], marker_dict[fips][1]), mobile);
+            const src = '"' + fips + '.jpg"';
+            const img_tag = "<img src=" + src + style + "></img>";
+            marker.bindPopup(img_tag, fips, {
+                showOnMouseOver: true
+            });
+            markers.addLayer(marker);
+        }
+        return false;
     }
-    return false;
-}
 
-map.addLayer(markers);
+    map.addLayer(markers);
 
-populate(marker_dict);
+    populate(marker_dict);
 
 
-    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
-        maxZoom: 18,
-        // attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
-        //     '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-        //     'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-        attribution: 'Data downloaded nightly from Johns Hoplins University',
-        id: 'mapbox/light-v9',
-        tileSize: 512,
-        zoomOffset: -1,
-        noWrap: false
-    }).addTo(map);
+    // L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+    //     maxZoom: 18,
+    //     // attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+    //     //     '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+    //     //     'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    //     attribution: 'Data downloaded nightly from Johns Hoplins University',
+    //     id: 'mapbox/light-v9',
+    //     tileSize: 512,
+    //     zoomOffset: -1,
+    //     noWrap: false
+    // }).addTo(map);
 
 
     // control that shows state info on hover
@@ -154,7 +166,7 @@ populate(marker_dict);
 
     info.update = function (props) {
         this._div.innerHTML = '';
-        if (props) {
+        if (props && !mobile) {
             ISO_A3 = props.adm0_a3;
             var src = '"' + ISO_A3 + '.jpg"';
             const h = '"250"';

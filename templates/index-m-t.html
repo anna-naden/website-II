@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-166186377-1">
+    </script>
+
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-166186377-1');
+    </script>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css">
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://d3js.org/d3.v6.js"></script>
+    <script src="../js/make_world_map.js"></script>
+    <script src="../js/map_colors.js"></script>
+    <style>
+        html, body {
+            height: 100vh;
+            width: 100vw;
+            margin: 0px;
+        }
+        #map {
+            height: 100vh;
+            width: 100vw;
+        }
+        /* .info {
+            position: relative;
+            left: -50%;
+            top: -10%;
+        } */
+    </style>
+    <!-- <script>
+        function refresh_map_div() {
+            var mapElement = document.getElementById('map');
+            mapElement.remove();
+            var a = document.createElement('div');
+            a.id="map";
+            container = document.getElementById("state-map-container")
+            container.appendChild(a);
+            return;
+        }
+    </script> -->
+    <body>
+        <div id="map"></div>
+        <script>
+            var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    var world_features =JSON.parse(this.responseText);
+                    // console.log(world_features.interval)
+                    world_features = world_features['features']
+                    // API gateway county-hot3. Lambda county_hot
+                    var xhttp = new XMLHttpRequest();
+                    xhttp.open("GET", "https://qwwj8ox9l9.execute-api.us-east-1.amazonaws.com/stage/fips?w_markers=true", true);
+                    xhttp.send();
+                    xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var markers = JSON.parse(this.responseText);
+                        make_world_map(world_features, markers, true)
+                    }
+                    }
+                }
+                };
+                // API gateway world-hot --> lambda county_hot
+                xhttp.open("GET", "https://a3155m5nk4.execute-api.us-east-1.amazonaws.com/stage?iso-a3=all", true);
+                xhttp.send();
+            </script>
+    </body>
+</html>

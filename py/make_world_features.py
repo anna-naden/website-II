@@ -108,6 +108,8 @@ for key in top_deaths:
     df_nation = df_world1[df_world1.ISO_A3==key].iloc[0]
     lat = df_nation.lat
     lon = df_nation.lon
+    if key == 'BGR':
+        print(lat,lon)
     markers[key] = [lat, lon]
 
 with open(config['FILES']['scratch'], 'w') as f:
