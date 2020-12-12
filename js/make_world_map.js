@@ -1,14 +1,7 @@
 max_deaths = 10;
 function make_world_map(features, marker_dict, mobile) {
-    const formatter = new Intl.NumberFormat('en-US', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-    })
-
-    // features = features['features']
-
-    zoom_level = 5;
-   lat_lon = [42.7339, 25.4858]
+    zoom_level = 1;
+    lat_lon = [54.835365, 0.0]
    var map = L.map('map').setView(lat_lon, zoom_level);
 
    // Markers for worst counties in the country

@@ -104,23 +104,29 @@ for fips in states_fips_s:
 
         #weekly changes
         if state in pops_dict.keys():
+            print(state)
             dates_n,nd_state = get_state_weekly(df_state, int(pops_dict[state]))
 
             #make plot
-            fig, ax=plt.subplots(figsize=(5,3))
+            fig, ax=plt.subplots(figsize=(3,3), constrained_layout=True)
             for tick in ax.get_xticklabels():
                 tick.set_rotation(45)
             ax.plot(dates_n, nd_state)
             ax.plot(dates, nd)
             ax.set_ylim(0, MAX_Y)
             ax.legend([state, 'USA'])
-            ax.set_title('Daily New Fatalities per 100,000 Population')
+            ax.set_title('Daily New Fatalities per 100,000 Population', fontsize=9)
 
             #Put text showing last date and last value
             last = len(nd_state)-1
             last_date=f'{dates_n[last]}'[:10]
-            ax.annotate(f'{last_date}, {round(nd_state[last],4)}', [dates_n[last],nd_state[last]])
-            fig.tight_layout(pad=4)
+            x = dates_n[last]
+            y = nd_state[last]
+            ax.annotate(f'{last_date}, {round(nd_state[last],4)}', [x,y], 
+                xycoords='data',
+                xytext=(dates_n[last-20],y+.5), textcoords='data',
+                arrowprops=dict(arrowstyle="->"))
+
 
             #save and upload
             fig.savefig(config['FILES']['scratch_image'])

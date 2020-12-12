@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+    <head>
+<!-- Render map of US and Candada -->
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css">
+        <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+        <script src="https://d3js.org/d3.v6.js"></script>
+        <script src="../js/make_us_map_m.js"></script>
+        <script src="../js/map_colors.js"></script>
+        <script type="text/javascript">
+          function get_us_features() {
+
+            // API Gateway US-hot-API. Lambda us_hot
+            url = "https://vpw7dxy2uf.execute-api.us-east-1.amazonaws.com/stage/us_hot";
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("GET", url, true);
+            xhttp.send();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                  var us_features =JSON.parse(this.responseText);
+                  us_features = us_features['features']
+
+                  // API gateway county-hot3. Lambda county_hot
+                  var xhttp = new XMLHttpRequest();
+                  xhttp.open("GET", "https://qwwj8ox9l9.execute-api.us-east-1.amazonaws.com/stage/fips?markers=true", true);
+                  xhttp.send();
+                  xhttp.onreadystatechange = function() {
+                  if (this.readyState == 4 && this.status == 200) {
+                      var markers = JSON.parse(this.responseText);
+                      make_us_map_m(us_features, markers)
+                  }
+                }
+          };
+        }
+      }
+        </script>
+        <style>
+        body {
+            padding: 0;
+            margin: 0;
+        }
+        html, body {
+            height: 100%;
+            width: 100%;
+            margin: 0px;
+        }
+        #map {
+            height: 100%;
+            width: 100%;
+        }
+        </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    </head>
+    <body>
+            <div id="map"></div>
+            <script>
+                get_us_features();
+            </script>
+    </body>

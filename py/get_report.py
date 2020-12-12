@@ -3,10 +3,10 @@ from get_config import get_config
 
 config = get_config()
 
-start_date ='10/22/20'
-end_date = '11/22/20'
-week_start = '11/18/20'
-week_end = '11/25/20'
+start_date ='11/11/20'
+end_date = '12/11/20'
+week_start = '12/4/20'
+week_end = '12/11/20'
 doctest_date ='4/10/20' #for testing make_pickle
 
 illinois_pop = 12671821
@@ -36,6 +36,8 @@ with open(path, 'r') as f:
             ndeaths_cook = int(row[col_last_date]) - int(row[col_first_date])
             last_cook_deaths = int(row[col_last_date])
             ndeaths_cook_week = int(row[col_week_end_us]) - int(row[col_week_end_us-7])
+        if row[4] == '46053.0':
+            ndeaths_gregory_week = int(row[col_week_end_us]) - int(row[col_week_end_us-7])
         if row[6] == 'Illinois':
             illinois_deaths += int(row[col_last_date])-int(row[col_first_date])
             illinois_deaths_wk += int(row[col_week_end_us]) - int(row[col_week_end_us-7])
@@ -109,3 +111,5 @@ print(f'{ndeaths_cook} deaths from {start_date} to {end_date}')
 print(f'Per capita {100000*ndeaths_cook/cook_pop}')
 print(f'Week per cap {100000*ndeaths_cook_week/(7*cook_pop)}')
 
+print('GREGORY, SD')
+print(f'Week per cap {100000*ndeaths_gregory_week/(7*4185)}')
