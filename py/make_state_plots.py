@@ -104,7 +104,7 @@ for fips in states_fips_s:
 
         #weekly changes
         if state in pops_dict.keys():
-            print(state)
+            # print(state)
             dates_n,nd_state = get_state_weekly(df_state, int(pops_dict[state]))
 
             #make plot
