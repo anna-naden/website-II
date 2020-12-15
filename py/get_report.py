@@ -64,9 +64,12 @@ def map_world(path, start_date, end_date, week_start, week_end, doctest_date):
                 last_ndeaths_mex = int(row[col_last_date])
                 week_mx_deaths = int(row[col_week_end]) - int(row[col_week_start])
                 doctest_mx_ndeaths = int(row[col_doctest_global])
+            elif row[1] == 'Bulgaria':
+                last_ndeaths_bulg = int(row[col_last_date])
+                week_bulg_ndeaths = int(row[col_week_end]) - int(row[col_week_start])
     f.close()
     return col_last_date, col_last_week, col_first_date, col_doctest_global, week_ndeaths_ontario, wk_fr_deaths, wk_us_deaths, doctest_mx_ndeaths, doctest_us_ndeaths, \
-        ndeaths_ontario, last_ndeaths_france, last_ndeaths_us, last_ndeaths_mex, week_mx_deaths
+        ndeaths_ontario, last_ndeaths_france, last_ndeaths_us, last_ndeaths_mex, week_mx_deaths, last_ndeaths_bulg, week_bulg_ndeaths
     
 
 config = get_config()
@@ -82,7 +85,7 @@ col_first_date, col_last_date, ndeaths_cook, last_cook_deaths, ndeaths_cook_week
     map_us(config['FILES']['us_covid_deaths'], end_date)
 
 col_last_date, col_last_week, col_first_date, col_doctest_global, week_ndeaths_ontario, wk_fr_deaths, wk_us_deaths, doctest_mx_ndeaths, doctest_us_ndeaths, \
-        ndeaths_ontario, last_ndeaths_france, last_ndeaths_us, last_ndeaths_mex, week_mx_deaths = \
+        ndeaths_ontario, last_ndeaths_france, last_ndeaths_us, last_ndeaths_mex, week_mx_deaths, last_ndeaths_bulg, week_bulg_ndeaths = \
         map_world(config['FILES']['world_covid_deaths'], start_date_for_world, end_date, week_start, week_end, doctest_date)
 
 illinois_pop = 12671821
@@ -92,6 +95,7 @@ france_pop = 66977107
 us_pop = 326687501
 mex_pop = 126190788
 gregory_pop = 4185
+bulg_pop = 7025037
 
 print('US')
 print(f'Deaths to date: {last_ndeaths_us}')
@@ -110,6 +114,12 @@ print(f'Last deaths {last_ndeaths_mex}')
 print(f'per capita to date {100000*last_ndeaths_mex/mex_pop}')
 print(f'Week deaths per cap {100000*week_mx_deaths/(7*mex_pop)}')
 print(f'doctest deaths {doctest_mx_ndeaths}')
+print('\n')
+
+print('BULG')
+print(f'Last deaths {last_ndeaths_bulg}')
+print(f'per capita to date {100000*last_ndeaths_bulg/bulg_pop}')
+print(f'Week deaths per cap {100000*week_bulg_ndeaths/(7*bulg_pop)}')
 print('\n')
 
 print('ONTARIO')

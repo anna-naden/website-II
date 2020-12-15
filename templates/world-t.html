@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block content %}
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css">
+        <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+        <script src="https://d3js.org/d3.v6.js"></script>
+        <script src="../js/make_world_map.js"></script>
+        <script src="../js/map_colors.js"></script>
+        <script type="text/javascript">
+          function get_world_features()
+          {
+            var xhttp = new XMLHttpRequest();
+              xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                  var world_features =JSON.parse(this.responseText);
+                  // console.log(world_features.interval)
+                  world_features = world_features['features']
+                  // API gateway county-hot3. Lambda county_hot
+                  var xhttp = new XMLHttpRequest();
+                  xhttp.open("GET", "https://qwwj8ox9l9.execute-api.us-east-1.amazonaws.com/stage/fips?w_markers=true", true);
+                  xhttp.send();
+                  xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var markers = JSON.parse(this.responseText);
+                        make_world_map(world_features, markers)
+                    }
+                  }
+                }
+              };
+              // API gateway world-hot --> lambda county_hot
+              xhttp.open("GET", "https://a3155m5nk4.execute-api.us-east-1.amazonaws.com/stage?iso-a3=all", true);
+              xhttp.send();
+          }
+        </script>
+        <style>
+            html, body {
+                height: 100vh;
+                height: 100vw;
+            }
+            #map {
+                height: 30vh;
+                height: 40vw;
+            }
+            .info {
+              position: relative;
+              left: -50%;
+              top: -10%;
+            }
+        </style>
+        <script>
+          function refresh_map_div() {
+              var mapElement = document.getElementById('map');
+              mapElement.remove();
+              var a = document.createElement('div');
+              a.id="map";
+              container = document.getElementById("state-map-container")
+              container.appendChild(a);
+              return;
+          }
+        </script>
+        <!-- <div id="state-map-container"></div> -->
+        <h4>Hover mouse over country of interest. Click USA to see individual states. The display for many regions has been validated against the raw data from thr source (Johns Hopkins University). To report issues, send email to <a href =mailto:anna@phoenix-computer.com>anna@phoenix-computer.com</a> </h6>
+        <script>
+            document.getElementById("body").onload = function() {get_world_features()};
+        </script>
+        <div id="map"></div>
+{% endblock %}
