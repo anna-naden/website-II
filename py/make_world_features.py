@@ -60,7 +60,7 @@ def get_world_features():
         nations[ISO_A3].append(feature)
     return nations
 
-def update_world_features(nations, deaths):
+def update_world_features(nations, deaths, ndays_map):
     for ISO_A3 in nations.keys():
         for feature in nations[ISO_A3]:
             id = feature['properties']['adm0_a3']
@@ -68,7 +68,7 @@ def update_world_features(nations, deaths):
             deaths1 = 0
             if id in deaths.keys():
                 deaths1 = deaths[id]
-            feature['properties']['density'] = f'{deaths1}'
+            feature['properties']['density'] = f'{deaths1/ndays_map}'
     return nations
 
 
@@ -108,8 +108,6 @@ for key in top_deaths:
     df_nation = df_world1[df_world1.ISO_A3==key].iloc[0]
     lat = df_nation.lat
     lon = df_nation.lon
-    if key == 'BGR':
-        print(lat,lon)
     markers[key] = [lat, lon]
 
 with open(config['FILES']['scratch'], 'w') as f:
@@ -119,7 +117,7 @@ upload_file(config['FILES']['scratch'], 'covid.phoenix-technical-services.com', 
 
 #Make map features
 nations = get_world_features()
-update_world_features(nations, world_deaths)
+update_world_features(nations, world_deaths, n_days_map)
 
 #for testing
 # with open('test.json', 'w') as f:

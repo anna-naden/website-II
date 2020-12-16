@@ -47,7 +47,7 @@ def make_features():
             deaths2 = df.query('date==@end_date and state==@state_name').deaths.sum()
             deaths = deaths2-deaths1
             pop = int(state_pops_dict[state_name])
-            state_deaths[ISO_A3 + fips_code]=100000*deaths/pop
+            state_deaths[ISO_A3 + fips_code]=100000*deaths/(pop*n_days_map)
 
     # Write csv file forgi barcharts
     # make_csv_bar_charts(state_deaths)
@@ -65,7 +65,7 @@ def make_features():
         if fips_code in canada_pop_dict.keys():
             # print(fips_code)
             pop = int(canada_pop_dict[fips_code])
-            state_deaths[ISO_A3 + fips_code]=100000*deaths/pop
+            state_deaths[ISO_A3 + fips_code]=100000*deaths/(n_days_map*pop)
         else:
                 state_deaths[ISO_A3 + fips_code] = 0
         

@@ -1,10 +1,6 @@
-const max_deaths = 40;
+const max_deaths = 40/25;
 
 function make_us_map(statesData, marker_dict) {
-    const formatter = new Intl.NumberFormat('en-US', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-    });
     var map = L.map('map').setView([37.8, -96], 3);
 
 // Markers for worst counties in the country
@@ -178,6 +174,9 @@ function make_us_map(statesData, marker_dict) {
     info.addTo(map);
 
     function style(feature) {
+        if (feature.id == 'CAN13') {
+            console.log(feature.properties.density)
+        }
         return {
             weight: 2,
             opacity: 1,
@@ -263,7 +262,7 @@ function make_us_map(statesData, marker_dict) {
                 from + (to ? '&ndash;' + to : '+'));
         }
 
-        div.innerHTML = 'Fatalities per 100,000 in past 28 days' + '<br/>' + labels.join('<br>');
+        div.innerHTML = 'Fatalities per 100,000 per day<br/>Seven day average<br/>' + labels.join('<br>');
         return div;
     };
 

@@ -1,4 +1,4 @@
-const max_deaths = 40;
+const max_deaths = 40/25;
 
 function make_us_map_m(statesData, marker_dict) {
     var map = L.map('map').setView([43.194, -99.1888], 5);
@@ -81,7 +81,7 @@ function make_us_map_m(statesData, marker_dict) {
                 from + (to ? '&ndash;' + to : '+'));
         }
 
-        div.innerHTML = 'Fatalities per 100K<br/>past 28 days<br/>' + labels.join('<br>');
+        div.innerHTML = 'Fatalities per 100K<br/>per day<br/>' + labels.join('<br>');
         return div;
     };
 

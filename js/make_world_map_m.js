@@ -1,4 +1,4 @@
-max_deaths = 10;
+max_deaths = 40/25;
 function make_world_map_m(features, marker_dict) {
     zoom_level = 4;
     lat_lon = [42.7339, 25.4858]
