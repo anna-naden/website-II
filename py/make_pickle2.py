@@ -244,16 +244,24 @@ def parse_spreadsheet(date_start_global, dd_us, dc_us, death_lines, cases_lines,
     values_us_d = {}
     for d in us_death_lines:
         key = d[:dd_us]
-        keys_us_d.append(key)
-        assert (tuple(key[:8]) not in values_us_d.keys())
-        values_us_d[tuple(key[:8])]=d[dd_us:]
+
+        #All of the Out of State data gets the same state fips code, which would cause the data to be aggregated. Likewise for correctional institutions
+        combined_key_a = key[10]
+        if key[0][3:5] != '70' and combined_key_a[:6] != 'Out of' and combined_key_a[:10] != 'Unassigned':
+            keys_us_d.append(key)
+            assert (tuple(key[:8]) not in values_us_d.keys())
+            values_us_d[tuple(key[:8])]=d[dd_us:]
     keys_us_c = []
     values_us_c = {}
     for c in us_cases_lines:
         key = c[:dc_us]
-        keys_us_c.append(key)
-        assert (tuple(key[:8]) not in values_us_c.keys())
-        values_us_c[tuple(key[:8])]=c[dc_us:]
+
+        #All of the Out of State data gets the same state fips code, which would cause the data to be aggregated. Likewise for correctional institutions
+        combined_key_a = key[10]
+        if key[0][3:5] != '70'  and combined_key_a[:6] != 'Out of' and combined_key_a[:10] != 'Unassigned':
+            keys_us_c.append(key)
+            assert (tuple(key[:8]) not in values_us_c.keys())
+            values_us_c[tuple(key[:8])]=c[dc_us:]
 
     #Compare death keys with cases keys
     assert (keys_global_c == keys_global_d)

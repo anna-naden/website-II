@@ -15,7 +15,7 @@ def map_us(path, end_date):
                 for i in range(len(row)):
                     if row[i] == end_date:
                         col_last_date = i
-                        col_first_date = i-30
+                        col_first_date = i-7
                     if row[i] == week_end:
                         col_week_end_us = i
                 header=False
@@ -75,9 +75,9 @@ def map_world(path, start_date, end_date, week_start, week_end, doctest_date):
 config = get_config()
 
 start_date_for_world ='11/13/20'
-end_date = '12/13/20'
-week_start = '12/7/20'
-week_end = '12/14/20'
+end_date = '12/16/20'
+week_start = '12/9/20'
+week_end = '12/16/20'
 doctest_date ='4/10/20' #for testing make_pickle
 print(f'start date for world {start_date_for_world} end date for us/world {end_date} week start for world {week_start} week end for world {week_end} doctest date {doctest_date}')
 
@@ -130,7 +130,7 @@ print('\n')
 
 print('ILLINOIS')
 print(f'{illinois_deaths} deaths from start date to end date')
-print(f'per capita to date {100000*illinois_deaths/illinois_pop}')
+print(f'per capita to date {100000*illinois_deaths/(7*illinois_pop)}')
 print(f'week per cap {100000*illinois_deaths_wk/(7*illinois_pop)}')
 print('\n')
 

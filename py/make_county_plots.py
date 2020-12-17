@@ -31,12 +31,13 @@ def get_nation_weekly(df, pop):
     dates = df.index.get_level_values('date')
     nd =[]
     dates2 =[]
-    for i in range(ndays-1,l,ndays):
+    i1 = (l-1) %ndays
+    for i in range(i1,l,ndays):
         di = deaths[i]
         di1 = deaths[i-ndays]
         nd.append(100000*(di - di1)/(ndays*pop))
         dates2.append(dates[i])
-        # print(di,di1,di-di1)
+        print(dates[i])
     return dates2, nd
 
 config = get_config()
@@ -59,16 +60,16 @@ def get_county_weekly(df, pop):
     """
     ndays=7
     l = len(df)
+    i1 = (l-1) % ndays
     deaths = df.deaths
     dates = df.index.get_level_values('date')
     nd =[]
     dates2 =[]
-    for i in range(ndays-1,l,ndays):
+    for i in range(i1,l,ndays):
         di = deaths[i]
         di1 = deaths[i-ndays]
         nd.append(100000*(di - di1)/(ndays*pop))
         dates2.append(dates[i])
-        # print(di,di1,di-di1)
     return dates2, nd
 
 # Main
@@ -94,7 +95,7 @@ df_us=df_us.groupby(axis='index', by=['date']).sum()
 
 #populations of countries
 pop = pops_dict['USA']['population']
-dates, nd = get_nation_weekly(df_us, pop)
+dates_n, nd_nation = get_nation_weekly(df_us, pop)
 
 #prepare to look up country names
 upload_time=0
@@ -110,7 +111,7 @@ for fips in df.fips.unique():
         #weekly changes
         pop = df_county.population.iloc[0]
         if pop != 0:
-            dates_n,nd_nation = get_county_weekly(df_county, pop)
+            dates,nd = get_county_weekly(df_county, pop)
 
             #make plot
             MAX_Y = 10*float(config['PLOT CONFIGURATION']['max_y'])
@@ -127,9 +128,9 @@ for fips in df.fips.unique():
             ax.set_title(f'Daily New Fatalities per 100,000 Population ({spop})', fontsize=9)
 
             #Put text showing last date and last value
-            last = len(nd_nation)-1
-            last_date=f'{dates_n[last]}'[:10]
-            ax.annotate(f'{last_date}, {round(nd_nation[last],3)}', [dates_n[last],nd_nation[last]], fontsize=9)
+            last = len(nd)-1
+            last_date=f'{dates[last]}'[:10]
+            ax.annotate(f'{last_date}, {round(nd[last],3)}', [dates[last],nd[last]], fontsize=9)
 
             #save and upload
             start_up = time.time()

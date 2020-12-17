@@ -31,6 +31,7 @@ def get_nation_weekly(df, pop):
     dates = df.index.get_level_values('date')
     nd =[]
     dates2 =[]
+    i1 = (l-1)%ndays
     for i in range(ndays-1,l,ndays):
         di = deaths[i]
         di1 = deaths[i-ndays]

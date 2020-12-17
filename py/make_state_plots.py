@@ -30,7 +30,8 @@ def get_nation_weekly(df, pop):
     dates = df.index.get_level_values('date')
     nd =[]
     dates2 =[]
-    for i in range(ndays-1,l,ndays):
+    i1 = (l-1)%ndays
+    for i in range(i1,l,ndays):
         di = deaths[i]
         di1 = deaths[i-ndays]
         nd.append(100000*(di - di1)/(ndays*pop))
@@ -57,7 +58,8 @@ def get_state_weekly(df, pop = None):
     dates = df.index.get_level_values('date')
     nd =[]
     dates2 =[]
-    for i in range(ndays-1,l,ndays):
+    i1 = (l-1) % ndays
+    for i in range(i1,l,ndays):
         di = deaths[i]
         di1 = deaths[i-ndays]
         nd.append(100000*(di - di1)/(ndays*pop))
@@ -86,7 +88,7 @@ df_us = df_us[df_us.index.get_level_values('date') > dmax-np.timedelta64(int(con
 
 #populations of states
 pop = pops_dict['USA']['population']
-dates, nd = get_nation_weekly(df_us, pop)
+dates_n, nd = get_nation_weekly(df_us, pop)
 
 df = df[df.index.get_level_values('ISO_A3')=='USA'].reset_index().set_index(['date'])
 df.drop(['ISO_A3', 'country_name', 'lat', 'lon', 'cases', 'fips', 'county', 'isos2', 'isos3', 'code3', 'FIPs', 'Admin2', 'country_region', 'latitude', 'longitude', 'combined_key'], axis='columns')
@@ -104,9 +106,10 @@ for fips in states_fips_s:
 
         #weekly changes
         if state in pops_dict.keys():
+            assert(fips != '80' and fips != '90' and fips != '70')
             # print(state)
-            dates_n,nd_state = get_state_weekly(df_state, int(pops_dict[state]))
-
+            dates,nd_state = get_state_weekly(df_state, int(pops_dict[state]))
+            assert(dates == dates_n)
             #make plot
             fig, ax=plt.subplots(figsize=(3,3), constrained_layout=True)
             for tick in ax.get_xticklabels():
@@ -119,14 +122,13 @@ for fips in states_fips_s:
 
             #Put text showing last date and last value
             last = len(nd_state)-1
-            last_date=f'{dates_n[last]}'[:10]
-            x = dates_n[last]
+            last_date=f'{dates[last]}'[:10]
+            x = dates[last]
             y = nd_state[last]
             ax.annotate(f'{last_date}, {round(nd_state[last],4)}', [x,y], 
                 xycoords='data',
-                xytext=(dates_n[last-20],y+.5), textcoords='data',
+                xytext=(dates[last-20],y+.5), textcoords='data',
                 arrowprops=dict(arrowstyle="->"))
-
 
             #save and upload
             fig.savefig(config['FILES']['scratch_image'])
