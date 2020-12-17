@@ -47,8 +47,11 @@ function make_us_map_m(statesData, marker_dict) {
     var geojson;
 
     function show_plot_image(e) {
-        fips = e.target.feature.id.substring(3, 5);
-        const popup = L.popup().setLatLng(e['latlng']).setContent(make_img_tag(e.target.feature.id)).openOn(map);
+        fips = e.target.feature.id;
+        if (fips.substring(0,3) == 'USA' ) {
+            fips = fips.substring(3,5);
+        }
+        const popup = L.popup().setLatLng(e['latlng']).setContent(make_img_tag(fips)).openOn(map);
     }
 
     function onEachFeature(feature, layer) {
