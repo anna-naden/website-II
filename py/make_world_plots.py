@@ -32,7 +32,7 @@ def get_nation_weekly(df, pop):
     nd =[]
     dates2 =[]
     i1 = (l-1)%ndays
-    for i in range(ndays-1,l,ndays):
+    for i in range(i1,l,ndays):
         di = deaths[i]
         di1 = deaths[i-ndays]
         nd.append(100000*(di - di1)/(ndays*pop))
@@ -77,7 +77,6 @@ for ISO_A3 in ISO_A3_codes:
         df_nation = df_nation[df_nation.index.get_level_values('date') > dmax-np.timedelta64(39*7*24,'h')]
 
         pop = pops_dict[ISO_A3]['population']
-
         #weekly changes
         dates_n,nd_nation = get_nation_weekly(df_nation, pop)
 
