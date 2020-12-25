@@ -93,6 +93,7 @@ start_date_graph = end_date-np.timedelta64(6,"M")
 # Make and upload county six-month stats
 # -------------------------------------------------------
 status, df_pops = county_pops_fips()
+assert(status is None)
 
 # Get population
 pops_dict = df_pops.to_dict(orient='dict')

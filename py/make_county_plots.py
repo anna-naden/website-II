@@ -37,7 +37,7 @@ def get_nation_weekly(df, pop):
         di1 = deaths[i-ndays]
         nd.append(100000*(di - di1)/(ndays*pop))
         dates2.append(dates[i])
-        print(dates[i])
+        # print(dates[i])
     return dates2, nd
 
 config = get_config()
@@ -135,6 +135,7 @@ for fips in df.fips.unique():
             #save and upload
             start_up = time.time()
             fig.savefig(config['FILES']['scratch_image'])
+            fig.savefig('/var/www/html/' + fips + '.jpg')
             plt.close()
             upload_file(config['FILES']['scratch_image'], 'covid.phoenix-technical-services.com', fips + '.jpg', title=fips)
             os.remove(config['FILES']['scratch_image'])

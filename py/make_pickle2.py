@@ -61,39 +61,40 @@ def save_keys_to_dataframes(keys_global, keys_us):
 
     ISO_A3s = []
     country_name_dict = csv_get_dict(config['FILES']['world_census'], 0,1)
-    alias_dict = read_parse_aliases(config['FILES']['country_aliases'])
+    # alias_dict = read_parse_aliases(config['FILES']['country_aliases'])
     keys_global2 = []
     state_fips_s = []
 
     for key in keys_global:
         country_name = key[1]
-        if country_name in alias_dict.keys():
-            country_name = alias_dict[country_name]
+        # if country_name in alias_dict.keys():
+        #     country_name = alias_dict[country_name]
         if country_name != 'XXX':
             state = key[0]
             
-            ISO_A3 = country_name_dict[country_name]
+            if country_name in country_name_dict.keys():
+                ISO_A3 = country_name_dict[country_name]
 
-            if state != '':
-                if ISO_A3 not in states_of_country.keys():
-                    states_of_country[ISO_A3] = [state]
-                else:
-                    states_of_country[ISO_A3].append(state)
+                if state != '':
+                    if ISO_A3 not in states_of_country.keys():
+                        states_of_country[ISO_A3] = [state]
+                    else:
+                        states_of_country[ISO_A3].append(state)
 
-            # If we don't exclude us here, all the national us cases and deaths will be counted twice.
-            if ISO_A3 != 'USA':
-                states.append(state)
-                country_names.append(key[1])
-                lats.append(key[2])
-                lons.append(key[3])
-                ISO_A3s.append(ISO_A3)
+                # If we don't exclude us here, all the national us cases and deaths will be counted twice.
+                if ISO_A3 != 'USA':
+                    states.append(state)
+                    country_names.append(key[1])
+                    lats.append(key[2])
+                    lons.append(key[3])
+                    ISO_A3s.append(ISO_A3)
 
-                if country_name == 'Canada' and key[0] in canada_fips.keys():
-                    # "Repatriated Travellers"
-                    state_fips_s.append(f'{canada_fips[key[0]]}')
-                else:
-                    state_fips_s.append('')
-                keys_global2.append(tuple(key[:2]))
+                    if country_name == 'Canada' and key[0] in canada_fips.keys():
+                        # "Repatriated Travellers"
+                        state_fips_s.append(f'{canada_fips[key[0]]}')
+                    else:
+                        state_fips_s.append('')
+                    keys_global2.append(tuple(key[:2]))
     keys_global = keys_global2
 
     df_global_keys = pd.DataFrame({'key': keys_global, 'ISO_A3': ISO_A3s, 'state': states, \
@@ -346,6 +347,7 @@ def make_pickle():
     cases = []
     deaths = []
     for key in keys_global:
+        # assert(key[1]!='Bulgaria')
         idate = 0
         for date in dates:
             expanded_dates.append(datetime.datetime.strptime(date,'%m/%d/%y'))
@@ -403,7 +405,7 @@ def make_pickle():
     dfg = df_global_keys.join(df_global, on='key')
 
     #denormalize us data
-    start = time.time()
+     start = time.time()
     df_us = df_us_keys.join(df_us, on='key')
     end = time.time()
     # print(f'join us {end-start}')

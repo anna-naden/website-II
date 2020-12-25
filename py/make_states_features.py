@@ -36,7 +36,9 @@ def make_features():
     df=df_us.groupby(axis='index', by=['state','date']).sum()
     df.reset_index(inplace=True)
     state_pops_dict = csv_get_dict(config['FILES']['state_census'],0,1)
-    state_name_dict = csv_get_dict(config['FILES']['state_fips'], 1, 0)
+    assert(type(state_pops_dict == type({})))
+    state_name_dict = csv_get_dict(config['FILES']['state_fips'], 2, 0)
+    assert(type(state_name_dict) == type({}))
     for fips_code in fips_codes:
 
         # The Johns Hopkins data has incorrect FIPS code for unassigned county in Illinois, so instead of keying on FIPS I must key on state name, e.g. Illinois
@@ -56,9 +58,11 @@ def make_features():
     ISO_A3 = 'CAN'
     df=df_can.groupby(axis='index', by=['state_fips','date']).sum()
     df.reset_index(inplace=True)
-    canada_pop_dict = csv_get_dict(config['FILES']['canada_census'],0,1)
+    canada_pop_dict = csv_get_dict(config['FILES']['canada_census'],1,2)
     fips_codes = df['state_fips'].unique()
     for fips_code in fips_codes:
+        if fips_code == '35':
+            print('hello')
         deaths1 = df.query('date==@start_date and state_fips==@fips_code').deaths.sum()
         deaths2 = df.query('date==@end_date and state_fips==@fips_code').deaths.sum()
         deaths = deaths2-deaths1
@@ -75,7 +79,7 @@ def make_features():
         canada_feature_dict = json.load(f_can)
 
     for feature in us_feature_dict['features']:
-        fid = 'USA' + feature['id']
+        fid = 'USA' + feature['properties']['STATE']
         if fid in state_deaths.keys():
             feature['id'] = fid
             deaths = state_deaths[feature['id']]
@@ -88,12 +92,13 @@ def make_features():
         if feature['properties']['name'] != 'Nunavut' and feature['properties']['name'] != 'Yukon Territory':    #Nunavit region
             features2.append(feature)
     canada_feature_dict['features'] = features2
-    province_dict = csv_get_dict(config['FILES']['canada_census'],2,0)
+    province_dict = csv_get_dict(config['FILES']['canada_census'], 0,1)
     for feature in canada_feature_dict['features']:
         name = feature['properties']['name']
         id = province_dict[name]
         feature['id'] = 'CAN' + id
         deaths = state_deaths[feature['id']]
+        print(name, deaths)
         feature['properties']['density'] = f'{deaths}'
         feature['properties']['fips'] = 'CAN' + id
 

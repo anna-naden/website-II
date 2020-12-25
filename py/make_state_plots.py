@@ -132,11 +132,13 @@ for fips in states_fips_s:
 
             #save and upload
             fig.savefig(config['FILES']['scratch_image'])
+            fig.savefig('/var/www/html/' +  fips + '.jpg')
             plt.close()
             upload_file(config['FILES']['scratch_image'], 'covid.phoenix-technical-services.com', fips + '.jpg', title=fips)
             os.remove(config['FILES']['scratch_image'])
 
             nfigs += 1
+print(nfigs)
 ################################################################
 # Canada
 ################################################################
@@ -152,7 +154,7 @@ states_fips_s = df.state_fips.unique()
 pops_dict = csv_get_dict(config['FILES']['state_census'], 0, 1, header=True)
 df_states = df.groupby(['date','state_fips', 'state']).sum()
 MAX_Y = float(config['PLOT CONFIGURATION']['max_y'])
-canada_pop_dict = csv_get_dict(config['FILES']['canada_census'],0,1)
+canada_pop_dict = csv_get_dict(config['FILES']['canada_census'],1,2)
 for fips in states_fips_s:
 
         #get weekly data
@@ -184,6 +186,7 @@ for fips in states_fips_s:
 
             #save and upload
             fig.savefig(config['FILES']['scratch_image'])
+            fig.savefig('/var/www/html/' + 'CAN' + fips + '.jpg')
             plt.close()
             upload_file(config['FILES']['scratch_image'], 'covid.phoenix-technical-services.com', 'CAN' + fips + '.jpg', title='CAN' + fips)
             os.remove(config['FILES']['scratch_image'])

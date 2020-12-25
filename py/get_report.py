@@ -75,9 +75,9 @@ def map_world(path, start_date, end_date, week_start, week_end, doctest_date):
 config = get_config()
 
 start_date_for_world ='11/13/20'
-end_date = '12/16/20'
-week_start = '12/9/20'
-week_end = '12/16/20'
+end_date = '12/24/20'
+week_start = '12/17/20'
+week_end = '12/24/20'
 doctest_date ='4/10/20' #for testing make_pickle
 print(f'start date for world {start_date_for_world} end date for us/world {end_date} week start for world {week_start} week end for world {week_end} doctest date {doctest_date}')
 
@@ -90,7 +90,7 @@ col_last_date, col_last_week, col_first_date, col_doctest_global, week_ndeaths_o
 
 illinois_pop = 12671821
 cook_pop = 5150233
-ontario_pop = 12851821
+ontario_pop = 14733119
 france_pop = 66977107
 us_pop = 326687501
 mex_pop = 126190788
