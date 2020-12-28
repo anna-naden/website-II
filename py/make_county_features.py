@@ -12,8 +12,7 @@ import csv
 import time
 import datetime
 
-from s3_util import *
-from county_pops_fips import county_pops_fips
+from send_content import send_content
 from get_world_covid_jh import get_world_covid_jh
 from get_config import get_config
 
@@ -25,16 +24,17 @@ def get_counties_features():
     features = features['features']
     states = {}
     for feature in features:
-        state_fips = feature['properties']['FIPS-code']
+        state_fips = feature['properties']['STATE']
         if state_fips not in states:
             states[state_fips] = []
     for feature in features:
-        state_fips = feature['properties']['FIPS-code']
-        feature['properties']['name'] = feature['properties']['county'] + ' County'
+        state_fips = feature['properties']['STATE']
+        feature['properties']['name'] = feature['properties']['NAME'] + ' County'
         states[state_fips].append(feature)
     return states
 
-def get_county_deaths(df_us, df_pops, start_date, end_date):
+def get_county_deaths(df_us, start_date, end_date):
+    df_pops = df_us[['fips','population']].drop_duplicates()
     fips_codes = df_us.fips.unique()
     county_deaths = {}
     n_deaths = {}
@@ -42,12 +42,11 @@ def get_county_deaths(df_us, df_pops, start_date, end_date):
     df2 = df_us[df_us.date == end_date]
     for fips_code in fips_codes:
         # print(fips_code)
+        pop = df_pops[df_pops.fips == fips_code].population.iloc[0]
         deaths1 = df1.query('fips==@fips_code').deaths.sum()
         deaths2 = df2.query('fips==@fips_code').deaths.sum()
         deaths = deaths2 - deaths1
-        df = df_pops[df_pops.fips == fips_code]
-        if not df.empty:
-            pop = df.population.iloc[0]
+        if pop != 0:
             n_deaths[fips_code] = deaths
             deaths = 100000*deaths/pop
             county_deaths[fips_code] = deaths
@@ -56,7 +55,7 @@ def get_county_deaths(df_us, df_pops, start_date, end_date):
 def update_county_features(states, deaths):
     for state in states.keys():
         for feature in states[state]:
-            id = feature['properties']['FIPS-code'] +  feature['properties']['COUNTY']
+            id = feature['properties']['STATE'] +  feature['properties']['COUNTY']
             feature['id'] = id
             deaths1 = 0
             if id in deaths.keys():
@@ -89,25 +88,11 @@ start_date = end_date-np.timedelta64(ndays_map,'D')
 
 start_date_graph = end_date-np.timedelta64(6,"M")
 
-# -------------------------------------------------------
-# Make and upload county six-month stats
-# -------------------------------------------------------
-status, df_pops = county_pops_fips()
-assert(status is None)
-
-# Get population
-pops_dict = df_pops.to_dict(orient='dict')
-df_pops['fips'] = df_pops.state_fips + df_pops.county_fips
-df_pops.drop(columns=['state_fips', 'county_fips', 'state', 'county'], inplace=True)
-if status is not None:
-    print(f'status from county_pops_fips: {status}')
-    exit(1)
-
 #--------------------------------------------------------------------------
 # County 30 day fatalities
 #--------------------------------------------------------------------------
 print(f'making and uploading county {ndays_map} day fatalities')
-county_deaths, ndeaths = get_county_deaths(df, df_pops, start_date, end_date)
+county_deaths, ndeaths = get_county_deaths(df, start_date, end_date)
 
 #Collect info for markers of worst counties in the country
 county_deaths_sorted = sorted(county_deaths, key=county_deaths.get, reverse=True)
@@ -121,10 +106,15 @@ for key in top_deaths:
     state = df_cty.state
     cty = df_cty.county
     markers[key] = [lat, lon, state, cty]
-    # print(ndeaths[key])
-with open(config['FILES']['scratch'], 'w') as f:
-    json.dump(markers, f)
-upload_file(config['FILES']['scratch'], 'covid.phoenix-technical-services.com', 'county-markers.json', title='county-markers.json')
+    
+    if config['SWITCHES']['send_content_to_local_html'] != '0':
+        with open('/var/www/html/county-markers.json', 'wt') as f:
+            json.dump(markers, f)
+    f.close()
+
+    with open(config['FILES']['scratch'], 'w') as f:
+        json.dump(markers, f)
+    send_content(config['FILES']['scratch'], 'covid.phoenix-technical-services.com', 'county-markers.json', title='county-markers.json')
 
 # Features for each state, one feature for each county
 deaths_by_state = get_counties_features()
@@ -132,15 +122,19 @@ update_county_features(deaths_by_state, county_deaths)
 
 #upload
 for state in deaths_by_state.keys():
-    with open(config['FILES']['scratch'], 'w') as f:
-        feature_set = {'type': 'FeatureCollection', 'features': deaths_by_state[state]}
-        interval = f'{w_start_date},{w_end_date}'
-        feature_obj = { 'interval': interval, 'feature_set': feature_set}
+    feature_set = {'type': 'FeatureCollection', 'features': deaths_by_state[state]}
+    interval = f'{w_start_date},{w_end_date}'
+
+    if config['SWITCHES']['send_content_to_local_html'] != '0':
+        with open('/var/www/html/county-markers.json', 'wt') as f:
+            json.dump(feature_set, f)
+        f.close()
+
+    with open(config['FILES']['scratch'], 'wt') as f:
         json.dump(feature_set,f)
-        f.flush()
-        upload_file(config['FILES']['scratch'], 'covid.phoenix-technical-services.com', state+'.json', title=state+'.json')
-        os.remove(config['FILES']['scratch'])
     f.close()
+    send_content(config['FILES']['scratch'], 'covid.phoenix-technical-services.com', state+'.json', title=state+'.json')
+    os.remove(config['FILES']['scratch'])
 end = time.time()
 seconds = round(end-start)
 print(f'\nUploaded county 30 day fatalties {str(start_date)[:10]} to {str(end_date)[:10]}. Elapsed time: {str(datetime.timedelta(seconds=seconds))} seconds')

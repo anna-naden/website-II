@@ -1,3 +1,5 @@
-For map javascript, set nowrap
-make pickle doctest cases
-New way to get weekly fatalities
+Keep projects website-II files and datasets in Dropbox. 
+Check config file before uploading content to s3. 
+Get county populations from Johns Hopkins data.
+Restore county_plots in web content make script.
+

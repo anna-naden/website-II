@@ -3,12 +3,13 @@ import json
 import csv
 import time
 import datetime
+import os
 
 from get_config import get_config
 from get_world_covid_jh import get_world_covid_jh
 from world_populations import world_populations
-from s3_util import upload_file, delete_obj
-import os
+from s3_util import delete_obj
+from send_content import send_content
 
 def get_world_deaths(df_world, start_date, end_date):
     """ Compute number of deaths in calendar interval for each nation of the world, including USA
@@ -93,9 +94,6 @@ w_start_date = w_end_date-np.timedelta64(n_days_map,'D')
 df = df_world[df_world.index.get_level_values('ISO_A3')=='USA']
 df.reset_index(inplace=True)
 
-# end_date = df.date.max()
-# start_date_graph = end_date-np.timedelta64(6,"M")
-
 # Make and upload world features
 world_deaths = get_world_deaths(df_world1, w_start_date, w_end_date)
 
@@ -110,9 +108,14 @@ for key in top_deaths:
     lon = df_nation.lon
     markers[key] = [lat, lon]
 
+if config['SWITCHES']['send_content_to_local_html'] != '0':
+    with open('/var/www/html/world-markers.json', 'wt') as f:
+        json.dump(markers, f)
+    f.close()
+
 with open(config['FILES']['scratch'], 'w') as f:
     json.dump(markers, f)
-upload_file(config['FILES']['scratch'], 'covid.phoenix-technical-services.com', 'world-markers.json', title='world-markers.json')
+send_content(config['FILES']['scratch'], 'covid.phoenix-technical-services.com', 'world-markers.json', title='world-markers.json')
 
 
 #Make map features
@@ -130,10 +133,16 @@ for key in nations.keys():
     feature_list.append(nations[key][0])
 with open(config['FILES']['scratch'], 'w') as f:
     feature_obj = { 'interval': interval, 'type': 'FeatureCollection', 'features': feature_list}
-    json.dump(feature_obj, f)
-    f.flush()
-    upload_file(config['FILES']['scratch'], 'covid.phoenix-technical-services.com', 'all.json', 'all.json')
+
+    if config['SWITCHES']['send_content_to_local_html'] != '0':
+        with open('/var/www/html/all.json', 'wt') as f:
+            json.dump(feature_obj, f)
+        f.close()
+
+    with open(config['FILES']['scratch'], 'wt') as f:
+        json.dump(feature_obj, f)
     f.close()
+    send_content(config['FILES']['scratch'], 'covid.phoenix-technical-services.com', 'all.json', 'all.json')
 os.remove(config['FILES']['scratch'])
 print('world features uploaded')
 

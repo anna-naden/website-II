@@ -5,15 +5,15 @@ echo 'Downloading Johns Hopkins dataset'
 cd ~/Downloads
 rm -rf COVID-19
 git clone https://github.com/CSSEGISandData/COVID-19.git
-cp COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv ~/datasets/covid-19
-cp COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv ~/datasets/covid-19
-cp COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv ~/datasets/covid-19
-cp COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv ~/datasets/covid-19
+cp COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv ~/Dropbox/datasets/covid-19
+cp COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv ~/Dropbox/datasets/covid-19
+cp COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv ~/Dropbox/datasets/covid-19
+cp COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv ~/Dropbox/datasets/covid-19
 echo '------------------------------------------------------------------------------------------'
 
 # ---------- Create and serialize dataframe
 conda activate website-II
-cd ~/projects/website-II/py
+cd ~/Dropbox/projects/website-II/py
 python make_pickle2.py
 if [ $? -ne 0 ]
 then
@@ -25,7 +25,7 @@ echo '--------------------------------------------------------------------------
 python make_county_features.py
 if [ $? -ne 0 ]
 then
-    exit 1
+   exit 1
 fi
 echo '------------------------------------------------------------------------------------------'
 

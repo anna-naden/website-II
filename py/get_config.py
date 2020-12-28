@@ -12,7 +12,7 @@ def get_config():
     """
 
     config = configparser.ConfigParser()
-    config_path = '/home/anna_user2/projects/website-II/config.ini'
+    config_path = '/home/anna_user2/Dropbox/projects/website-II/config.ini'
     config.read(config_path)
     return config
 

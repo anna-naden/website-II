@@ -405,7 +405,7 @@ def make_pickle():
     dfg = df_global_keys.join(df_global, on='key')
 
     #denormalize us data
-     start = time.time()
+    start = time.time()
     df_us = df_us_keys.join(df_us, on='key')
     end = time.time()
     # print(f'join us {end-start}')

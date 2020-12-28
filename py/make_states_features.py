@@ -4,7 +4,7 @@ feature.
 
 from get_world_covid_jh import get_world_covid_jh
 from get_config import get_config
-from s3_util import upload_file
+from send_content import send_content
 from csv_util import csv_get_dict, csv_lookup
 
 import numpy as np
@@ -71,7 +71,7 @@ def make_features():
             pop = int(canada_pop_dict[fips_code])
             state_deaths[ISO_A3 + fips_code]=100000*deaths/(n_days_map*pop)
         else:
-                state_deaths[ISO_A3 + fips_code] = 0
+            state_deaths[ISO_A3 + fips_code] = 0
         
     with open(config['FILES']['states_geometry'], 'r') as f_usa:
         us_feature_dict = json.load(f_usa)
@@ -111,9 +111,15 @@ start = time.time()
 
 config = get_config()
 map_features = make_features()
+
+if config['SWITCHES']['send_content_to_local_html'] != '0':
+    with open('/var/www/html/all-states.json', 'wt') as f:
+        json.dump(map_features, f)
+    f.close()
+
 with open(config['FILES']['scratch'], 'w') as f:
     json.dump(map_features,f)
-upload_file(config['FILES']['scratch'], 'covid.phoenix-technical-services.com', 'all-states.json', title='all-states.json')
+send_content(config['FILES']['scratch'], 'covid.phoenix-technical-services.com', 'all-states.json', title='all-states.json')
 os.remove(config['FILES']['scratch'])
 
 end = time.time()

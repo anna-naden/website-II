@@ -10,9 +10,9 @@ import datetime
 
 from get_world_covid_jh import get_world_covid_jh
 from world_populations import world_populations
-from s3_util import upload_file
 from get_config import get_config
 from csv_util import csv_get_dict
+from send_content import send_content
 
 def get_nation_weekly(df, pop):
     """ Generate lists or arrays of x and y values for a single nation based on daily change averaged over seven days
@@ -82,7 +82,6 @@ try:
 except Exception as inst:
     print(inst)
     exit(1)
-
 status, df=get_world_covid_jh()
 dmax = df.index.get_level_values('date').max()
 
@@ -102,6 +101,7 @@ upload_time=0
 df = df[df.index.get_level_values('ISO_A3')=='USA'].reset_index().set_index(['date'])
 nfigs = 0
 for fips in df.fips.unique():
+        print(fips)
 
         #get weekly data
         df_county=df[df.fips ==fips]
@@ -120,8 +120,8 @@ for fips in df.fips.unique():
             ax.set_ylim(0,  MAX_Y)
             for tick in ax.get_xticklabels():
                 tick.set_rotation(45)
-            ax.plot(dates_n, nd_nation)
             ax.plot(dates, nd)
+            ax.plot(dates_n, nd_nation)
             ax.legend([county + ' County, ' + state, 'USA'], fontsize=9)
             pop = int(pop)
             spop = "{:,}".format(pop)
@@ -135,9 +135,10 @@ for fips in df.fips.unique():
             #save and upload
             start_up = time.time()
             fig.savefig(config['FILES']['scratch_image'])
-            fig.savefig('/var/www/html/' + fips + '.jpg')
+            if config['SWITCHES']['send_content_to_local_html'] != '0':
+                fig.savefig('/var/www/html/' + fips + '.jpg')
             plt.close()
-            upload_file(config['FILES']['scratch_image'], 'covid.phoenix-technical-services.com', fips + '.jpg', title=fips)
+            send_content(config['FILES']['scratch_image'], 'covid.phoenix-technical-services.com', fips + '.jpg', title=fips, show_progress=True)
             os.remove(config['FILES']['scratch_image'])
             upload_time += time.time()-start_up
             nfigs += 1

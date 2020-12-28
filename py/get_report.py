@@ -75,9 +75,9 @@ def map_world(path, start_date, end_date, week_start, week_end, doctest_date):
 config = get_config()
 
 start_date_for_world ='11/13/20'
-end_date = '12/24/20'
-week_start = '12/17/20'
-week_end = '12/24/20'
+end_date = '12/26/20'
+week_start = '12/19/20'
+week_end = '12/26/20'
 doctest_date ='4/10/20' #for testing make_pickle
 print(f'start date for world {start_date_for_world} end date for us/world {end_date} week start for world {week_start} week end for world {week_end} doctest date {doctest_date}')
 

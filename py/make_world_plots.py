@@ -10,7 +10,7 @@ import datetime
 
 from get_world_covid_jh import get_world_covid_jh
 from world_populations import world_populations
-from s3_util import upload_file
+from send_content import send_content
 from get_config import get_config
 from csv_util import csv_get_dict
 
@@ -103,9 +103,10 @@ for ISO_A3 in ISO_A3_codes:
         #save and upload
         start_upload = time.time()
         fig.savefig(config['FILES']['scratch_image'])
-        fig.savefig('/var/www/html/' + ISO_A3 + '.jpg')
+        if config['SWITCHES']['send_content_to_local_html'] != '0':
+            fig.savefig('/var/www/html/' + ISO_A3 + '.jpg')
         plt.close()
-        upload_file(config['FILES']['scratch_image'], 'covid.phoenix-technical-services.com', ISO_A3 + '.jpg', title=ISO_A3)
+        send_content(config['FILES']['scratch_image'], 'covid.phoenix-technical-services.com', ISO_A3 + '.jpg', title=ISO_A3)
         os.remove(config['FILES']['scratch_image'])
         upload_time += time.time()-start_upload
         nfigs += 1

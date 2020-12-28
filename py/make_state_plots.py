@@ -11,7 +11,7 @@ import datetime
 from get_world_covid_jh import get_world_covid_jh
 from world_populations import world_populations
 
-from s3_util import upload_file
+from send_content import send_content
 from get_config import get_config
 from csv_util import csv_get_dict
 
@@ -132,9 +132,10 @@ for fips in states_fips_s:
 
             #save and upload
             fig.savefig(config['FILES']['scratch_image'])
-            fig.savefig('/var/www/html/' +  fips + '.jpg')
+            if config['SWITCHES']['send_content_to_local_html'] != '0':
+                fig.savefig('/var/www/html/' +  fips + '.jpg')
             plt.close()
-            upload_file(config['FILES']['scratch_image'], 'covid.phoenix-technical-services.com', fips + '.jpg', title=fips)
+            send_content(config['FILES']['scratch_image'], 'covid.phoenix-technical-services.com', fips + '.jpg', title=fips)
             os.remove(config['FILES']['scratch_image'])
 
             nfigs += 1
@@ -186,9 +187,12 @@ for fips in states_fips_s:
 
             #save and upload
             fig.savefig(config['FILES']['scratch_image'])
-            fig.savefig('/var/www/html/' + 'CAN' + fips + '.jpg')
+
+            jpg_name = 'CAN' + fips + '.jpg'
+            if config['SWITCHES']['send_content_to_local_html'] != '0':
+                fig.savefig('/var/www/html/' + jpg_name)
             plt.close()
-            upload_file(config['FILES']['scratch_image'], 'covid.phoenix-technical-services.com', 'CAN' + fips + '.jpg', title='CAN' + fips)
+            send_content(config['FILES']['scratch_image'], 'covid.phoenix-technical-services.com', 'CAN' + fips + '.jpg', title='CAN' + fips)
             os.remove(config['FILES']['scratch_image'])
 
             nfigs += 1
