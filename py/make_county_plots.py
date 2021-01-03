@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import os
 import time
 import datetime
+from filelock import FileLock
 
 from get_world_covid_jh import get_world_covid_jh
 from world_populations import world_populations
@@ -74,6 +75,7 @@ def get_county_weekly(df, pop):
 
 # Main
 start = time.time()
+print('Making county plots')
 
 config = get_config()
 try:
@@ -101,47 +103,50 @@ upload_time=0
 df = df[df.index.get_level_values('ISO_A3')=='USA'].reset_index().set_index(['date'])
 nfigs = 0
 for fips in df.fips.unique():
-        print(fips)
 
-        #get weekly data
-        df_county=df[df.fips ==fips]
-        county = df_county.iloc[0].county
-        state = df_county.iloc[0].state
+    #get weekly data
+    df_county=df[df.fips ==fips]
+    county = df_county.iloc[0].county
+    state = df_county.iloc[0].state
 
-        #weekly changes
-        pop = df_county.population.iloc[0]
-        if pop != 0:
-            dates,nd = get_county_weekly(df_county, pop)
+    #weekly changes
+    pop = df_county.population.iloc[0]
+    if pop != 0:
+        dates,nd = get_county_weekly(df_county, pop)
 
-            #make plot
-            MAX_Y = 10*float(config['PLOT CONFIGURATION']['max_y'])
-            fig, ax=plt.subplots(figsize=(4.5,2.4), constrained_layout=True)
-            plt.xticks(fontsize=9)
-            ax.set_ylim(0,  MAX_Y)
-            for tick in ax.get_xticklabels():
-                tick.set_rotation(45)
-            ax.plot(dates, nd)
-            ax.plot(dates_n, nd_nation)
-            ax.legend([county + ' County, ' + state, 'USA'], fontsize=9)
-            pop = int(pop)
-            spop = "{:,}".format(pop)
-            ax.set_title(f'Daily New Fatalities per 100,000 Population ({spop})', fontsize=9)
+        #make plot
+        MAX_Y = 10*float(config['PLOT CONFIGURATION']['max_y'])
+        fig, ax=plt.subplots(figsize=(4.5,2.4), constrained_layout=True)
+        plt.xticks(fontsize=9)
+        ax.set_ylim(0,  MAX_Y)
+        for tick in ax.get_xticklabels():
+            tick.set_rotation(45)
+        ax.plot(dates, nd)
+        ax.plot(dates_n, nd_nation)
+        ax.legend([county + ' County, ' + state, 'USA'], fontsize=9)
+        pop = int(pop)
+        spop = "{:,}".format(pop)
+        ax.set_title(f'Daily New Fatalities per 100,000 Population ({spop})', fontsize=9)
 
-            #Put text showing last date and last value
-            last = len(nd)-1
-            last_date=f'{dates[last]}'[:10]
-            ax.annotate(f'{last_date}, {round(nd[last],3)}', [dates[last],nd[last]], fontsize=9)
+        #Put text showing last date and last value
+        last = len(nd)-1
+        last_date=f'{dates[last]}'[:10]
+        ax.annotate(f'{last_date}, {round(nd[last],3)}', [dates[last],nd[last]], fontsize=9)
 
-            #save and upload
-            start_up = time.time()
+        #save and upload
+        start_up = time.time()
+        if config['SWITCHES']['send_content_to_local_html'] != '0':
+            fig.savefig('/var/www/html/' + fips + '.jpg')
+        plt.close()
+
+        lock = FileLock(config['FILES']['lockfile'])
+        with lock:
             fig.savefig(config['FILES']['scratch_image'])
-            if config['SWITCHES']['send_content_to_local_html'] != '0':
-                fig.savefig('/var/www/html/' + fips + '.jpg')
-            plt.close()
-            send_content(config['FILES']['scratch_image'], 'covid.phoenix-technical-services.com', fips + '.jpg', title=fips, show_progress=True)
+            send_content(config['FILES']['scratch_image'], 'covid.phoenix-technical-services.com', fips + '.jpg', title=fips)
             os.remove(config['FILES']['scratch_image'])
-            upload_time += time.time()-start_up
-            nfigs += 1
+        upload_time += time.time()-start_up
+        nfigs += 1
+        print(nfigs)
 end = time.time()
 seconds = round(end-start)
 print(f'\nCounty plots made. {nfigs} figures uploaded. Upload time: {round(upload_time,2)}. Elapsed time: {str(datetime.timedelta(seconds=seconds))}')

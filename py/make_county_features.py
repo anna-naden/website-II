@@ -11,6 +11,7 @@ import pandas as pd
 import csv
 import time
 import datetime
+from filelock import FileLock
 
 from send_content import send_content
 from get_world_covid_jh import get_world_covid_jh
@@ -33,7 +34,7 @@ def get_counties_features():
         states[state_fips].append(feature)
     return states
 
-def get_county_deaths(df_us, start_date, end_date):
+def get_county_deaths(df_us, start_date, end_date, ndays_map):
     df_pops = df_us[['fips','population']].drop_duplicates()
     fips_codes = df_us.fips.unique()
     county_deaths = {}
@@ -49,7 +50,7 @@ def get_county_deaths(df_us, start_date, end_date):
         if pop != 0:
             n_deaths[fips_code] = deaths
             deaths = 100000*deaths/pop
-            county_deaths[fips_code] = deaths
+            county_deaths[fips_code] = deaths/ndays_map
     return county_deaths, n_deaths
 
 def update_county_features(states, deaths):
@@ -92,7 +93,7 @@ start_date_graph = end_date-np.timedelta64(6,"M")
 # County 30 day fatalities
 #--------------------------------------------------------------------------
 print(f'making and uploading county {ndays_map} day fatalities')
-county_deaths, ndeaths = get_county_deaths(df, start_date, end_date)
+county_deaths, ndeaths = get_county_deaths(df, start_date, end_date, ndays_map)
 
 #Collect info for markers of worst counties in the country
 county_deaths_sorted = sorted(county_deaths, key=county_deaths.get, reverse=True)
@@ -106,23 +107,26 @@ for key in top_deaths:
     state = df_cty.state
     cty = df_cty.county
     markers[key] = [lat, lon, state, cty]
-    
+
     if config['SWITCHES']['send_content_to_local_html'] != '0':
         with open('/var/www/html/county-markers.json', 'wt') as f:
             json.dump(markers, f)
-    f.close()
+        f.close()
 
-    with open(config['FILES']['scratch'], 'w') as f:
-        json.dump(markers, f)
-    send_content(config['FILES']['scratch'], 'covid.phoenix-technical-services.com', 'county-markers.json', title='county-markers.json')
+    lock = FileLock(config['FILES']['lockfile'])
+    with lock:
+        with open(config['FILES']['scratch'], 'w') as f:
+            json.dump(markers, f)
+        send_content(config['FILES']['scratch'], 'covid.phoenix-technical-services.com', 'county-markers.json', title='county-markers.json')
+        os.remove(config['FILES']['scratch'])
 
 # Features for each state, one feature for each county
-deaths_by_state = get_counties_features()
-update_county_features(deaths_by_state, county_deaths)
+features = get_counties_features()
+update_county_features(features, county_deaths)
 
 #upload
-for state in deaths_by_state.keys():
-    feature_set = {'type': 'FeatureCollection', 'features': deaths_by_state[state]}
+for state in features.keys():
+    feature_set = {'type': 'FeatureCollection', 'features': features[state]}
     interval = f'{w_start_date},{w_end_date}'
 
     if config['SWITCHES']['send_content_to_local_html'] != '0':
@@ -130,11 +134,13 @@ for state in deaths_by_state.keys():
             json.dump(feature_set, f)
         f.close()
 
-    with open(config['FILES']['scratch'], 'wt') as f:
-        json.dump(feature_set,f)
-    f.close()
-    send_content(config['FILES']['scratch'], 'covid.phoenix-technical-services.com', state+'.json', title=state+'.json')
-    os.remove(config['FILES']['scratch'])
+    lock = FileLock(config['FILES']['lockfile'])
+    with lock:
+        with open(config['FILES']['scratch'], 'wt') as f:
+            json.dump(feature_set,f)
+        f.close()
+        send_content(config['FILES']['scratch'], 'covid.phoenix-technical-services.com', state+'.json', title=state+'.json')
+        os.remove(config['FILES']['scratch'])
 end = time.time()
 seconds = round(end-start)
 print(f'\nUploaded county 30 day fatalties {str(start_date)[:10]} to {str(end_date)[:10]}. Elapsed time: {str(datetime.timedelta(seconds=seconds))} seconds')

@@ -4,6 +4,7 @@ import csv
 import time
 import datetime
 import os
+from filelock import FileLock
 
 from get_config import get_config
 from get_world_covid_jh import get_world_covid_jh
@@ -34,7 +35,7 @@ def get_world_deaths(df_world, start_date, end_date):
     df1 = df_world[df_world.date == start_date]
     df2 = df_world[df_world.date == end_date]
     for ISO_A3 in ISO_A3_codes:
-        # print(ISO_A3)
+        print(ISO_A3)
         deaths1 = df1.query('ISO_A3==@ISO_A3').deaths.sum()
         deaths2 = df2.query('ISO_A3==@ISO_A3').deaths.sum()
         deaths = deaths2 - deaths1
@@ -113,10 +114,12 @@ if config['SWITCHES']['send_content_to_local_html'] != '0':
         json.dump(markers, f)
     f.close()
 
-with open(config['FILES']['scratch'], 'w') as f:
-    json.dump(markers, f)
-send_content(config['FILES']['scratch'], 'covid.phoenix-technical-services.com', 'world-markers.json', title='world-markers.json')
-
+lock = FileLock(config['FILES']['lockfile'])
+with lock:
+    with open(config['FILES']['scratch'], 'w') as f:
+        json.dump(markers, f)
+    send_content(config['FILES']['scratch'], 'covid.phoenix-technical-services.com', 'world-markers.json', title='world-markers.json')
+    f.close()
 
 #Make map features
 nations = get_world_features()
@@ -131,7 +134,6 @@ interval = f'{w_start_date},{w_end_date}'
 feature_list = []
 for key in nations.keys():
     feature_list.append(nations[key][0])
-with open(config['FILES']['scratch'], 'w') as f:
     feature_obj = { 'interval': interval, 'type': 'FeatureCollection', 'features': feature_list}
 
     if config['SWITCHES']['send_content_to_local_html'] != '0':
@@ -139,11 +141,13 @@ with open(config['FILES']['scratch'], 'w') as f:
             json.dump(feature_obj, f)
         f.close()
 
-    with open(config['FILES']['scratch'], 'wt') as f:
-        json.dump(feature_obj, f)
-    f.close()
-    send_content(config['FILES']['scratch'], 'covid.phoenix-technical-services.com', 'all.json', 'all.json')
-os.remove(config['FILES']['scratch'])
+    lock = FileLock(config['FILES']['lockfile'])
+    with lock:
+        with open(config['FILES']['scratch'], 'wt') as f:
+            json.dump(feature_obj, f)
+        f.close()
+        send_content(config['FILES']['scratch'], 'covid.phoenix-technical-services.com', 'all.json', 'all.json')
+        os.remove(config['FILES']['scratch'])
 print('world features uploaded')
 
 seconds = round(time.time()-start)

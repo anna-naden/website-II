@@ -57,5 +57,15 @@ then
 fi
 echo '------------------------------------------------------------------------------------------'
 
+# ---------- Make and upload jpeg files for coumty stats plots
+python make_county_plots.py
+if [ $? -ne 0 ]
+then
+    echo 'nonzero fron county plots'
+    exit 1
+fi
+echo 'County plots made'
+echo '---------------------------------------------------------------------------------------'
+
 echo "Done"
 date

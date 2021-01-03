@@ -208,7 +208,7 @@ function make_state_map(fips,state_features, marker_dict) {
     info.update = function (props) {
         this._div.innerHTML = '';
         if (props) {
-            const fips = props['FIPS-code'] + props['COUNTY'];
+            const fips = props['STATE'] + props['COUNTY'];
             // this._div.innerHTML = '<h3>COVID-19 by County</h3>' + (props ?
             //     '<b>' + props.name + '</b><br />' + formatter.format(props.density) + ' fatalities per 100,000 people in past 30 days</sup>'
             //     : 'Mouse over a county to fatalities per capita.<br/>Click to see graph.');
@@ -322,7 +322,7 @@ function make_state_map(fips,state_features, marker_dict) {
                 from + (to ? '&ndash;' + to : '+'));
         }
 
-        div.innerHTML = 'Fatalities per 100,000 in past 28 days' + '<br/>' + labels.join('<br>');
+        div.innerHTML = 'Fatalities per 100,000 in past 7 days' + '<br/>' + labels.join('<br>');
         return div;
     };
 

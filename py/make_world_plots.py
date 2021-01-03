@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import os
 import time
 import datetime
+from filelock import FileLock
 
 from get_world_covid_jh import get_world_covid_jh
 from world_populations import world_populations
@@ -102,12 +103,15 @@ for ISO_A3 in ISO_A3_codes:
 
         #save and upload
         start_upload = time.time()
-        fig.savefig(config['FILES']['scratch_image'])
         if config['SWITCHES']['send_content_to_local_html'] != '0':
             fig.savefig('/var/www/html/' + ISO_A3 + '.jpg')
+
+        lock = FileLock(config['FILES']['lockfile'])
+        with lock:
+            fig.savefig(config['FILES']['scratch_image'])
+            send_content(config['FILES']['scratch_image'], 'covid.phoenix-technical-services.com', ISO_A3 + '.jpg', title=ISO_A3)
+            os.remove(config['FILES']['scratch_image'])
         plt.close()
-        send_content(config['FILES']['scratch_image'], 'covid.phoenix-technical-services.com', ISO_A3 + '.jpg', title=ISO_A3)
-        os.remove(config['FILES']['scratch_image'])
         upload_time += time.time()-start_upload
         nfigs += 1
 end = time.time()

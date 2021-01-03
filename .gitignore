@@ -1,6 +1,5 @@
 make-out.txt
-json/??.json
-py/states_json_write_dynamo.py
 sh/daily-out.txt
 sullivan
 py/__pycache__
+world-pickle.pkl

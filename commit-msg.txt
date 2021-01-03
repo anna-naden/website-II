@@ -1,5 +1,3 @@
-Keep projects website-II files and datasets in Dropbox. 
-Check config file before uploading content to s3. 
-Get county populations from Johns Hopkins data.
-Restore county_plots in web content make script.
-
+for state maps, legend says 7 days
+get lock file path from config
+Use Dropbox directory for project

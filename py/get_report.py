@@ -75,11 +75,11 @@ def map_world(path, start_date, end_date, week_start, week_end, doctest_date):
 config = get_config()
 
 start_date_for_world ='11/13/20'
-end_date = '12/26/20'
-week_start = '12/19/20'
-week_end = '12/26/20'
+end_date = '1/2/21'
+week_start = '12/26/20'
+week_end = '1/2/21'
 doctest_date ='4/10/20' #for testing make_pickle
-print(f'start date for world {start_date_for_world} end date for us/world {end_date} week start for world {week_start} week end for world {week_end} doctest date {doctest_date}')
+print(f'start date for world {start_date_for_world}\nend date for us/world {end_date} \nweek start for world {week_start} \nweek end for world {week_end} \ndoctest date {doctest_date}\n')
 
 col_first_date, col_last_date, ndeaths_cook, last_cook_deaths, ndeaths_cook_week, ndeaths_gregory_week, illinois_deaths, illinois_deaths_wk = \
     map_us(config['FILES']['us_covid_deaths'], end_date)
@@ -100,38 +100,38 @@ bulg_pop = 7025037
 print('US')
 print(f'Deaths to date: {last_ndeaths_us}')
 print(f'Deaths to date per cap {100000*last_ndeaths_us/us_pop}')
-print(f'per capita per day {100000*wk_us_deaths/(7*us_pop)}')
+print(f'per capita per day {100000*wk_us_deaths/(7*us_pop):.4f}')
 print(f'doctest deaths {doctest_us_ndeaths}')
 print('\n')
 
 print('FRA')
-print(f'Last week d per cap: {100000*wk_fr_deaths/(7*france_pop)}')
+print(f'Last week d per cap: {100000*wk_fr_deaths/(7*france_pop):.4f}')
 print(f'per capita to date {100000*last_ndeaths_france/france_pop}')
 print('\n')
 
 print('MEX')
 print(f'Last deaths {last_ndeaths_mex}')
 print(f'per capita to date {100000*last_ndeaths_mex/mex_pop}')
-print(f'Week deaths per cap {100000*week_mx_deaths/(7*mex_pop)}')
+print(f'Week deaths per cap {100000*week_mx_deaths/(7*mex_pop):.4f}')
 print(f'doctest deaths {doctest_mx_ndeaths}')
 print('\n')
 
 print('BULG')
 print(f'Last deaths {last_ndeaths_bulg}')
 print(f'per capita to date {100000*last_ndeaths_bulg/bulg_pop}')
-print(f'Week deaths per cap {100000*week_bulg_ndeaths/(7*bulg_pop)}')
+print(f'Week deaths per cap {100000*week_bulg_ndeaths/(7*bulg_pop):.4f}')
 print('\n')
 
 print('ONTARIO')
 print(f'Deaths {ndeaths_ontario}')
 print(f'Per capita to date {100000*ndeaths_ontario/ontario_pop}')
-print(f'week per cap {100000*week_ndeaths_ontario/(7*ontario_pop)}')
+print(f'week per cap {100000*week_ndeaths_ontario/(7*ontario_pop):.4f}')
 print('\n')
 
 print('ILLINOIS')
 print(f'{illinois_deaths} deaths from start date to end date')
 print(f'per capita to date {100000*illinois_deaths/(7*illinois_pop)}')
-print(f'week per cap {100000*illinois_deaths_wk/(7*illinois_pop)}')
+print(f'week per cap {100000*illinois_deaths_wk/(7*illinois_pop):.4f}')
 print('\n')
 
 print('COOK')
@@ -139,8 +139,8 @@ print(f'Last deaths {last_cook_deaths}')
 print(f'Last per capita {100000*last_cook_deaths/cook_pop}')
 print(f'{ndeaths_cook} deaths from 30 days prior to {end_date}')
 print(f'Per capita to date {100000*ndeaths_cook/cook_pop}')
-print(f'7-day avg per cap {100000*ndeaths_cook_week/(7*cook_pop)}')
+print(f'7-day avg per cap {100000*ndeaths_cook_week/(7*cook_pop):.3f}')
 print('\n')
 
 print('GREGORY, SD')
-print(f'Week per cap {100000*ndeaths_gregory_week/(7*gregory_pop)}')
+print(f'Week per cap {100000*ndeaths_gregory_week/(7*gregory_pop):.34}')

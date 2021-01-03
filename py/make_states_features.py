@@ -12,6 +12,7 @@ import json
 import  os
 import time
 import datetime
+from filelock import FileLock
 
 def make_features():
     """Read us and canada covid data frame, and the map feature json for these countries. Fill in period deaths in "density" feature.
@@ -61,8 +62,6 @@ def make_features():
     canada_pop_dict = csv_get_dict(config['FILES']['canada_census'],1,2)
     fips_codes = df['state_fips'].unique()
     for fips_code in fips_codes:
-        if fips_code == '35':
-            print('hello')
         deaths1 = df.query('date==@start_date and state_fips==@fips_code').deaths.sum()
         deaths2 = df.query('date==@end_date and state_fips==@fips_code').deaths.sum()
         deaths = deaths2-deaths1
@@ -98,7 +97,6 @@ def make_features():
         id = province_dict[name]
         feature['id'] = 'CAN' + id
         deaths = state_deaths[feature['id']]
-        print(name, deaths)
         feature['properties']['density'] = f'{deaths}'
         feature['properties']['fips'] = 'CAN' + id
 
@@ -116,11 +114,13 @@ if config['SWITCHES']['send_content_to_local_html'] != '0':
     with open('/var/www/html/all-states.json', 'wt') as f:
         json.dump(map_features, f)
     f.close()
-
-with open(config['FILES']['scratch'], 'w') as f:
-    json.dump(map_features,f)
-send_content(config['FILES']['scratch'], 'covid.phoenix-technical-services.com', 'all-states.json', title='all-states.json')
-os.remove(config['FILES']['scratch'])
+lock = FileLock(config['FILES']['lockfile'])
+with lock:
+    with open(config['FILES']['scratch'], 'w') as f:
+        json.dump(map_features,f)
+    f.close()
+    send_content(config['FILES']['scratch'], 'covid.phoenix-technical-services.com', 'all-states.json', title='all-states.json')
+    os.remove(config['FILES']['scratch'])
 
 end = time.time()
 seconds = round(end-start,1)

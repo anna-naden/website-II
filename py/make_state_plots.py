@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import os
 import time
 import datetime
+from filelock import FileLock
 
 from get_world_covid_jh import get_world_covid_jh
 from world_populations import world_populations
@@ -50,8 +51,6 @@ def get_state_weekly(df, pop = None):
     """
     if pop is None:
         pop = df.population.iloc[0]
-        if pop == 0:
-            print('hello')
     ndays=7
     l = len(df)
     deaths = df.deaths
@@ -131,12 +130,15 @@ for fips in states_fips_s:
                 arrowprops=dict(arrowstyle="->"))
 
             #save and upload
-            fig.savefig(config['FILES']['scratch_image'])
             if config['SWITCHES']['send_content_to_local_html'] != '0':
                 fig.savefig('/var/www/html/' +  fips + '.jpg')
             plt.close()
-            send_content(config['FILES']['scratch_image'], 'covid.phoenix-technical-services.com', fips + '.jpg', title=fips)
-            os.remove(config['FILES']['scratch_image'])
+
+            lock = FileLock(config['FILES']['lockfile'])
+            with lock:
+                fig.savefig(config['FILES']['scratch_image'])
+                send_content(config['FILES']['scratch_image'], 'covid.phoenix-technical-services.com', fips + '.jpg', title=fips)
+                os.remove(config['FILES']['scratch_image'])
 
             nfigs += 1
 print(nfigs)
@@ -158,44 +160,47 @@ MAX_Y = float(config['PLOT CONFIGURATION']['max_y'])
 canada_pop_dict = csv_get_dict(config['FILES']['canada_census'],1,2)
 for fips in states_fips_s:
 
-        #get weekly data
-        df_state=df_states[df_states.index.get_level_values('state_fips') ==fips]
-        state = df_state.index.get_level_values('state')[0]
-        df_state = df_state[df_state.index.get_level_values('date') > dmax-np.timedelta64(int(config['PLOT CONFIGURATION']['calendar_window'])*7*24,'h')]
+    #get weekly data
+    df_state=df_states[df_states.index.get_level_values('state_fips') ==fips]
+    state = df_state.index.get_level_values('state')[0]
+    df_state = df_state[df_state.index.get_level_values('date') > dmax-np.timedelta64(int(config['PLOT CONFIGURATION']['calendar_window'])*7*24,'h')]
 
-        #weekly changes
-        if fips in canada_pop_dict.keys():
-            pop = int(canada_pop_dict[fips])
-            dates_n,nd_state = get_state_weekly(df_state, pop)
+    #weekly changes
+    if fips in canada_pop_dict.keys():
+        pop = int(canada_pop_dict[fips])
+        dates_n,nd_state = get_state_weekly(df_state, pop)
 
-            #make plot
+        #make plot
 
-            fig, ax=plt.subplots(figsize=(5,3))
-            for tick in ax.get_xticklabels():
-                tick.set_rotation(45)
-            ax.plot(dates_n, nd_state)
-            ax.plot(dates, nd)
-            ax.set_ylim(0, MAX_Y)
-            ax.legend([state, 'USA'])
-            ax.set_title('Daily New Fatalities per 100,000 Population')
+        fig, ax=plt.subplots(figsize=(5,3))
+        for tick in ax.get_xticklabels():
+            tick.set_rotation(45)
+        ax.plot(dates_n, nd_state)
+        ax.plot(dates, nd)
+        ax.set_ylim(0, MAX_Y)
+        ax.legend([state, 'USA'])
+        ax.set_title('Daily New Fatalities per 100,000 Population')
 
-            #Put text showing last date and last value
-            last = len(nd_state)-1
-            last_date=f'{dates_n[last]}'[:10]
-            ax.annotate(f'{last_date}, {round(nd_state[last],4)}', [dates_n[last],nd_state[last]])
-            fig.tight_layout(pad=4)
+        #Put text showing last date and last value
+        last = len(nd_state)-1
+        last_date=f'{dates_n[last]}'[:10]
+        ax.annotate(f'{last_date}, {round(nd_state[last],4)}', [dates_n[last],nd_state[last]])
+        fig.tight_layout(pad=4)
 
-            #save and upload
+        #save and upload
+        jpg_name = 'CAN' + fips + '.jpg'
+        
+        if config['SWITCHES']['send_content_to_local_html'] != '0':
+            fig.savefig('/var/www/html/' + jpg_name)
+        plt.close()
+
+        lock = FileLock(config['FILES']['lockfile'])
+        with lock:
             fig.savefig(config['FILES']['scratch_image'])
-
-            jpg_name = 'CAN' + fips + '.jpg'
-            if config['SWITCHES']['send_content_to_local_html'] != '0':
-                fig.savefig('/var/www/html/' + jpg_name)
-            plt.close()
-            send_content(config['FILES']['scratch_image'], 'covid.phoenix-technical-services.com', 'CAN' + fips + '.jpg', title='CAN' + fips)
+            send_content(config['FILES']['scratch_image'], 'covid.phoenix-technical-services.com', jpg_name, title=jpg_name)
             os.remove(config['FILES']['scratch_image'])
 
-            nfigs += 1
+        nfigs += 1
 
 end = time.time()
 seconds = round(end-start)
