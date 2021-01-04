@@ -2,7 +2,7 @@ import configparser
 import os
 
 def get_config():
-    """ Get the configuration dictionary (analogous to Windows ini file) for the application based on the config_path environmental variable
+    """ Get the configuration dictionary (analogous to Windows ini file) for the application
 
     Returns:
      dictionary: indexed by string group and string key

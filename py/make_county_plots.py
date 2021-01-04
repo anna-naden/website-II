@@ -100,10 +100,12 @@ dates_n, nd_nation = get_nation_weekly(df_us, pop)
 
 #prepare to look up country names
 upload_time=0
+save_fig_time = 0
 df = df[df.index.get_level_values('ISO_A3')=='USA'].reset_index().set_index(['date'])
 nfigs = 0
 for fips in df.fips.unique():
-
+    if nfigs == 500:
+        break
     #get weekly data
     df_county=df[df.fips ==fips]
     county = df_county.iloc[0].county
@@ -134,19 +136,21 @@ for fips in df.fips.unique():
         ax.annotate(f'{last_date}, {round(nd[last],3)}', [dates[last],nd[last]], fontsize=9)
 
         #save and upload
-        start_up = time.time()
         if config['SWITCHES']['send_content_to_local_html'] != '0':
             fig.savefig('/var/www/html/' + fips + '.jpg')
         plt.close()
 
         lock = FileLock(config['FILES']['lockfile'])
         with lock:
+            start_save = time.time()
             fig.savefig(config['FILES']['scratch_image'])
+            save_fig_time += time.time() - start_save
+            start_up = time.time()
             send_content(config['FILES']['scratch_image'], 'covid.phoenix-technical-services.com', fips + '.jpg', title=fips)
+            upload_time += time.time()-start_up
             os.remove(config['FILES']['scratch_image'])
-        upload_time += time.time()-start_up
         nfigs += 1
         print(nfigs)
 end = time.time()
 seconds = round(end-start)
-print(f'\nCounty plots made. {nfigs} figures uploaded. Upload time: {round(upload_time,2)}. Elapsed time: {str(datetime.timedelta(seconds=seconds))}')
+print(f'\nCounty plots made. {nfigs} figures uploaded. Upload time: {round(upload_time,2)}. Save fig time: {round(save_fig_time, 2)}. Elapsed time: {str(datetime.timedelta(seconds=seconds))}')

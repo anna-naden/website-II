@@ -117,6 +117,7 @@ for key in top_deaths:
     with lock:
         with open(config['FILES']['scratch'], 'w') as f:
             json.dump(markers, f)
+        f.close()
         send_content(config['FILES']['scratch'], 'covid.phoenix-technical-services.com', 'county-markers.json', title='county-markers.json')
         os.remove(config['FILES']['scratch'])
 
