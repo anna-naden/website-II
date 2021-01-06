@@ -100,26 +100,29 @@ county_deaths_sorted = sorted(county_deaths, key=county_deaths.get, reverse=True
 n_worst = int(config['MARKERS']['n_worst_counties'])
 top_deaths = county_deaths_sorted[:n_worst]
 markers = {}
-for key in top_deaths:
-    df_cty = df[df.fips==key].iloc[0]
-    lat = df_cty.latitude
-    lon = df_cty.longitude
-    state = df_cty.state
-    cty = df_cty.county
-    markers[key] = [lat, lon, state, cty]
+with open('county-markers-report.txt', 'wt') as f2:
+    for key in top_deaths:
+        df_cty = df[df.fips==key].iloc[0]
+        lat = df_cty.latitude
+        lon = df_cty.longitude
+        state = df_cty.state
+        cty = df_cty.county
+        markers[key] = [lat, lon, state, cty]
 
-    if config['SWITCHES']['send_content_to_local_html'] != '0':
-        with open('/var/www/html/county-markers.json', 'wt') as f:
-            json.dump(markers, f)
-        f.close()
+        if config['SWITCHES']['send_content_to_local_html'] != '0':
+            with open('/var/www/html/county-markers.json', 'wt') as f:
+                json.dump(markers, f)
+            f.close()
 
-    lock = FileLock(config['FILES']['lockfile'])
-    with lock:
-        with open(config['FILES']['scratch'], 'w') as f:
-            json.dump(markers, f)
-        f.close()
-        send_content(config['FILES']['scratch'], 'covid.phoenix-technical-services.com', 'county-markers.json', title='county-markers.json')
-        os.remove(config['FILES']['scratch'])
+        lock = FileLock(config['FILES']['lockfile'])
+        with lock:
+            with open(config['FILES']['scratch'], 'w') as f:
+                json.dump(markers, f)
+            f.close()
+            send_content(config['FILES']['scratch'], 'covid.phoenix-technical-services.com', 'county-markers.json', title='county-markers.json')
+            os.remove(config['FILES']['scratch'])
+        f2.write(f'{key} {markers[key]}\n')
+    f2.close()
 
 # Features for each state, one feature for each county
 features = get_counties_features()

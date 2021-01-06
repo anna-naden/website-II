@@ -1,1 +1,6 @@
-switch back to Linux. Unused js path
+make marker report
+correct the way I get lat and lon for world markers
+show population on popup graphs for nations
+stuff trying to satify facebook that I am a business
+update base template html
+typo in world html

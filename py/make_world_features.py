@@ -35,7 +35,6 @@ def get_world_deaths(df_world, start_date, end_date):
     df1 = df_world[df_world.date == start_date]
     df2 = df_world[df_world.date == end_date]
     for ISO_A3 in ISO_A3_codes:
-        print(ISO_A3)
         deaths1 = df1.query('ISO_A3==@ISO_A3').deaths.sum()
         deaths2 = df2.query('ISO_A3==@ISO_A3').deaths.sum()
         deaths = deaths2 - deaths1
@@ -104,9 +103,10 @@ n_worst = int(config['MARKERS']['n_worst_nations'])
 top_deaths = world_deaths_sorted[:n_worst]
 markers = {}
 for key in top_deaths:
-    df_nation = df_world1[df_world1.ISO_A3==key].iloc[0]
-    lat = df_nation.lat
-    lon = df_nation.lon
+    df_nation = df_world1[df_world1.ISO_A3==key]
+    df_nation = df_nation[df_nation.state=='']
+    lat = df_nation.iloc[0].lat
+    lon = df_nation.iloc[0].lon
     markers[key] = [lat, lon]
 
 if config['SWITCHES']['send_content_to_local_html'] != '0':

@@ -89,7 +89,8 @@ for ISO_A3 in ISO_A3_codes:
         ax.plot(dates_n, nd_nation)
         ax.plot(dates, nd)
         ax.legend([countries[ISO_A3].replace('_',','), 'USA'])
-        ax.set_title('Daily New Fatalities per 100,000 Population', fontsize=9)
+        spop = "{:,}".format(pop)
+        ax.set_title(f'Daily Fatalities per 100,000 Pop. ({spop})', fontsize=9)
 
         #Put text showing last date and last value
         last = len(nd_nation)-1

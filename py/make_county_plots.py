@@ -104,8 +104,6 @@ save_fig_time = 0
 df = df[df.index.get_level_values('ISO_A3')=='USA'].reset_index().set_index(['date'])
 nfigs = 0
 for fips in df.fips.unique():
-    if nfigs == 500:
-        break
     #get weekly data
     df_county=df[df.fips ==fips]
     county = df_county.iloc[0].county
@@ -150,7 +148,6 @@ for fips in df.fips.unique():
             upload_time += time.time()-start_up
             os.remove(config['FILES']['scratch_image'])
         nfigs += 1
-        print(nfigs)
 end = time.time()
 seconds = round(end-start)
 print(f'\nCounty plots made. {nfigs} figures uploaded. Upload time: {round(upload_time,2)}. Save fig time: {round(save_fig_time, 2)}. Elapsed time: {str(datetime.timedelta(seconds=seconds))}')
