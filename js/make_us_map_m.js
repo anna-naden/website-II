@@ -63,9 +63,7 @@ function make_us_map_m(statesData, marker_dict) {
         style: style,
         onEachFeature: onEachFeature
     }).addTo(map);
-
-    map.attributionControl.addAttribution('Population data &copy; <a href="http://census.gov/">US Census Bureau</a>');
-
+    map.attributionControl.addAttribution('Data from Johns Hoplins University');
 
     var legend = L.control({ position: 'bottomright' });
 
