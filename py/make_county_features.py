@@ -129,12 +129,13 @@ features = get_counties_features()
 update_county_features(features, county_deaths)
 
 #upload
+
 for state in features.keys():
     feature_set = {'type': 'FeatureCollection', 'features': features[state]}
     interval = f'{w_start_date},{w_end_date}'
 
     if config['SWITCHES']['send_content_to_local_html'] != '0':
-        with open('/var/www/html/county-markers.json', 'wt') as f:
+        with open('/var/www/html/' + state+'.json', 'wt') as f:
             json.dump(feature_set, f)
         f.close()
 
