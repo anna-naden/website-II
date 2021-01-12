@@ -9,6 +9,8 @@ cp COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_dea
 cp COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv ~/Dropbox/datasets/covid-19
 cp COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv ~/Dropbox/datasets/covid-19
 cp COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv ~/Dropbox/datasets/covid-19
+echo 'Upload done'
+date
 echo '------------------------------------------------------------------------------------------'
 
 # ---------- Create and serialize dataframe
@@ -67,5 +69,8 @@ fi
 echo 'County plots made'
 echo '---------------------------------------------------------------------------------------'
 
-echo "Done"
+echo '--------------------------------------------------------------------------------------'
+echo 'syncing to s3
+s3 sync /var/www/html s3://covid.phoenix-technical-services.com --quiet
+echo 'Done'
 date

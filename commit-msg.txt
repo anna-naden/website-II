@@ -1,6 +1,3 @@
-make marker report. 
-correct the way I get lat and lon for world markers. 
-show population on popup graphs for nations. 
-stuff trying to satify facebook that I am a business. 
-update base template html. 
-typo in world html. 
+Fix open(,'wt') writing county markers - it was not being parsed correctly by the javascript.
+Write web content to /var/www/html and use "aws s3 sync" to sync the content between that local folder and the s3 bucket.
+

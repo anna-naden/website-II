@@ -110,7 +110,7 @@ with open('county-markers-report.txt', 'wt') as f2:
         markers[key] = [lat, lon, state, cty]
 
         if config['SWITCHES']['send_content_to_local_html'] != '0':
-            with open('/var/www/html/county-markers.json', 'wt') as f:
+            with open('/var/www/html/county-markers.json', 'w') as f:
                 json.dump(markers, f)
             f.close()
 
