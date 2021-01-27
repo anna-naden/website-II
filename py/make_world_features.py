@@ -104,9 +104,13 @@ top_deaths = world_deaths_sorted[:n_worst]
 markers = {}
 for key in top_deaths:
     df_nation = df_world1[df_world1.ISO_A3==key]
-    df_nation = df_nation[df_nation.state=='']
-    lat = df_nation.iloc[0].lat
-    lon = df_nation.iloc[0].lon
+    if key == 'USA':
+        lat = f"{'41.91358968'}"    #Thomas County, NE. An arbitrary choice near the center of the country
+        lon = f"{'-100.5556632'}"
+    else:
+        df_nation = df_nation[df_nation.state=='']
+        lat = df_nation.iloc[0].lat
+        lon = df_nation.iloc[0].lon
     markers[key] = [lat, lon]
 
 if config['SWITCHES']['send_content_to_local_html'] != '0':

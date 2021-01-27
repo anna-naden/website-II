@@ -67,10 +67,11 @@ then
     exit 1
 fi
 echo 'County plots made'
-echo '---------------------------------------------------------------------------------------'
 
 echo '--------------------------------------------------------------------------------------'
 echo 'syncing to s3'
-s3 sync /var/www/html s3://covid.phoenix-technical-services.com --quiet
+aws s3 sync /var/www/html s3://covid.phoenix-technical-services.com --quiet
+echo '---------------------------------------------------------------------------------------'
+
 echo 'Done'
 date
